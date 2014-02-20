@@ -80,11 +80,13 @@
   <ItemGroup>
     <ClInclude Include="CircularEnt.h" />
     <ClInclude Include="RectangularEnt.h" />
-    <ClInclude Include="SimEnt.h" />
+    <ClInclude Include="SymEnt.h" />
+    <ClInclude Include="Symulation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CircularEnt.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
+    <ClCompile Include="Symulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

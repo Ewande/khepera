@@ -1,9 +1,9 @@
 #ifndef RECTANGULAR_ENT_H
 #define RECTANGULAR_ENT_H
 
-#include "SimEnt.h"
+#include "SymEnt.h"
 
-class RectangularEnt : public SimEnt
+class RectangularEnt : public SymEnt
 {
 	public:
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x,

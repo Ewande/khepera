@@ -15,13 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SimEnt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RectangularEnt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CircularEnt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Symulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SymEnt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -30,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CircularEnt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Symulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,9 +1,9 @@
 #ifndef CIRCULAR_ENT_H
 #define CIRCULAR_ENT_H
 
-#include "SimEnt.h"
+#include "SymEnt.h"
 
-class CircularEnt : public SimEnt
+class CircularEnt : public SymEnt
 {
 	public:
 		CircularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x,
