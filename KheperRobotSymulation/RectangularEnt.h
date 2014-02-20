@@ -1,5 +1,5 @@
-#ifndef RECTANGULAR_ENT
-#define RECTANGULAR_ENT
+#ifndef RECTANGULAR_ENT_H
+#define RECTANGULAR_ENT_H
 
 #include "SimEnt.h"
 
