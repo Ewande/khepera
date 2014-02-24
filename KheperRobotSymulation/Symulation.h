@@ -15,7 +15,7 @@ class Symulation
 		void Start();
 	private:
 		std::map<uint16_t, SymEnt*>   _entities;
-		uint32_t                 _time;
+		uint32_t                      _time;
 };
 
 
