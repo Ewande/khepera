@@ -10,6 +10,8 @@ class RectangularEnt : public SymEnt
 			uint32_t y, uint32_t width, uint32_t height);
 
 		virtual void Translate(int x, int y);
+
+		virtual Buffer* Serialize();
 	private:
 		uint32_t _x;
 		uint32_t _y;

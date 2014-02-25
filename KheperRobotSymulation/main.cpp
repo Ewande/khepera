@@ -1,5 +1,6 @@
 #include "CommunicationManager.h"
 #include "CircularEnt.h"
+#include "RectangularEnt.h"
 #include <iostream>
 
 int main(int argc, char** argv)
@@ -13,9 +14,23 @@ int main(int argc, char** argv)
 		if ((i + 1) % 32 == 0)
 			std::cout << std::endl;
 	}
+	std::cout << std::endl;
 
 	delete b;
 	delete c;
+
+	RectangularEnt* r = new RectangularEnt(1, 12, false, 400, 500, 30, 50);
+	b = r->Serialize();
+
+	for (int i = 0; i < b->GetLength(); i++)
+	{
+		printf("%x ", b->GetBuffer()[i]);
+		if ((i + 1) % 32 == 0)
+			std::cout << std::endl;
+	}
+
+	delete r;
+	delete b;
 
 	Symulation* symulation = new Symulation();
 	CommunicationManager* commMan = new CommunicationManager(symulation);
