@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="CircularEnt.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="RectangularEnt.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="Symulation.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="CircularEnt.cpp" />
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="main.cpp" />

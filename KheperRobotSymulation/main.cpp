@@ -1,8 +1,22 @@
 #include "CommunicationManager.h"
+#include "CircularEnt.h"
 #include <iostream>
 
 int main(int argc, char** argv)
 {
+	CircularEnt* c = new CircularEnt(0, 1024, true, 666, 666, 4);
+	Buffer* b = c->Serialize();
+
+	for (int i = 0; i < b->GetLength(); i++)
+	{
+		printf("%x ", b->GetBuffer()[i]);
+		if ((i + 1) % 32 == 0)
+			std::cout << std::endl;
+	}
+
+	delete b;
+	delete c;
+
 	Symulation* symulation = new Symulation();
 	CommunicationManager* commMan = new CommunicationManager(symulation);
 
