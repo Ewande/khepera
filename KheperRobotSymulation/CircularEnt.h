@@ -11,7 +11,7 @@ class CircularEnt : public SymEnt
 
 		virtual void Translate(int x, int y);
 
-		virtual Buffer* Serialize();
+		virtual void Serialize(Buffer& buffer);
 
 	private:
 		uint32_t _x;

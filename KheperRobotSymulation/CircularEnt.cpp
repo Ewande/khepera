@@ -13,7 +13,7 @@ void CircularEnt::Translate(int x, int y)
 }
 
 /*
-                                          Serialization format (all numbers in network byte order)
+                             Serialization format (all numbers in network byte order)
              +-------------------+--------------------------------------+-------------------+
              |                   |                                      |                   |
              |   SHAPE_ID        |              ENTITY_ID               |    MOVABLE        |
@@ -40,20 +40,13 @@ void CircularEnt::Translate(int x, int y)
 
 */
 
-Buffer* CircularEnt::Serialize()
+void CircularEnt::Serialize(Buffer& buffer)
 {
-	int data_length = sizeof(_shapeID) +sizeof(_id) +sizeof(_movable) +sizeof(_weight) +
-		sizeof(_x) +sizeof(_y) +sizeof(_radius);
-
-	Buffer* result = new Buffer(data_length);
-
-	result->Pack(_shapeID);
-	result->Pack(htons(_id));
-	result->Pack(_movable);
-	result->Pack(htonl(_weight));
-	result->Pack(htonl(_x));
-	result->Pack(htonl(_y));
-	result->Pack(htonl(_radius));
-
-	return result;
+	buffer.Pack(_shapeID);
+	buffer.Pack(htons(_id));
+	buffer.Pack(_movable);
+	buffer.Pack(htonl(_weight));
+	buffer.Pack(htonl(_x));
+	buffer.Pack(htonl(_y));
+	buffer.Pack(htonl(_radius));
 }

@@ -24,7 +24,7 @@ class SymEnt
 		// virtual void Rotate(double angle) = 0; TODO: Later
 		virtual void Translate(int x, int y) = 0;
 
-		virtual Buffer* Serialize() = 0;
+		virtual void Serialize(Buffer& buffer) = 0;
 	protected:
 		const uint8_t    _shapeID;
 		const uint16_t   _id;
