@@ -1,11 +1,10 @@
 #include "Buffer.h"
 
-Buffer::Buffer(int length) : _length(length), _offset(0)
+Buffer::Buffer(int length)
 {
-	_buffer = new uint8_t[length];
+	_buffer.reserve(length);
 }
 
 Buffer::~Buffer()
 {
-	delete[] _buffer;
 }
