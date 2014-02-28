@@ -1,6 +1,7 @@
 #include "Symulation.h"
 
-Symulation::Symulation()
+Symulation::Symulation(unsigned int areaWidth, unsigned int areaHeight) :
+	_areaWidth(areaWidth), _areaHeight(areaHeight)
 {
 }
 

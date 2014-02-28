@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 	delete r;
 	delete b;
 
-	Symulation* symulation = new Symulation();
+	Symulation* symulation = new Symulation(200, 400);
 	CommunicationManager* commMan = new CommunicationManager(symulation);
 
 	// init WINSock
