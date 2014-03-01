@@ -1,7 +1,7 @@
 #include "Symulation.h"
 
-Symulation::Symulation(unsigned int areaWidth, unsigned int areaHeight) :
-	_areaWidth(areaWidth), _areaHeight(areaHeight)
+Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight) :
+	_worldWidth(worldWidth), _worldHeight(worldHeight)
 {
 }
 
@@ -24,4 +24,42 @@ void Symulation::AddEntity(SymEnt* newEntity)
 void Symulation::Start()
 {
 	_time = 0;
+}
+
+
+/*
+					Serialization format (all numbers in network byte order)
+			+-------------------+--------------------------------------+-------------------+
+			|                                                                              |
+			|                              WORLD_WIDTH                                     |
+			|                                32 bytes                                      |
+			+------------------------------------------------------------------------------+
+			|                                                                              |
+			|                              WORLD_HEIGHT                                    |
+			|                                32 bytes                                      |
+			+------------------------------------------------------------------------------+
+			|                                                                              |
+			|                                  TIME                                        |
+			|                                32 bytes                                      |
+			+-------------------+--------------------------------------+-------------------+
+			|                                      |                                       |
+			|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
+			|               16 bytes               |              variable length          |
+			+--------------------------------------+---------------------------------------+
+
+*/
+void Symulation::Serialize(Buffer& buffer) const
+{
+	buffer.Pack(htonl(_worldWidth));
+	buffer.Pack(htonl(_worldHeight));
+	buffer.Pack(htonl(_time));
+	buffer.Pack(htons(static_cast<uint16_t>(_entities.size())));
+
+	std::map<uint16_t, SymEnt*>::const_iterator it = _entities.begin();
+
+	while (it != _entities.end())
+	{
+		it->second->Serialize(buffer);
+		it++;
+	}
 }

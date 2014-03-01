@@ -7,6 +7,8 @@
 
 #include "Symulation.h"
 
+class Symulation;
+
 class CommunicationManager
 {
 	public:
