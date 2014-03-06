@@ -43,8 +43,6 @@ int main(int argc, char** argv)
 
 	delete symulation;
 	delete commMan;
-	delete c;
-	delete r;
 
 	WSACleanup();
 

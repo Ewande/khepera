@@ -66,8 +66,9 @@ bool CommunicationManager::Init()
 		return false;
 	}
 
-	const char* MSG = "Hello Dear Client!";
-	send(ClientSocket, MSG, strlen(MSG), 0);
+	Buffer b;
+	_symulation->Serialize(b);
+	send(ClientSocket, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
 
 	iResult = shutdown(ClientSocket, SD_SEND);
 	if (iResult == SOCKET_ERROR) {
