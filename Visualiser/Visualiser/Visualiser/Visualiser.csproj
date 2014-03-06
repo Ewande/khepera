@@ -55,6 +55,7 @@
     </ApplicationDefinition>
     <Compile Include="CircularEnt.cs" />
     <Compile Include="EntityReceiver.cs" />
+    <Compile Include="RectangularEnt.cs" />
     <Compile Include="SymEnt.cs" />
     <Compile Include="SymulationWorld.cs" />
     <Page Include="MainWindow.xaml">

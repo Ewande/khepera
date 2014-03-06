@@ -28,6 +28,7 @@ namespace Visualiser
             switch (shapeID)
             {
                 case CIRCLE: result = ReadCircle(reader, entityID, movable, weight); break;
+                case RECTANGLE: result = ReadRectangle(reader, entityID, movable, weight); break;
                 default: System.Windows.MessageBox.Show("Unknown ShapeID"); break;
             }
 
@@ -42,6 +43,17 @@ namespace Visualiser
             UInt32 radius = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
 
             return new CircularEnt(entityID, weight, movable, x, y, radius);
+        }
+
+        private static RectangularEnt ReadRectangle(BinaryReader reader, UInt16 entityID,
+            bool movable, UInt32 weight)
+        {
+            UInt32 x = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 y = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 width = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 height = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+
+            return new RectangularEnt(entityID, weight, movable, x, y, width, height);
         }
     }
 }
