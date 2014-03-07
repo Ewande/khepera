@@ -44,7 +44,7 @@ namespace Visualiser
             for (int i = 0; i < numberOfEntites; i++)
             {
                 SymEnt entity = EntityReceiver.ReadNext(reader);
-                result.Entities.Add(entity._id, entity);
+                result.Entities.Add(entity.ID, entity);
             }
 
             return result;
