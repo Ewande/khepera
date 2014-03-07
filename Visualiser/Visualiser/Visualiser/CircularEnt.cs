@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Visualiser
 {
@@ -18,6 +20,20 @@ namespace Visualiser
             X = x;
             Y = y;
             Radius = radius;
+        }
+
+        public override void AddToCanvas(Canvas canvas)
+        {
+            Ellipse result = new Ellipse();
+
+            result.Width = Radius;
+            result.Height = Radius;
+            result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
+
+            Canvas.SetLeft(result, X); /* TODO: Check if those are really center coordinates, not upper-right corner coordinates */
+            Canvas.SetTop(result, Y);
+
+            canvas.Children.Add(result);
         }
     }
 }

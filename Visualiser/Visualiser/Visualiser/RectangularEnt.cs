@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Visualiser
 {
@@ -20,6 +22,20 @@ namespace Visualiser
             Y = y;
             Width = width;
             Height = height;
+        }
+
+        public override void AddToCanvas(Canvas canvas)
+        {
+            Rectangle result = new Rectangle();
+
+            result.Width = Width;
+            result.Height = Height;
+            result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
+
+            Canvas.SetLeft(result, X); 
+            Canvas.SetTop(result, Y);
+
+            canvas.Children.Add(result);
         }
     }
 }

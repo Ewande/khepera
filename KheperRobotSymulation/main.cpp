@@ -5,8 +5,9 @@
 
 int main(int argc, char** argv)
 {
-	CircularEnt* c = new CircularEnt(0, 1024, true, 666, 666, 4);
-	RectangularEnt* r = new RectangularEnt(1, 12, false, 400, 500, 30, 50);
+	CircularEnt* c = new CircularEnt(0, 1024, true, 250, 250, 40);
+	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 30, 50);
+	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 200, 60);
 	Buffer b2;
 
 	Symulation* symulation = new Symulation(200, 400);
@@ -14,6 +15,7 @@ int main(int argc, char** argv)
 
 	symulation->AddEntity(c);
 	symulation->AddEntity(r);
+	symulation->AddEntity(c2);
 
 	symulation->Serialize(b2);
 	for (int i = 0; i < b2.GetLength(); i++)

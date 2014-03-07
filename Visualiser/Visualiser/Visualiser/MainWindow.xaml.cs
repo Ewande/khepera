@@ -30,13 +30,24 @@ namespace Visualiser
             ConnectionManager c = new ConnectionManager();
             if (c.Connect(host.Text))
             {
-                MessageBox.Show("Connected");
-                c.ReciveWorldDesc();
+                SymulationWorld symulationWorld = c.ReciveWorldDesc();
+                PaintSymulationWorld(symulationWorld);
             }
             else
                 MessageBox.Show("Couldnt connect");
 
 
+        }
+
+        private void PaintSymulationWorld(SymulationWorld symulationWorld)
+        {
+            /* TODO: If window is smaller then symulation world, we should probably scale every coordinates and dimensions, 
+             * so that we can paint whole world in smaller window */
+
+            foreach (SymEnt entity in symulationWorld.Entities.Values)
+            {
+                entity.AddToCanvas(worldCanvas);
+            }
         }
     }
 }

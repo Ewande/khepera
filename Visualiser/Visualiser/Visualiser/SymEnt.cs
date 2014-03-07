@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Visualiser
 {
@@ -23,5 +24,7 @@ namespace Visualiser
             _weight = weight;
             _movable = movable;
         }
+
+        public abstract void AddToCanvas(Canvas canvas); // Adds this object to canvas (System.Windows.Controls.Canvas)
     }
 }

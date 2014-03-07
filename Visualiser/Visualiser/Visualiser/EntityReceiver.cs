@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Visualiser
 {
+
+    // some kind of SymEnt factory
     class EntityReceiver
     {
         // Shapes IDs definitions, must be the same as in SymEnt.h !!

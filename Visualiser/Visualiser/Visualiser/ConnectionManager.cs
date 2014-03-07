@@ -23,12 +23,12 @@ namespace Visualiser
 
         public bool Connect(string hostname)
         {
-            _tcpClient.Connect(hostname, SERVER_PORT_NUMBER);
+            _tcpClient.Connect(hostname, SERVER_PORT_NUMBER); /* TODO: Catch exception, when connecting fails */
 
             return _tcpClient.Connected;
         }
 
-        public SymulationWorld ReciveWorldDesc() // retrives world description from server, blocks until whole message is received
+        public SymulationWorld ReciveWorldDesc() // retrives world description from server
         {
             SymulationWorld result = new SymulationWorld();
 
@@ -40,8 +40,6 @@ namespace Visualiser
             result.Time = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
 
             int numberOfEntites = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-
-            MessageBox.Show("WorldWidth: " + result.WorldWidth + " #entites: " + numberOfEntites);
 
             for (int i = 0; i < numberOfEntites; i++)
             {

@@ -26,6 +26,8 @@ class SymEnt
 
 		virtual void Serialize(Buffer& buffer) = 0;
 	protected:
+
+		/* TODO: Maybe we should store color information, so that visualiser user will be able to distinct diffrent entities */
 		const uint8_t    _shapeID;
 		const uint16_t   _id;
 		const uint32_t   _weight;
