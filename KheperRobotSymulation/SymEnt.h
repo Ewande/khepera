@@ -13,6 +13,7 @@ class SymEnt
 		// shapes IDs definitions
 		static const uint8_t RECTANGLE = 0;
 		static const uint8_t CIRCLE = 1;
+		static const uint8_t KHEPERA_ROBOT = 2;
 
 		SymEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
 			_weight(weight), _movable(movable) {}
@@ -28,10 +29,10 @@ class SymEnt
 	protected:
 
 		/* TODO: Maybe we should store color information, so that visualiser user will be able to distinct diffrent entities */
-		const uint8_t    _shapeID;
-		const uint16_t   _id;
-		const uint32_t   _weight;
-		const uint8_t    _movable; // stored as integer, to be able to send it through socket
+		uint8_t    _shapeID;
+		uint16_t   _id;
+		uint32_t   _weight;
+		uint8_t    _movable; // stored as integer, to be able to send it through socket
 };
 
 #endif

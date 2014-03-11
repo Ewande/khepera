@@ -13,7 +13,7 @@ class CircularEnt : public SymEnt
 
 		virtual void Serialize(Buffer& buffer);
 
-	private:
+	protected:
 		uint32_t _x;
 		uint32_t _y;
 		uint32_t _radius;
