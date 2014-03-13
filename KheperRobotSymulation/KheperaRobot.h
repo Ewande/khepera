@@ -20,6 +20,8 @@ class KheperaRobot : public CircularEnt
 		// deltaTime in [ sec ]
 		void UpdatePosition(unsigned int deltaTime);
 
+		virtual void Serialize(Buffer& buffer);
+
 
 	protected:
 		uint16_t    _wheelRadius;

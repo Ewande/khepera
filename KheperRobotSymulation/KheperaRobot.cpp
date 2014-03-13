@@ -28,3 +28,47 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 	_y += deltaY;
 	
 }
+
+/*
+		Serialization format (all numbers in network byte order)
+			+-------------------+--------------------------------------+-------------------+
+			|                   |                                      |                   |
+			|   SHAPE_ID        |              ENTITY_ID               |    MOVABLE        |
+			|    8 bytes        |               16 bytes               |    8 bytes        |
+			+-------------------+--------------------------------------+-------------------+
+			|                                                                              |
+			|                                WEIGHT                                        |
+			|                                32 bytes                                      |
+			+------------------------------------------------------------------------------+
+			|                                                                              |
+			|                                X COORD                                       |
+			|                                32 bytes                                      |
+			+------------------------------------------------------------------------------+
+			|                                                                              |
+			|                                y COORD                                       |
+			|                                32 bytes                                      |
+			+------------------------------------------------------------------------------+
+			|                                                                              |
+			|                              ROBOT_RADIUS                                    |
+			|                                32 bytes                                      |
+			+--------------------------------------+---------------------------------------+
+			|                                      |                                       |
+			|             WHEEL_RADIUS             |            WHEEL_DISTANCE             |
+			|               16 bytes               |                16 bytes               |
+			+--------------------------------------+---------------------------------------+
+			|                   |
+			|  DIRECTION_ANGLE  |
+			|    8 bytes        |
+			+-------------------+
+
+DATA_LENGTH = 200 bytes
+
+*/
+
+void KheperaRobot::Serialize(Buffer& buffer)
+{
+	CircularEnt::Serialize(buffer);
+	buffer.Pack(_wheelRadius);
+	buffer.Pack(_wheelDistance);
+	buffer.Pack(_directionAngle);
+}
