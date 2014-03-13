@@ -68,7 +68,7 @@ DATA_LENGTH = 200 bytes
 void KheperaRobot::Serialize(Buffer& buffer)
 {
 	CircularEnt::Serialize(buffer);
-	buffer.Pack(_wheelRadius);
-	buffer.Pack(_wheelDistance);
+	buffer.Pack(htons(_wheelRadius));
+	buffer.Pack(htons(_wheelDistance));
 	buffer.Pack(_directionAngle);
 }
