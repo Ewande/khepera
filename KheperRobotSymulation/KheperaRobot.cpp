@@ -17,7 +17,7 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 	int leftWheelTurnAngle = _leftMotor.GetSpeed() * deltaTime;
 	int rightWheelTurnAngle = _rightMotor.GetSpeed() * deltaTime;
 
-	int deltaFI = (_wheelRadius / _wheelDistance) * (deltaTime - deltaTime);
+	int deltaFI = (_wheelRadius / _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle);
 	_directionAngle += deltaFI;
 
 	/* FIXME: _directionAngle is probably in radians, but i have to check it, when visualisuator will be able to show robot */

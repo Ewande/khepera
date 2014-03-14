@@ -2,6 +2,7 @@
 #define COMMUNICATION_MANAGER_H
 
 #include <map>
+#include <set>
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
 
@@ -21,14 +22,16 @@ class CommunicationManager
 		bool Init();
 
 		// called by Symulation after every time when symulation state is updated, to inform visualisers about it
-		void SymulationTick();
+		void SendWorldDescriptionToVisualisers();
 	private:
 		SOCKET                     _listenSocket; 
 		Symulation*                _symulation;
 
 		// connected clients
 		std::map<uint8_t, SOCKET>  _robotsControlers;
-		std::map<uint8_t, SOCKET>  _visualisers;
+		std::set<SOCKET>  _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
+
+		bool ListenForNewClient();
 };
 
 #endif

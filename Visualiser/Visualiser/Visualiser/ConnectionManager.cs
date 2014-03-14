@@ -25,6 +25,11 @@ namespace Visualiser
         {
             _tcpClient.Connect(hostname, SERVER_PORT_NUMBER); /* TODO: Catch exception, when connecting fails */
 
+            if (_tcpClient.Connected)
+            {
+                _tcpClient.GetStream().WriteByte(1); // identify as visualiser
+            }
+
             return _tcpClient.Connected;
         }
 

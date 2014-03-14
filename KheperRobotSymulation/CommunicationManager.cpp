@@ -7,7 +7,14 @@ CommunicationManager::CommunicationManager(Symulation* sym)
 
 CommunicationManager::~CommunicationManager()
 {
+	/* close visualisers sockets */
 
+	for (std::set<SOCKET>::iterator it = _visualisers.begin();
+		it != _visualisers.end(); it++)
+	{
+		shutdown(*it, SD_SEND);
+		closesocket(*it);
+	}
 }
 
 bool CommunicationManager::Init()
@@ -47,6 +54,34 @@ bool CommunicationManager::Init()
 		return false;
 	}
 
+	ListenForNewClient();
+
+/*	iResult = shutdown(ClientSocket, SD_SEND);
+	if (iResult == SOCKET_ERROR) {
+		printf("shutdown failed: %d\n", WSAGetLastError());
+		closesocket(ClientSocket);
+		WSACleanup();
+		return false;
+	}
+	closesocket(ClientSocket); */
+
+	return true;
+}
+
+void CommunicationManager::SendWorldDescriptionToVisualisers()
+{
+	Buffer b;
+	_symulation->Serialize(b);
+
+	for (std::set<SOCKET>::iterator it = _visualisers.begin();
+		it != _visualisers.end(); it++)
+	{
+		send(*it, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
+	}
+}
+
+bool CommunicationManager::ListenForNewClient()
+{
 	// listen
 	if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR) {
 		printf("Listen failed with error: %ld\n", WSAGetLastError());
@@ -56,7 +91,6 @@ bool CommunicationManager::Init()
 	}
 
 	SOCKET ClientSocket = INVALID_SOCKET;
-
 	// Accept a client socket
 	ClientSocket = accept(_listenSocket, NULL, NULL);
 	if (ClientSocket == INVALID_SOCKET) {
@@ -66,18 +100,14 @@ bool CommunicationManager::Init()
 		return false;
 	}
 
-	Buffer b;
-	_symulation->Serialize(b);
-	send(ClientSocket, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
+	uint8_t newClientType;
 
-	iResult = shutdown(ClientSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		return false;
+	recv(ClientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
+	if (newClientType == 1)
+	{
+		_visualisers.insert(ClientSocket);
+		return true;
 	}
-	closesocket(ClientSocket);
 
-	return true;
+	return false;
 }

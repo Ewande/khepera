@@ -39,6 +39,7 @@ int main(int argc, char** argv)
 	if (commMan->Init())
 	{
 		std::cout << "DONE!" << std::endl;
+		commMan->SendWorldDescriptionToVisualisers();
 	}
 	else
 		std::cout << "ERROR!" << std::endl;
