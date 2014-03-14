@@ -47,12 +47,20 @@ namespace Visualiser
         private static RectangularEnt ReadRectangle(BinaryReader reader, UInt16 entityID,
             bool movable, UInt32 weight)
         {
-            UInt32 x = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 width = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 height = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 x1 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 y1 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
 
-            return new RectangularEnt(entityID, weight, movable, x, y, width, height);
+            UInt32 x2 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 y2 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+
+            UInt32 x3 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 y3 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+
+            UInt32 x4 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            UInt32 y4 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+
+            return new RectangularEnt(entityID, weight, movable, x1, y1, x2, y2,
+                x3, y3, x4, y4);
         }
 
         private static KheperaRobot ReadKheperaRobot(BinaryReader reader, UInt16 entityID,
