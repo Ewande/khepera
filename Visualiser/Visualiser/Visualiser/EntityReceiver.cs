@@ -13,10 +13,6 @@ namespace Visualiser
     // some kind of SymEnt factory
     class EntityReceiver
     {
-        // Shapes IDs definitions, must be the same as in SymEnt.h !!
-        public const byte RECTANGLE = 0;
-        public const byte CIRCLE = 1;
-
         public static SymEnt ReadNext(BinaryReader reader)
         {
             SymEnt result = null;
@@ -29,8 +25,9 @@ namespace Visualiser
 
             switch (shapeID)
             {
-                case CIRCLE: result = ReadCircle(reader, entityID, movable, weight); break;
-                case RECTANGLE: result = ReadRectangle(reader, entityID, movable, weight); break;
+                case SymEnt.CIRCLE_ID: result = ReadCircle(reader, entityID, movable, weight); break;
+                case SymEnt.RECTANGLE_ID: result = ReadRectangle(reader, entityID, movable, weight); break;
+                case SymEnt.KHEPERA_ROBOT_ID: result = ReadKheperaRobot(reader, entityID, movable, weight); break;
                 default: System.Windows.MessageBox.Show("Unknown ShapeID"); break;
             }
 
@@ -56,6 +53,20 @@ namespace Visualiser
             UInt32 height = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
 
             return new RectangularEnt(entityID, weight, movable, x, y, width, height);
+        }
+
+        private static KheperaRobot ReadKheperaRobot(BinaryReader reader, UInt16 entityID,
+            bool movable, UInt32 weight)
+        {
+            // KheperaRobot contains all fields, that CircularEnt contains, so to not repeat code, we use this:
+            CircularEnt circularRobotPart = ReadCircle(reader, entityID, movable, weight);
+
+            UInt16 wheelRadius = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            UInt16 wheelDistance = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            SByte directionAngle = (SByte)reader.ReadSByte();
+
+            return new KheperaRobot(entityID, weight, movable, circularRobotPart.X, circularRobotPart.Y,
+                circularRobotPart.Radius, wheelRadius, wheelDistance, directionAngle);
         }
     }
 }

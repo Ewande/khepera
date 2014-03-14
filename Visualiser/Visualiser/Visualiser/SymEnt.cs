@@ -9,8 +9,9 @@ namespace Visualiser
 {
     abstract class SymEnt
     {
-        public static byte RECTANGLE_ID = 0;
-        public static byte CIRCLE_ID = 1;
+        public const byte RECTANGLE_ID = 0;
+        public const byte CIRCLE_ID = 1;
+        public const byte KHEPERA_ROBOT_ID = 2;
 
         public UInt16 ID { get; private set; }
         public byte ShapeID { get; private set; }
