@@ -27,7 +27,7 @@ class KheperaRobot : public CircularEnt
 		uint16_t    _wheelRadius;
 		uint16_t    _wheelDistance;
 
-		int8_t      _directionAngle; // angle beetween x axis and robot heading direction (don't know if in radians or degrees)
+		float       _directionAngle; // angle beetween x axis and robot heading direction (don't know if in radians or degrees)
 
 		Motor       _leftMotor;
 		Motor       _rightMotor;

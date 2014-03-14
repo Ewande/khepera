@@ -17,12 +17,12 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 	int leftWheelTurnAngle = _leftMotor.GetSpeed() * deltaTime;
 	int rightWheelTurnAngle = _rightMotor.GetSpeed() * deltaTime;
 
-	int deltaFI = (_wheelRadius / _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle);
+	float deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
 	_directionAngle += deltaFI;
 
 	/* FIXME: _directionAngle is probably in radians, but i have to check it, when visualisuator will be able to show robot */
-	int deltaX = (_wheelRadius / 2)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
-	int deltaY = (_wheelRadius / 2)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
+	int deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
+	int deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
 	_x += deltaX;
 	_y += deltaY;
@@ -56,12 +56,12 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 			|             WHEEL_RADIUS             |            WHEEL_DISTANCE             |
 			|               16 bytes               |                16 bytes               |
 			+--------------------------------------+---------------------------------------+
-			|                   |
-			|  DIRECTION_ANGLE  |
-			|    8 bytes        |
-			+-------------------+
+			|                                                                              |
+			|                                  DIRECTION_ANGLE                             |
+			|                                     32 bytes                                 |
+			+--------------------------------------+---------------------------------------+
 
-DATA_LENGTH = 200 bytes
+DATA_LENGTH = 256 bytes
 
 */
 
