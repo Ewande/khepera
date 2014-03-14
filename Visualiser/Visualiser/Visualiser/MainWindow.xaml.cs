@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,18 +21,32 @@ namespace Visualiser
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ConnectionManager _connMan;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
+        private delegate void UpdateWorldCallback(SymulationWorld world);
+
+        private void WorldReceiverThread()
+        {
+            for (int i = 0; i < 30; i++)
+            {
+                SymulationWorld symulationWorld = _connMan.ReciveWorldDesc();
+                worldCanvas.Dispatcher.Invoke(new UpdateWorldCallback(PaintSymulationWorld), symulationWorld);
+            }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ConnectionManager c = new ConnectionManager();
-            if (c.Connect(host.Text))
+            _connMan = new ConnectionManager();
+            if (_connMan.Connect(host.Text))
             {
-                SymulationWorld symulationWorld = c.ReciveWorldDesc();
-                PaintSymulationWorld(symulationWorld);
+                // receive world descriptions on separate thread and don't block GUI thread, so that app remains responsive
+                Thread worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
+                worldReceiverThread.Start();
             }
             else
                 MessageBox.Show("Couldnt connect");
@@ -43,6 +58,8 @@ namespace Visualiser
         {
             /* TODO: If window is smaller then symulation world, we should probably scale every coordinates and dimensions, 
              * so that we can paint whole world in smaller window */
+
+            worldCanvas.Children.Clear();
 
             foreach (SymEnt entity in symulationWorld.Entities.Values)
             {

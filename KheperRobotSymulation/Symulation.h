@@ -4,6 +4,7 @@
 #include <map>
 
 #include "SymEnt.h"
+#include "KheperaRobot.h"
 #include "Buffer.h"
 #include "CommunicationManager.h"
 
@@ -15,6 +16,7 @@ class Symulation
 
 		void AddEntity(SymEnt* newEntity);
 		void Start();
+		void Update(unsigned int deltaTime); // deltaTime in [ sec ] 
 
 		void Serialize(Buffer& buffer) const;
 	private:

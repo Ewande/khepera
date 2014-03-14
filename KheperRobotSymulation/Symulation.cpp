@@ -26,6 +26,22 @@ void Symulation::Start()
 	_time = 0;
 }
 
+void Symulation::Update(unsigned int deltaTime)
+{
+	std::map<uint16_t, SymEnt*>::iterator it = _entities.begin();
+
+	_time += deltaTime;
+
+	while (it != _entities.end())
+	{
+		if (it->second->GetShapeID() == SymEnt::KHEPERA_ROBOT)
+		{
+			dynamic_cast<KheperaRobot*>(it->second)->UpdatePosition(deltaTime);
+		}
+		it++;
+	}
+}
+
 
 /*
 					Serialization format (all numbers in network byte order)
