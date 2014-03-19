@@ -46,9 +46,9 @@ int main(int argc, char** argv)
 	{
 		std::cout << "DONE!" << std::endl;
 
-		commMan->SendWorldDescriptionToVisualisers();
+		/*commMan->SendWorldDescriptionToVisualisers();
 
-		/* make some simple simulation */
+		// make some simple simulation
 		robot->SetLeftMotorSpeed(1);
 		robot->SetRightMotorSpeed(2);
 
@@ -80,7 +80,8 @@ int main(int argc, char** argv)
 			symulation->Update(1);
 			commMan->SendWorldDescriptionToVisualisers();
 			i++;
-		}
+		} */
+		commMan->RunServerLoop();
 	}
 	else
 		std::cout << "ERROR!" << std::endl;

@@ -1,8 +1,10 @@
 #include "CommunicationManager.h"
 
-CommunicationManager::CommunicationManager(Symulation* sym)
+CommunicationManager::CommunicationManager(Symulation* sym) : _isStopped(false)
 {
 	_symulation = sym;
+
+	InitializeCriticalSection(&_clientsMutex);
 }
 
 CommunicationManager::~CommunicationManager()
@@ -15,6 +17,8 @@ CommunicationManager::~CommunicationManager()
 		shutdown(*it, SD_SEND);
 		closesocket(*it);
 	}
+
+	DeleteCriticalSection(&_clientsMutex);
 }
 
 bool CommunicationManager::Init()
@@ -54,34 +58,6 @@ bool CommunicationManager::Init()
 		return false;
 	}
 
-	ListenForNewClient();
-
-/*	iResult = shutdown(ClientSocket, SD_SEND);
-	if (iResult == SOCKET_ERROR) {
-		printf("shutdown failed: %d\n", WSAGetLastError());
-		closesocket(ClientSocket);
-		WSACleanup();
-		return false;
-	}
-	closesocket(ClientSocket); */
-
-	return true;
-}
-
-void CommunicationManager::SendWorldDescriptionToVisualisers()
-{
-	Buffer b;
-	_symulation->Serialize(b);
-
-	for (std::set<SOCKET>::iterator it = _visualisers.begin();
-		it != _visualisers.end(); it++)
-	{
-		send(*it, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
-	}
-}
-
-bool CommunicationManager::ListenForNewClient()
-{
 	// listen
 	if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR) {
 		printf("Listen failed with error: %ld\n", WSAGetLastError());
@@ -90,6 +66,78 @@ bool CommunicationManager::ListenForNewClient()
 		return false;
 	}
 
+	AcceptNewClient();
+
+	return true;
+}
+
+void CommunicationManager::RunServerLoop()
+{
+	while (!_isStopped)
+	{
+		fd_set recivingSockets;
+		FD_ZERO(&recivingSockets);
+
+		// add visualisers to observed sockets set
+		for (std::set<SOCKET>::iterator it = _visualisers.begin();
+			it != _visualisers.end(); it++)
+			FD_SET(*it, &recivingSockets);
+
+		// now add controllers
+		for (std::map<uint16_t, SOCKET>::iterator it = _robotsControlers.begin();
+			it != _robotsControlers.end(); it++)
+			FD_SET(it->second, &recivingSockets);
+
+		// add server's listen socket
+		FD_SET(_listenSocket, &recivingSockets);
+
+		int numberOfSockets = select(0, &recivingSockets, NULL, NULL, NULL);
+
+		if (FD_ISSET(_listenSocket, &recivingSockets))
+			AcceptNewClient();
+
+		// find who sent us a message
+		std::set<SOCKET>::iterator it = _visualisers.begin();
+		while (it != _visualisers.end())
+		{
+			if (FD_ISSET(*it, &recivingSockets))
+			{
+				// FIXME: for testing purpose only !
+				// TODO: respond to received message 
+				uint8_t message;
+				int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
+				if (dataLength < 1)
+					_visualisers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
+				else
+				{
+					std::cout << "Message: " << message << std::endl;
+					it++;
+				}
+			}
+			else
+				it++;
+		}
+	}
+}
+
+void CommunicationManager::SendWorldDescriptionToVisualisers()
+{
+	Buffer b;
+	_symulation->Serialize(b);
+
+	EnterCriticalSection(&_clientsMutex);
+
+	for (std::set<SOCKET>::iterator it = _visualisers.begin();
+		it != _visualisers.end(); it++)
+	{
+		send(*it, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
+	}
+
+	LeaveCriticalSection(&_clientsMutex);
+}
+
+bool CommunicationManager::AcceptNewClient()
+{
 	SOCKET ClientSocket = INVALID_SOCKET;
 	// Accept a client socket
 	ClientSocket = accept(_listenSocket, NULL, NULL);
@@ -105,7 +153,12 @@ bool CommunicationManager::ListenForNewClient()
 	recv(ClientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
 	if (newClientType == 1)
 	{
+		EnterCriticalSection(&_clientsMutex);
+
 		_visualisers.insert(ClientSocket);
+
+		LeaveCriticalSection(&_clientsMutex);
+
 		return true;
 	}
 
