@@ -32,7 +32,7 @@ namespace Visualiser
 
         private void WorldReceiverThread()
         {
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 SymulationWorld symulationWorld = _connMan.ReciveWorldDesc();
                 worldCanvas.Dispatcher.Invoke(new UpdateWorldCallback(PaintSymulationWorld), symulationWorld);

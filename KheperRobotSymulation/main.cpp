@@ -17,6 +17,11 @@ int main(int argc, char** argv)
 	Symulation* symulation = new Symulation(200, 400);
 	CommunicationManager* commMan = new CommunicationManager(symulation);
 
+	symulation->SetCommunicationManager(commMan);
+
+	robot->SetLeftMotorSpeed(1);
+	robot->SetRightMotorSpeed(2);
+
 	symulation->AddEntity(c);
 	symulation->AddEntity(r);
 	symulation->AddEntity(c2);
@@ -46,41 +51,7 @@ int main(int argc, char** argv)
 	{
 		std::cout << "DONE!" << std::endl;
 
-		/*commMan->SendWorldDescriptionToVisualisers();
-
-		// make some simple simulation
-		robot->SetLeftMotorSpeed(1);
-		robot->SetRightMotorSpeed(2);
-
-		int i = 0;
-		while (i < 10)
-		{
-			std::cout << "Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers(); 
-			i++;
-		}
-
-		robot->SetRightMotorSpeed(1);
-		while (i < 20)
-		{
-			std::cout << "Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers();
-			i++;
-		}
-
-		robot->SetLeftMotorSpeed(2);
-		while (i < 30)
-		{
-			std::cout << "Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers();
-			i++;
-		} */
+		symulation->Start();
 		commMan->RunServerLoop();
 	}
 	else
