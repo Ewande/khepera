@@ -10,9 +10,16 @@ CommunicationManager::CommunicationManager(Symulation* sym) : _isStopped(false)
 CommunicationManager::~CommunicationManager()
 {
 	/* close visualisers sockets */
-
 	for (std::set<SOCKET>::iterator it = _visualisers.begin();
 		it != _visualisers.end(); it++)
+	{
+		shutdown(*it, SD_SEND);
+		closesocket(*it);
+	}
+
+	// close robot controlers sockets
+	for (std::set<SOCKET>::iterator it = _robotsControlers.begin();
+		it != _robotsControlers.end(); it++)
 	{
 		shutdown(*it, SD_SEND);
 		closesocket(*it);
@@ -75,48 +82,29 @@ void CommunicationManager::RunServerLoop()
 {
 	while (!_isStopped)
 	{
-		fd_set recivingSockets;
-		FD_ZERO(&recivingSockets);
+		fd_set receivingSockets;
+		FD_ZERO(&receivingSockets);
 
-		// add visualisers to observed sockets set
+		// add controllers to observed sockets set
+		for (std::set<SOCKET>::iterator it = _robotsControlers.begin();
+			it != _robotsControlers.end(); it++)
+			FD_SET(*it, &receivingSockets);
+
+		// add visualisers
 		for (std::set<SOCKET>::iterator it = _visualisers.begin();
 			it != _visualisers.end(); it++)
-			FD_SET(*it, &recivingSockets);
-
-		// now add controllers
-		for (std::map<uint16_t, SOCKET>::iterator it = _robotsControlers.begin();
-			it != _robotsControlers.end(); it++)
-			FD_SET(it->second, &recivingSockets);
+			FD_SET(*it, &receivingSockets);
 
 		// add server's listen socket
-		FD_SET(_listenSocket, &recivingSockets);
+		FD_SET(_listenSocket, &receivingSockets);
 
-		int numberOfSockets = select(0, &recivingSockets, NULL, NULL, NULL);
+		int numberOfSockets = select(0, &receivingSockets, NULL, NULL, NULL);
 
-		if (FD_ISSET(_listenSocket, &recivingSockets))
+		if (FD_ISSET(_listenSocket, &receivingSockets))
 			AcceptNewClient();
 
-		// find who sent us a message
-		std::set<SOCKET>::iterator it = _visualisers.begin();
-		while (it != _visualisers.end())
-		{
-			if (FD_ISSET(*it, &recivingSockets))
-			{
-				// FIXME: for testing purpose only !
-				// TODO: respond to received message 
-				uint8_t message;
-				int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
-				if (dataLength < 1)
-					_visualisers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
-				else
-				{
-					std::cout << "Message: " << message << std::endl;
-					it++;
-				}
-			}
-			else
-				it++;
-		}
+		ReceiveRobotControlersMessages(&receivingSockets);
+		ReceiveVisualisersMessages(&receivingSockets);
 	}
 }
 
@@ -125,7 +113,7 @@ void CommunicationManager::SendWorldDescriptionToVisualisers()
 	Buffer b;
 	_symulation->Serialize(b);
 
-	EnterCriticalSection(&_clientsMutex);
+	EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
 
 	for (std::set<SOCKET>::iterator it = _visualisers.begin();
 		it != _visualisers.end(); it++)
@@ -147,7 +135,8 @@ bool CommunicationManager::AcceptNewClient()
 		WSACleanup();
 		return false;
 	}
-
+	
+	// receive new client type information, and it to appropriate container
 	uint8_t newClientType;
 
 	recv(ClientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
@@ -158,9 +147,57 @@ bool CommunicationManager::AcceptNewClient()
 		_visualisers.insert(ClientSocket);
 
 		LeaveCriticalSection(&_clientsMutex);
-
-		return true;
 	}
+	else
+		_robotsControlers.insert(ClientSocket);
 
-	return false;
+	return true;
+}
+
+void CommunicationManager::ReceiveRobotControlersMessages(fd_set* sockets)
+{
+	// find who sent us a message
+	std::set<SOCKET>::iterator it = _robotsControlers.begin();
+	while (it != _robotsControlers.end())
+	{
+		if (FD_ISSET(*it, sockets))
+		{
+			uint8_t message;
+			int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
+			if (dataLength < 1)
+				_robotsControlers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
+			else
+			{
+				// FIXME: For testing purpose only!
+				std::cout << "Message from controler: " << message << std::endl;
+				it++;
+			}
+		}
+		else
+			it++;
+	}
+}
+
+void CommunicationManager::ReceiveVisualisersMessages(fd_set* sockets)
+{
+	// find who sent us a message
+	std::set<SOCKET>::iterator it = _visualisers.begin();
+	while (it != _visualisers.end())
+	{
+		if (FD_ISSET(*it, sockets))
+		{
+			uint8_t message;
+			int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
+			if (dataLength < 1)
+				_visualisers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
+			else
+			{
+				// FIXME: For testing purpose only!
+				std::cout << "Message from visualiser: " << message << std::endl;
+				it++;
+			}
+		}
+		else
+			it++;
+	}
 }

@@ -22,7 +22,7 @@ class CommunicationManager
 
 		bool Init();
 
-		// starts server loop, which responds to clients requests
+		// starts server loop, which receives and responds to clients requests
 		// WARNING: blocks current thread
 		void RunServerLoop(); 
 
@@ -35,10 +35,17 @@ class CommunicationManager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 
 		// connected clients
-		std::map<uint16_t, SOCKET> _robotsControlers;
+		std::set<SOCKET>           _robotsControlers; // FIXME: change to map, if one controller can controll only one robot
 		std::set<SOCKET>           _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
 
-		bool AcceptNewClient();
+		bool AcceptNewClient(); // accepts client, that is trying to connect, and adds it to appropriate clients set
+
+		// receives and executes messages sent by robot controllers
+		// sockets -> sockets, that have message to receive, get from select function
+		void ReceiveRobotControlersMessages(fd_set* sockets);
+
+		// the same method for visualisers messages
+		void ReceiveVisualisersMessages(fd_set* sockets);
 };
 
 #endif
