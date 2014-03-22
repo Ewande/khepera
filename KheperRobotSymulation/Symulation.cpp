@@ -13,6 +13,7 @@ Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight) :
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
 	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
 {
+	InitializeCriticalSection(&_criticalSection);
 }
 
 Symulation::~Symulation()
@@ -26,6 +27,8 @@ Symulation::~Symulation()
 		delete it->second;
 		it++;
 	}
+
+	DeleteCriticalSection(&_criticalSection);
 }
 
 void Symulation::AddEntity(SymEnt* newEntity)
@@ -101,10 +104,14 @@ void Symulation::Run()
 	int i = 0;
 	while (_isRunning)
 	{
+		Lock();
+
 		_commMan->SendWorldDescriptionToVisualisers();
 		Sleep(125);
 		Update(1);
-		std::cout << "RUNNING" <<  i++ << std::endl;
+		std::cout << "RUNNING: " <<  i++ << std::endl;
+
+		Unlock();
 	}
 
 	std::cout << "THREAD END" << std::endl;
