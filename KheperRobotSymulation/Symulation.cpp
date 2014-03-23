@@ -83,6 +83,17 @@ void Symulation::Update(unsigned int deltaTime)
 			+--------------------------------------+---------------------------------------+
 
 */
+
+SymEnt* Symulation::GetEntity(uint16_t id)
+{
+	std::map<uint16_t, SymEnt*>::iterator it = _entities.find(id);
+
+	if (it != _entities.end())
+		return _entities[id];
+	else
+		return NULL;
+}
+
 void Symulation::Serialize(Buffer& buffer) const
 {
 	buffer.Pack(htonl(_worldWidth));
@@ -107,11 +118,11 @@ void Symulation::Run()
 		Lock();
 
 		_commMan->SendWorldDescriptionToVisualisers();
-		Sleep(125);
 		Update(1);
 		std::cout << "RUNNING: " <<  i++ << std::endl;
 
 		Unlock();
+		Sleep(125);
 	}
 
 	std::cout << "THREAD END" << std::endl;

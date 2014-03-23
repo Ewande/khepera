@@ -45,6 +45,9 @@
     <ClInclude Include="ClientCommands\ClientCommand.h">
       <Filter>Header Files\Commands</Filter>
     </ClInclude>
+    <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RectangularEnt.cpp">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="KheperaRobot.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
+      <Filter>Header Files\Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

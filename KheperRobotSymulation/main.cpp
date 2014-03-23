@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 	CircularEnt* c = new CircularEnt(0, 1024, true, 250, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 30, 50);
 	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 200, 60);
-	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 30, 5, 10, 0);
+	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 30, 2, 10, 0);
 	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 130, 130, 150, 150, 130, 170);
 	Buffer b2;
 	const int symulationDelay = 100; // in [ msec ]
@@ -19,8 +19,8 @@ int main(int argc, char** argv)
 
 	symulation->SetCommunicationManager(commMan);
 
-	robot->SetLeftMotorSpeed(1);
-	robot->SetRightMotorSpeed(2);
+	robot->SetLeftMotorSpeed(0);
+	robot->SetRightMotorSpeed(0);
 
 	symulation->AddEntity(c);
 	symulation->AddEntity(r);

@@ -5,17 +5,23 @@
 #include <set>
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
-
-#include "Symulation.h"
 #include <iostream>
 
+#include "Symulation.h"
+
+#include "ClientCommands\ClientCommand.h"
+#include "ClientCommands\RobotMotorSpeedChangeCommand.h"
+
 class Symulation;
+class ClientCommand;
 
 class CommunicationManager
 {
 	public:
 		const int LISTEN_PORT = 6020;
 		const char* LISTEN_PORT_STR = "6020";
+		static const int NUMBER_OF_CONTROLLERS_COMMANDS;
+			
 
 		CommunicationManager(Symulation* symulation);
 		~CommunicationManager();
@@ -37,6 +43,9 @@ class CommunicationManager
 		// connected clients
 		std::set<SOCKET>           _robotsControlers; // FIXME: change to map, if one controller can controll only one robot
 		std::set<SOCKET>           _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
+
+		// arrays of ClientCommand*
+		ClientCommand**            _robotsControlersCommandsList;
 
 		bool AcceptNewClient(); // accepts client, that is trying to connect, and adds it to appropriate clients set
 

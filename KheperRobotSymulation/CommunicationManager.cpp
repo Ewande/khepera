@@ -1,10 +1,18 @@
 #include "CommunicationManager.h"
 
+const int CommunicationManager::NUMBER_OF_CONTROLLERS_COMMANDS = 
+	ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID + 1;
+
 CommunicationManager::CommunicationManager(Symulation* sym) : _isStopped(false)
 {
 	_symulation = sym;
 
 	InitializeCriticalSection(&_clientsMutex);
+
+	// initialize arrays with clients commands
+	_robotsControlersCommandsList = new ClientCommand*[NUMBER_OF_CONTROLLERS_COMMANDS];
+	_robotsControlersCommandsList[ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID] =
+		new RobotMotorSpeedChangeCommand();
 }
 
 CommunicationManager::~CommunicationManager()
@@ -24,6 +32,12 @@ CommunicationManager::~CommunicationManager()
 		shutdown(*it, SD_SEND);
 		closesocket(*it);
 	}
+
+	// delete commands
+	for (int i = 0; i < NUMBER_OF_CONTROLLERS_COMMANDS; i++)
+		delete _robotsControlersCommandsList[i];
+
+	delete[] _robotsControlersCommandsList;
 
 	DeleteCriticalSection(&_clientsMutex);
 }
@@ -162,14 +176,16 @@ void CommunicationManager::ReceiveRobotControlersMessages(fd_set* sockets)
 	{
 		if (FD_ISSET(*it, sockets))
 		{
-			uint8_t message;
-			int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
+			uint8_t commandID;
+			int dataLength = recv(*it, reinterpret_cast<char*>(&commandID), 1, 0);
 			if (dataLength < 1)
 				_robotsControlers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
 			else
 			{
-				// FIXME: For testing purpose only!
-				std::cout << "Message from controler: " << message << std::endl;
+				std::cout << "Received command id: " << commandID << std::endl;
+				if (commandID < NUMBER_OF_CONTROLLERS_COMMANDS)
+					// TODO: Send back error code in case of errors
+					_robotsControlersCommandsList[commandID]->Execute(_symulation, *it);
 				it++;
 			}
 		}

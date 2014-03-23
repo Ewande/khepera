@@ -24,10 +24,12 @@ class Symulation
 
 		// methods used to lock and unlock Symulation object for only one thread
 		// if object is locked, it can't be locked again, until unlocking
-		void Lock() { EnterCriticalSection(&_criticalSection); }
-		void Unlock() { LeaveCriticalSection(&_criticalSection); }
+		void Lock() { (&_criticalSection); }
+		void Unlock() { (&_criticalSection); }
 
 		void SetCommunicationManager(CommunicationManager* commMan) { _commMan = commMan; }
+
+		SymEnt* GetEntity(uint16_t id);
 
 		void Serialize(Buffer& buffer) const;
 	private:
