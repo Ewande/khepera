@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CircularEnt.h" />
+    <ClInclude Include="ClientCommands\ClientCommand.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="RectangularEnt.h" />
