@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{36b482a3-23a8-4ce4-84e8-2293c2a7f239}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RectangularEnt.h">
@@ -42,6 +45,12 @@
     <ClInclude Include="Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClientCommands\ClientCommand.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h">
+      <Filter>Header Files\Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RectangularEnt.cpp">
@@ -65,8 +74,13 @@
     <ClCompile Include="KheperaRobot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Point.cpp">
       <Filter>Source Files</Filter>
+=======
+    <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
+      <Filter>Header Files\Commands</Filter>
+>>>>>>> multiclient
     </ClCompile>
   </ItemGroup>
 </Project>

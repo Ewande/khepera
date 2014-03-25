@@ -6,16 +6,22 @@
 
 int main(int argc, char** argv)
 {
-	CircularEnt* c = new CircularEnt(0, 1024, true, 250, 250, 40);
+	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 30, 50);
-	CircularEnt* c2 = new CircularEnt(3, 10, true, 150, 200, 60);
-	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 30, 5, 10, 0);
-	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 90, 130, 110, 110, 130, 130, 110, 150);
+
+	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 250, 30);
+	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 15, 2, 10, 0);
+	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 130, 130, 150, 150, 130, 170);
 	Buffer b2;
 	const int symulationDelay = 100; // in [ msec ]
 
 	Symulation* symulation = new Symulation(200, 400);
 	CommunicationManager* commMan = new CommunicationManager(symulation);
+
+	symulation->SetCommunicationManager(commMan);
+
+	robot->SetLeftMotorSpeed(0);
+	robot->SetRightMotorSpeed(0);
 
 	symulation->AddEntity(c);
 	symulation->AddEntity(r);
@@ -46,40 +52,8 @@ int main(int argc, char** argv)
 	{
 		std::cout << "DONE!" << std::endl;
 
-		commMan->SendWorldDescriptionToVisualisers();
-		/* make some simple simulation */
-		robot->SetLeftMotorSpeed(4);
-		robot->SetRightMotorSpeed(2);
-
-		int i = 0;
-		while (i < 9)
-		{
-			std::cout << ">>>>>>> Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers(); 
-			i++;
-		}
-
-		robot->SetRightMotorSpeed(4);
-		while (i < 20)
-		{
-			std::cout << ">>>>>>> Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers();
-			i++;
-		}
-
-		robot->SetLeftMotorSpeed(4);
-		while (i < 30)
-		{
-			std::cout << ">>>>>>> Symualtion step: " << i << std::endl;
-			Sleep(symulationDelay);
-			symulation->Update(1);
-			commMan->SendWorldDescriptionToVisualisers();
-			i++;
-		}
+		symulation->Start();
+		commMan->RunServerLoop();
 	}
 	else
 		std::cout << "ERROR!" << std::endl;

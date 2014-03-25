@@ -82,6 +82,8 @@
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CircularEnt.h" />
+    <ClInclude Include="ClientCommands\ClientCommand.h" />
+    <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="KheperaRobot.h" />
     <ClInclude Include="Motor.h" />
@@ -93,6 +95,7 @@
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="CircularEnt.cpp" />
+    <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp" />
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="KheperaRobot.cpp" />
     <ClCompile Include="main.cpp" />
