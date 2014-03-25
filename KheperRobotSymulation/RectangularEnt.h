@@ -2,6 +2,7 @@
 #define RECTANGULAR_ENT_H
 
 #include "SymEnt.h"
+#include "Point.h"
 
 class RectangularEnt : public SymEnt
 {
@@ -15,22 +16,18 @@ class RectangularEnt : public SymEnt
 			uint32_t y1, uint32_t x2, uint32_t y2, uint32_t x3, uint32_t y3,
 			uint32_t x4, uint32_t y4);
 
+		~RectangularEnt() { delete _vertices; }
+
+		double CollisionLength(SymEnt& other, Point& proj);
+		Point* GetVertices() { return _vertices; }
+
+
 		virtual void Translate(int x, int y);
 
 		virtual void Serialize(Buffer& buffer);
 
 	protected:
-		uint32_t _x1;
-		uint32_t _y1;
-
-		uint32_t _x2;
-		uint32_t _y2;
-
-		uint32_t _x3;
-		uint32_t _y3;
-
-		uint32_t _x4;
-		uint32_t _y4;
+		Point* _vertices;
 };
 
 #endif

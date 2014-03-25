@@ -83,9 +83,10 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CircularEnt.h" />
     <ClInclude Include="CommunicationManager.h" />
-    <ClInclude Include="Motor.h" />
-    <ClInclude Include="RectangularEnt.h" />
     <ClInclude Include="KheperaRobot.h" />
+    <ClInclude Include="Motor.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="RectangularEnt.h" />
     <ClInclude Include="SymEnt.h" />
     <ClInclude Include="Symulation.h" />
   </ItemGroup>
@@ -95,6 +96,7 @@
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="KheperaRobot.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Point.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
     <ClCompile Include="Symulation.cpp" />
   </ItemGroup>

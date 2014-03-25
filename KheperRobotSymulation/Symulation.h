@@ -1,6 +1,8 @@
 #ifndef SYMULATION_H
 #define SYMULATION_H
 
+#define NUMBER_OF_CHECKS 10
+
 #include <map>
 
 #include "SymEnt.h"
@@ -17,6 +19,8 @@ class Symulation
 		void AddEntity(SymEnt* newEntity);
 		void Start();
 		void Update(unsigned int deltaTime); // deltaTime in [ sec ] 
+		void CheckCollisions();
+		void removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, Point& proj);
 
 		void Serialize(Buffer& buffer) const;
 	private:

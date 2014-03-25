@@ -6,6 +6,7 @@
 #include <Ws2tcpip.h>
 
 #include "Buffer.h"
+#include "Point.h"
 
 class SymEnt
 {
@@ -20,8 +21,10 @@ class SymEnt
 
 		uint16_t GetID() const { return _id; }
 		uint8_t GetShapeID() const { return _shapeID; }
+		uint32_t GetWeight() const { return _weight; }
 
-		bool IsColliding(const SymEnt& other) { return false; /* TODO: Implement*/ }
+
+		virtual double CollisionLength(SymEnt& other, Point& proj) = 0;
 		// virtual void Rotate(double angle) = 0; TODO: Later
 		virtual void Translate(int x, int y) = 0;
 

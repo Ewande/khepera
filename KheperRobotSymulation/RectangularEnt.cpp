@@ -12,25 +12,28 @@ RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, uint3
 
 RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x1,
 	uint32_t y1, uint32_t x2, uint32_t y2, uint32_t x3, uint32_t y3,
-	uint32_t x4, uint32_t y4) : SymEnt(id, SymEnt::RECTANGLE, weight, movable), _x1(x1),
-	_y1(y1), _x2(x2), _y2(y2), _x3(x3), _y3(y3), _x4(x4), _y4(y4)
+	uint32_t x4, uint32_t y4) : SymEnt(id, SymEnt::RECTANGLE, weight, movable)
 {
+	_vertices = new Point[4];
+	_vertices[0] = Point(x1, y1);
+	_vertices[1] = Point(x2, y2);
+	_vertices[2] = Point(x3, y3);
+	_vertices[3] = Point(x4, y4);
+}
 
+double RectangularEnt::CollisionLength(SymEnt& other, Point& proj)
+{
+	int other_shape = other.GetShapeID();
+	if (other_shape == SymEnt::CIRCLE || other_shape == SymEnt::KHEPERA_ROBOT)
+		return other.CollisionLength(*this, proj);
+	else
+		return -1;
 }
 
 void RectangularEnt::Translate(int x, int y)
 {
-	_x1 += x;
-	_y1 += y;
-
-	_x2 += x;
-	_y2 += y;
-
-	_x3 += x;
-	_y3 += y;
-
-	_x4 += x;
-	_y4 += y;
+	for (int i = 0; i < 4; i++)
+		_vertices[i].Translate(x, y);
 }
 
 /*
@@ -88,15 +91,9 @@ void RectangularEnt::Serialize(Buffer& buffer)
 	buffer.Pack(_movable);
 	buffer.Pack(htonl(_weight));
 
-	buffer.Pack(htonl(_x1));
-	buffer.Pack(htonl(_y1));
-
-	buffer.Pack(htonl(_x2));
-	buffer.Pack(htonl(_y2));
-
-	buffer.Pack(htonl(_x3));
-	buffer.Pack(htonl(_y3));
-
-	buffer.Pack(htonl(_x4));
-	buffer.Pack(htonl(_y4));
+	for (int i = 0; i < 4; i++)
+	{
+		buffer.Pack(htonl(_vertices[i].iGetX()));
+		buffer.Pack(htonl(_vertices[i].iGetY()));
+	}
 }
