@@ -9,8 +9,8 @@
 class KheperaRobot : public CircularEnt
 {
 	public:
-		KheperaRobot(uint16_t id, uint32_t weight, uint32_t x,
-			uint32_t y, uint32_t robotRadius, uint16_t wheelRadius,
+		KheperaRobot(uint16_t id, uint32_t weight, double x,
+			double y, double robotRadius, uint16_t wheelRadius,
 			uint16_t wheelDistance, float directionAngle);
 
 		void SetRightMotorSpeed(int16_t speed) { _rightMotor.SetSpeed(speed); }

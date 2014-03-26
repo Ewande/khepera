@@ -8,15 +8,15 @@ class RectangularEnt : public SymEnt
 {
 	public:
 		// x, y -> coord of left-top corner
-		RectangularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x,
-			uint32_t y, uint32_t width, uint32_t height);
+		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
+			double y, double width, double height);
 
 		// points should be in clockwise order
-		RectangularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x1,
-			uint32_t y1, uint32_t x2, uint32_t y2, uint32_t x3, uint32_t y3,
-			uint32_t x4, uint32_t y4);
+		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x1,
+			double y1, double x2, double y2, double x3, double y3,
+			double x4, double y4);
 
-		~RectangularEnt() { delete _vertices; }
+		virtual ~RectangularEnt() { delete[] _vertices; }
 
 		double CollisionLength(SymEnt& other, Point& proj);
 		Point* GetVertices() { return _vertices; }

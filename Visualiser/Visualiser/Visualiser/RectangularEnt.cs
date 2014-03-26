@@ -10,67 +10,59 @@ namespace Visualiser
 {
     class RectangularEnt : SymEnt
     {
-        public UInt32 X1 { get; set; }
-        public UInt32 Y1 { get; set; }
+        private Point[]   _vertices;
 
-        public UInt32 X2 { get; set; }
-        public UInt32 Y2 { get; set; }
-
-        public UInt32 X3 { get; set; }
-        public UInt32 Y3 { get; set; }
-
-        public UInt32 X4 { get; set; }
-        public UInt32 Y4 { get; set; }
-
-        public RectangularEnt(UInt16 id, UInt32 weight, bool movable, UInt32 x1,
-            UInt32 y1, UInt32 x2, UInt32 y2, UInt32 x3, UInt32 y3, UInt32 x4, 
-            UInt32 y4) : base(id, SymEnt.CIRCLE_ID, weight, movable)
+        public RectangularEnt(UInt16 id, UInt32 weight, bool movable, double x1,
+            double y1, double x2, double y2, double x3, double y3, double x4, 
+            double y4) : this(id, weight, movable, new Point(x1, y1), new Point(x2, y2),
+            new Point(x3, y3), new Point(x4, y4))
         {
-            X1 = x1;
-            Y1 = y1;
+        }
 
-            X2 = x2;
-            Y2 = y2;
+        public RectangularEnt(UInt16 id, UInt32 weight, bool movable, 
+            Point p1, Point p2, Point p3, Point p4) :
+            base(id, SymEnt.CIRCLE_ID, weight, movable)
+        {
+            _vertices = new Point[4];
 
-            X3 = x3;
-            Y3 = y3;
-
-            X4 = x4;
-            Y4 = y4;
+            _vertices[0] = p1;
+            _vertices[1] = p2;
+            _vertices[2] = p3;
+            _vertices[3] = p4;
         }
 
         public override void AddToCanvas(Canvas canvas)
         {
             Line line1 = new Line() { 
-                X1 = this.X1,
-                Y1 = this.Y1,
-                X2 = this.X2,
-                Y2 = this.Y2,
+                X1 = this._vertices[0].X,
+                Y1 = this._vertices[0].Y,
+                X2 = this._vertices[1].X,
+                Y2 = this._vertices[1].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line2 = new Line()
             {
-                X1 = this.X2,
-                Y1 = this.Y2,
-                X2 = this.X3,
-                Y2 = this.Y3,
+                X1 = this._vertices[1].X,
+                Y1 = this._vertices[1].Y,
+                X2 = this._vertices[2].X,
+                Y2 = this._vertices[2].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line3 = new Line() { 
-                X1 = this.X3,
-                Y1 = this.Y3,
-                X2 = this.X4,
-                Y2 = this.Y4,
+                X1 = this._vertices[2].X,
+                Y1 = this._vertices[2].Y,
+                X2 = this._vertices[3].X,
+                Y2 = this._vertices[3].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
-            Line line4 = new Line() { 
-                X1 = this.X4,
-                Y1 = this.Y4,
-                X2 = this.X1,
-                Y2 = this.Y1,
+            Line line4 = new Line() {
+                X1 = this._vertices[3].X,
+                Y1 = this._vertices[3].Y,
+                X2 = this._vertices[0].X,
+                Y2 = this._vertices[0].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 

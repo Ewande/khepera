@@ -37,9 +37,9 @@ namespace Visualiser
         private static CircularEnt ReadCircle(BinaryReader reader, UInt16 entityID,
             bool movable, UInt32 weight)
         {
-            UInt32 x = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 radius = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            double x = reader.ReadDouble();
+            double y = reader.ReadDouble();
+            double radius = reader.ReadDouble();
 
             return new CircularEnt(entityID, weight, movable, x, y, radius);
         }
@@ -47,17 +47,17 @@ namespace Visualiser
         private static RectangularEnt ReadRectangle(BinaryReader reader, UInt16 entityID,
             bool movable, UInt32 weight)
         {
-            UInt32 x1 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y1 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            double x1 = reader.ReadDouble();
+            double y1 = reader.ReadDouble();
 
-            UInt32 x2 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y2 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            double x2 = reader.ReadDouble();
+            double y2 = reader.ReadDouble();
 
-            UInt32 x3 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y3 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            double x3 = reader.ReadDouble();
+            double y3 = reader.ReadDouble();
 
-            UInt32 x4 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            UInt32 y4 = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            double x4 = reader.ReadDouble();
+            double y4 = reader.ReadDouble();
 
             return new RectangularEnt(entityID, weight, movable, x1, y1, x2, y2,
                 x3, y3, x4, y4);

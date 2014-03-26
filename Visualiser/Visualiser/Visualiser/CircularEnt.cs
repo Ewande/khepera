@@ -10,11 +10,11 @@ namespace Visualiser
 {
     class CircularEnt : SymEnt
     {
-        public UInt32 X { get; set; }
-        public UInt32 Y { get; set; }
-        public UInt32 Radius { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Radius { get; set; }
 
-        public CircularEnt(UInt16 id, UInt32 weight, bool movable, UInt32 x, UInt32 y, UInt32 radius) : 
+        public CircularEnt(UInt16 id, UInt32 weight, bool movable, double x, double y, double radius) : 
             base(id, SymEnt.CIRCLE_ID, weight, movable)
         {
             Radius = radius;

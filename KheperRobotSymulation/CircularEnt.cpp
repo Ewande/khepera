@@ -2,8 +2,8 @@
 #include "RectangularEnt.h"
 #include <iostream>
 
-CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, uint32_t x, uint32_t y,
-	uint32_t radius) : SymEnt(id, SymEnt::CIRCLE, weight, movable), _radius(radius)
+CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y,
+	double radius) : SymEnt(id, SymEnt::CIRCLE, weight, movable), _radius(radius)
 {
 	_center = new Point(x, y);
 }
@@ -36,10 +36,10 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 				CircularEnt. If any of these distances is shorter than the radius, there is a collision.
 
 			*/
-			double x1 = vertices[i].dGetX(),				
-					y1 = vertices[i].dGetY();
-			double x2 = vertices[(i + 1) % 4].dGetX(),
-					y2 = vertices[(i + 1) % 4].dGetY();
+			double x1 = vertices[i].GetX(),				
+					y1 = vertices[i].GetY();
+			double x2 = vertices[(i + 1) % 4].GetX(),
+					y2 = vertices[(i + 1) % 4].GetY();
 
 			double u = ((_x - x1) * (x2 - x1) + (_y - y1) * (y2 - y1)) /
 					( (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) );
@@ -80,7 +80,7 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 	else if (shapeId == CIRCLE || shapeId == KHEPERA_ROBOT)
 	{
 		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
-		int radiusesSum = _radius + converted.GetRadius();
+		double radiusesSum = _radius + converted.GetRadius();
 		double centresDiff = _center->GetDistance(converted.GetCenter());
 
 		return radiusesSum - centresDiff + 1;
@@ -103,20 +103,29 @@ void CircularEnt::Translate(int x, int y)
 			 |                                WEIGHT                                        |
 			 |                                32 bytes                                      |
 			 +------------------------------------------------------------------------------+
+		   	 |                                                                              |
 			 |                                                                              |
 			 |                                X COORD                                       |
-			 |                                32 bytes                                      |
+			 |                                64 bytes                                      |
+			 |                                                                              |
+			 |                                                                              |
 			 +------------------------------------------------------------------------------+
 			 |                                                                              |
-			 |                                y COORD                                       |
-			 |                                32 bytes                                      |
+			 |                                                                              |
+			 |                                Y COORD                                       |
+			 |                                64 bytes                                      |
+			 |                                                                              |
+			 |                                                                              |
 			 +------------------------------------------------------------------------------+
 			 |                                                                              |
-			 |                                RADIUS                                        |
-			 |                                32 bytes                                      |
+			 |                                                                              |
+			 |                                 RADIUS                                       | 
+			 |                                64 bytes                                      |
+			 |                                                                              |
+			 |                                                                              |
 			 +------------------------------------------------------------------------------+
 
-			 DATA_LENGTH = 160 bytes
+			 DATA_LENGTH = 256 bytes
 
 */
 
@@ -126,7 +135,7 @@ void CircularEnt::Serialize(Buffer& buffer)
 	buffer.Pack(htons(_id));
 	buffer.Pack(_movable);
 	buffer.Pack(htonl(_weight));
-	buffer.Pack(htonl(GetX()));
-	buffer.Pack(htonl(GetY()));
-	buffer.Pack(htonl(_radius));
+	buffer.Pack(GetX());
+	buffer.Pack(GetY());
+	buffer.Pack(_radius);
 }

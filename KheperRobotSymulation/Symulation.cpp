@@ -77,7 +77,7 @@ void Symulation::CheckCollisions()
 				{
 					Point proj;
 
-					int collision_len = it1->second->CollisionLength(*(it2->second), proj);
+					double collision_len = it1->second->CollisionLength(*(it2->second), proj);
 					if (collision_len >= 0)
 					{
 						std::cout << "kolizja " << it1->second->GetID() << " i " << it2->second->GetID() << "\n";
@@ -108,8 +108,8 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 		double x_diff = center_fst.GetXDiff(center_snd);
 		double y_diff = center_fst.GetYDiff(center_snd);
 
-		int x_diff_sgn = x_diff / abs(x_diff);
-		int y_diff_sgn = y_diff / abs(y_diff);
+		double x_diff_sgn = x_diff / abs(x_diff);
+		double y_diff_sgn = y_diff / abs(y_diff);
 
 		double fst_x_trans = x_diff / centers_diff * collisionLen * fst_coeff;
 		double fst_y_trans = y_diff / centers_diff * collisionLen * fst_coeff;

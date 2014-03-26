@@ -1,7 +1,7 @@
 #include "KheperaRobot.h"
 
-KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, uint32_t x,
-	uint32_t y, uint32_t robotRadius, uint16_t wheelRadius, uint16_t wheelDistance,
+KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
+	double y, double robotRadius, uint16_t wheelRadius, uint16_t wheelDistance,
 	float directionAngle) : CircularEnt(id, weight, true, x, y, robotRadius),
 	_wheelRadius(wheelRadius), _wheelDistance(wheelDistance), _directionAngle(directionAngle)
 {
@@ -20,8 +20,8 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 	float deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
 	_directionAngle += deltaFI;
 	/* FIXME: _directionAngle is probably in radians, but i have to check it, when visualisuator will be able to show robot */
-	int deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(/*M_PI**/_directionAngle);
-	int deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(/*M_PI**/_directionAngle);
+	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(/*M_PI**/_directionAngle);
+	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(/*M_PI**/_directionAngle);
 
 	_center->Translate(deltaX, deltaY);
 	
@@ -39,16 +39,25 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 			|                                32 bytes                                      |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
+			|                                                                              |
 			|                                X COORD                                       |
-			|                                32 bytes                                      |
+			|                                64 bytes                                      |
+			|                                                                              |
+			|                                                                              |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
-			|                                y COORD                                       |
-			|                                32 bytes                                      |
+			|                                                                              |
+			|                                Y COORD                                       |
+			|                                64 bytes                                      |
+			|                                                                              |
+			|                                                                              |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
-			|                              ROBOT_RADIUS                                    |
-			|                                32 bytes                                      |
+			|                                                                              |
+			|                              ROBOT_RADIUS                                    | 
+			|                                64 bytes                                      |
+			|                                                                              |
+			|                                                                              |
 			+--------------------------------------+---------------------------------------+
 			|                                      |                                       |
 			|             WHEEL_RADIUS             |            WHEEL_DISTANCE             |
