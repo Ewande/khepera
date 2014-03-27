@@ -14,16 +14,17 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 	// here is more precise equation: http://robotics.stackexchange.com/a/1679
 
 	// angles of which wheels turned during deltaTime
-	int leftWheelTurnAngle = _leftMotor.GetSpeed() * deltaTime;
-	int rightWheelTurnAngle = _rightMotor.GetSpeed() * deltaTime;
+	double leftWheelTurnAngle = _leftMotor.GetSpeed() * deltaTime;
+	double rightWheelTurnAngle = _rightMotor.GetSpeed() * deltaTime;
 
-	float deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
+	double deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
 	_directionAngle += deltaFI;
 	/* FIXME: _directionAngle is probably in radians, but i have to check it, when visualisuator will be able to show robot */
-	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(/*M_PI**/_directionAngle);
-	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(/*M_PI**/_directionAngle);
+	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
+	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
-	_center->Translate(deltaX, deltaY);
+	// (0,0) is in upper left corner, so unlike in cartesian coordinates, if robot moves up, his Y cords decereases
+	_center->SetCords(_center->GetX() + deltaX, _center->GetY() - deltaY); 
 	
 }
 
@@ -64,11 +65,14 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 			|               16 bytes               |                16 bytes               |
 			+--------------------------------------+---------------------------------------+
 			|                                                                              |
-			|                                  DIRECTION_ANGLE                             |
-			|                                     32 bytes                                 |
+			|                                                                              |
+			|                                 DIRECTION_ANGLE                              |
+			|                                     64 bytes                                 |
+			|                                                                              |
+			|                                                                              |
 			+--------------------------------------+---------------------------------------+
 
-DATA_LENGTH = 256 bytes
+DATA_LENGTH = 352 bytes
 
 */
 
