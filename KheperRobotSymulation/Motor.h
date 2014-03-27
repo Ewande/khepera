@@ -6,11 +6,11 @@
 class Motor
 {
 	public:
-		int16_t GetSpeed() const { return _speed; } // returns speed in [ rad / sec ]
-		void SetSpeed(int16_t speed) { _speed = speed; }
+		double GetSpeed() const { return _speed; } // returns speed in [ rad / sec ]
+		void SetSpeed(double speed) { _speed = speed; }
 
 	protected:
-		int16_t _speed; // [ rad / sec ]
+		double  _speed; // [ rad / sec ]
 };
 
 #endif

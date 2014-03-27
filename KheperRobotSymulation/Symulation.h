@@ -22,7 +22,7 @@ class Symulation
 
 		void AddEntity(SymEnt* newEntity);
 		void Start(); // starts symulation
-		void Update(unsigned int deltaTime); // deltaTime in [ sec ]
+		void Update(double deltaTime); // deltaTime in [ sec ]
 
 		void CheckCollisions();
 		void removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, Point& proj);

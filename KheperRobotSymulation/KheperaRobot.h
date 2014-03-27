@@ -13,14 +13,14 @@ class KheperaRobot : public CircularEnt
 			double y, double robotRadius, uint16_t wheelRadius,
 			uint16_t wheelDistance, float directionAngle);
 
-		void SetRightMotorSpeed(int16_t speed) { _rightMotor.SetSpeed(speed); }
-		void SetLeftMotorSpeed(int16_t speed) { _leftMotor.SetSpeed(speed); }
+		void SetRightMotorSpeed(double speed) { _rightMotor.SetSpeed(speed); }
+		void SetLeftMotorSpeed(double speed) { _leftMotor.SetSpeed(speed); }
 
-		int16_t GetRightMotorSpeed() const { return _rightMotor.GetSpeed(); }
-		int16_t GetLeftMotorSpeed() const { return _leftMotor.GetSpeed(); }
+		double GetRightMotorSpeed() const { return _rightMotor.GetSpeed(); }
+		double GetLeftMotorSpeed() const { return _leftMotor.GetSpeed(); }
 
 		// deltaTime in [ sec ]
-		void UpdatePosition(unsigned int deltaTime);
+		void UpdatePosition(double deltaTime);
 
 		virtual void Serialize(Buffer& buffer);
 
@@ -29,7 +29,7 @@ class KheperaRobot : public CircularEnt
 		uint16_t    _wheelRadius;
 		uint16_t    _wheelDistance;
 
-		float       _directionAngle; // angle beetween x axis and robot heading direction (don't know if in radians or degrees)
+		double       _directionAngle; // angle beetween x axis and robot heading direction (don't know if in radians or degrees)
 
 		Motor       _leftMotor;
 		Motor       _rightMotor;

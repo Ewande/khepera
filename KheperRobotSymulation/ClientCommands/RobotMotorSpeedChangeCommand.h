@@ -6,16 +6,20 @@
 #include "../KheperaRobot.h"
 
 /*
-                             Serialization format (all numbers in network byte order)
+          Serialization format (integers in network-byte-order, doubles and floats in host-byte-order)
+
              +-------------------+----------------------------------------+-------------------+
              |                   |                                        |                   |
              |   COMMAND_ID      |                 ROBOT_ID               |     ENGINE_ID     |
 			 |     1 byte        |                  2 bytes               |      1 byte       |
-			 +-----------------------------------------+------------------+-------------------+
-			 |                                         |
-			 |                  NEW_SPEED              |
-			 |                   2 bytes               |
-			 +-----------------------------------------+
+			 +--------------------------------------------------------------------------------+
+			 |                                                                                |
+			 |                                                                                |
+			 |                             NEW_SPEED_VALUE                                    | 
+			 |                                64 bytes                                        |
+			 |                                                                                |
+			 |                                                                                |
+			 +--------------------------------------------------------------------------------+
 */
 
 class RobotMotorSpeedChangeCommand : public ClientCommand

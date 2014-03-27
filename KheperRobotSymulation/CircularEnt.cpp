@@ -93,7 +93,8 @@ void CircularEnt::Translate(int x, int y)
 }
 
 /*
-                             Serialization format (all numbers in network byte order)
+		 Serialization format (integers in network-byte-order, doubles and floats in host-byte-order)
+
              +-------------------+--------------------------------------+-------------------+
              |                   |                                      |                   |
              |   SHAPE_ID        |              ENTITY_ID               |    MOVABLE        |

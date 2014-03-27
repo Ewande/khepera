@@ -8,7 +8,7 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	_shapeID = SymEnt::KHEPERA_ROBOT;
 }
 
-void KheperaRobot::UpdatePosition(unsigned int deltaTime)
+void KheperaRobot::UpdatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
 	// here is more precise equation: http://robotics.stackexchange.com/a/1679
@@ -29,7 +29,8 @@ void KheperaRobot::UpdatePosition(unsigned int deltaTime)
 }
 
 /*
-		Serialization format (all numbers in network byte order)
+		Serialization format (integers in network-byte-order, doubles and floats in host-byte-order)
+
 			+-------------------+--------------------------------------+-------------------+
 			|                   |                                      |                   |
 			|   SHAPE_ID        |              ENTITY_ID               |    MOVABLE        |

@@ -46,7 +46,7 @@ void Symulation::Start()
 		static_cast<LPVOID>(this), 0, NULL);
 }
 
-void Symulation::Update(unsigned int deltaTime)
+void Symulation::Update(double deltaTime)
 {
 	std::map<uint16_t, SymEnt*>::iterator it = _entities.begin();
 

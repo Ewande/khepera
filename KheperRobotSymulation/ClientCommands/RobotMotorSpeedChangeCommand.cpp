@@ -13,7 +13,7 @@ uint16_t RobotMotorSpeedChangeCommand::Execute(Symulation* sym, SOCKET sock)
 {
 	uint16_t robotID;
 	uint8_t  motorID;
-	int16_t  newSpeed;
+	double  newSpeed;
 
 	recv(sock, reinterpret_cast<char*>(&robotID), sizeof(robotID), 0);
 	robotID = ntohs(robotID);
@@ -21,7 +21,6 @@ uint16_t RobotMotorSpeedChangeCommand::Execute(Symulation* sym, SOCKET sock)
 	recv(sock, reinterpret_cast<char*>(&motorID), sizeof(motorID), 0);
 
 	recv(sock, reinterpret_cast<char*>(&newSpeed), sizeof(newSpeed), 0);
-	newSpeed = ntohs(newSpeed);
 
 	SymEnt* entity = sym->GetEntity(robotID);
 	if (entity != NULL)
