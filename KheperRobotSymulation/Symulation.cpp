@@ -154,28 +154,6 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 }
 
 
-/*
-					Serialization format (all numbers in network byte order)
-			+-------------------+--------------------------------------+-------------------+
-			|                                                                              |
-			|                              WORLD_WIDTH                                     |
-			|                                32 bytes                                      |
-			+------------------------------------------------------------------------------+
-			|                                                                              |
-			|                              WORLD_HEIGHT                                    |
-			|                                32 bytes                                      |
-			+------------------------------------------------------------------------------+
-			|                                                                              |
-			|                                  TIME                                        |
-			|                                32 bytes                                      |
-			+-------------------+--------------------------------------+-------------------+
-			|                                      |                                       |
-			|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
-			|               16 bytes               |              variable length          |
-			+--------------------------------------+---------------------------------------+
-
-*/
-
 SymEnt* Symulation::GetEntity(uint16_t id)
 {
 	std::map<uint16_t, SymEnt*>::iterator it = _entities.find(id);
@@ -185,6 +163,28 @@ SymEnt* Symulation::GetEntity(uint16_t id)
 	else
 		return NULL;
 }
+
+/*
+		Serialization format (all numbers in network byte order)
+	+-------------------+--------------------------------------+-------------------+
+	|                                                                              |
+	|                              WORLD_WIDTH                                     |
+	|                                32 bytes                                      |
+	+------------------------------------------------------------------------------+
+	|                                                                              |
+	|                              WORLD_HEIGHT                                    |
+	|                                32 bytes                                      |
+	+------------------------------------------------------------------------------+
+	|                                                                              |
+	|                                  TIME                                        |
+	|                                32 bytes                                      |
+	+-------------------+--------------------------------------+-------------------+
+	|                                      |                                       |
+	|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
+	|               16 bytes               |              variable length          |
+	+--------------------------------------+---------------------------------------+
+
+*/
 
 void Symulation::Serialize(Buffer& buffer) const
 {
@@ -198,6 +198,24 @@ void Symulation::Serialize(Buffer& buffer) const
 	while (it != _entities.end())
 	{
 		it->second->Serialize(buffer);
+		it++;
+	}
+}
+
+void Symulation::Serialize(std::ofstream& file) const
+{
+	file.write(reinterpret_cast<const char*>(&_worldWidth), sizeof(_worldWidth));
+	file.write(reinterpret_cast<const char*>(&_worldHeight), sizeof(_worldHeight));
+	file.write(reinterpret_cast<const char*>(&_time), sizeof(_time)); // do we have to save time to file?
+	
+	uint16_t size = _entities.size();
+	file.write(reinterpret_cast<const char*>(&size), sizeof(size));
+
+	std::map<uint16_t, SymEnt*>::const_iterator it = _entities.begin();
+
+	while (it != _entities.end())
+	{
+		it->second->Serialize(file);
 		it++;
 	}
 }

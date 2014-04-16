@@ -29,6 +29,11 @@ int main(int argc, char** argv)
 	symulation->AddEntity(robot);
 	symulation->AddEntity(rotatedRect);
 
+	std::ofstream  file("test.wld", std::ios::out | std::ios::binary | std::ios::trunc);
+	symulation->Serialize(file);
+	file.close();
+
+
 	symulation->Serialize(b2);
 	for (int i = 0; i < b2.GetLength(); i++)
 	{

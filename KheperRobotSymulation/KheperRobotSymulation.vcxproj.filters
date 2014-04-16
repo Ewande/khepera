@@ -12,6 +12,7 @@
     <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
       <Filter>ClientCommands</Filter>
     </ClCompile>
+    <ClCompile Include="SymEnt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />

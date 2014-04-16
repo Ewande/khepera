@@ -23,6 +23,7 @@ class KheperaRobot : public CircularEnt
 		void UpdatePosition(double deltaTime);
 
 		virtual void Serialize(Buffer& buffer);
+		virtual void Serialize(std::ofstream& file);
 
 
 	protected:

@@ -80,7 +80,19 @@ DATA_LENGTH = 352 bytes
 void KheperaRobot::Serialize(Buffer& buffer)
 {
 	CircularEnt::Serialize(buffer);
+
 	buffer.Pack(htons(_wheelRadius));
 	buffer.Pack(htons(_wheelDistance));
 	buffer.Pack(_directionAngle);
+}
+
+void KheperaRobot::Serialize(std::ofstream& file)
+{
+	CircularEnt::Serialize(file);
+
+	file.write(reinterpret_cast<const char*>(&_wheelRadius), sizeof(_wheelRadius));
+	file.write(reinterpret_cast<const char*>(&_wheelDistance), sizeof(_wheelDistance));
+	file.write(reinterpret_cast<const char*>(&_directionAngle), sizeof(_directionAngle));
+
+	/* TODO: Serialize information about motors(probably about their type) */
 }

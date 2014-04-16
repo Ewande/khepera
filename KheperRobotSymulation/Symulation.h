@@ -37,6 +37,7 @@ class Symulation
 		SymEnt* GetEntity(uint16_t id);
 
 		void Serialize(Buffer& buffer) const;
+		void Serialize(std::ofstream& file) const;
 	private:
 		std::map<uint16_t, SymEnt*>   _entities;
 		uint32_t                      _worldWidth;

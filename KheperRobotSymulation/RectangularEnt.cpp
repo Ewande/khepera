@@ -122,3 +122,17 @@ void RectangularEnt::Serialize(Buffer& buffer)
 		buffer.Pack(_vertices[i].GetY());
 	}
 }
+
+void RectangularEnt::Serialize(std::ofstream& file)
+{
+	SymEnt::Serialize(file);
+
+	for (int i = 0; i < 4; i++)
+	{
+		double tmp = _vertices[i].GetX();
+		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
+
+		tmp = _vertices[i].GetY();
+		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
+	}
+}

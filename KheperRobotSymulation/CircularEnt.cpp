@@ -140,3 +140,14 @@ void CircularEnt::Serialize(Buffer& buffer)
 	buffer.Pack(GetY());
 	buffer.Pack(_radius);
 }
+
+void CircularEnt::Serialize(std::ofstream& file)
+{
+	double x = GetX();
+	double y = GetY();
+
+	SymEnt::Serialize(file);
+	file.write(reinterpret_cast<const char*>(&x), sizeof(x));
+	file.write(reinterpret_cast<const char*>(&y), sizeof(y));
+	file.write(reinterpret_cast<const char*>(&_radius), sizeof(_radius));
+}
