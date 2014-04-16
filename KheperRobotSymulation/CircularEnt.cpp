@@ -132,10 +132,8 @@ void CircularEnt::Translate(int x, int y)
 
 void CircularEnt::Serialize(Buffer& buffer)
 {
-	buffer.Pack(_shapeID);
-	buffer.Pack(htons(_id));
-	buffer.Pack(_movable);
-	buffer.Pack(htonl(_weight));
+	SymEnt::Serialize(buffer);
+
 	buffer.Pack(GetX());
 	buffer.Pack(GetY());
 	buffer.Pack(_radius);

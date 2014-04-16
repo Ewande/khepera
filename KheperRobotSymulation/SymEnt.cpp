@@ -19,6 +19,14 @@
 
 */
 
+void SymEnt::Serialize(Buffer& buffer)
+{
+	buffer.Pack(_shapeID);
+	buffer.Pack(htons(_id));
+	buffer.Pack(_movable);
+	buffer.Pack(htonl(_weight));
+}
+
 void SymEnt::Serialize(std::ofstream& file)
 {
 	file.write(reinterpret_cast<const char*>(&_shapeID), sizeof(_shapeID));
