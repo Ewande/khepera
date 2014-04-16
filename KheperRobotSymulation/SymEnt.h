@@ -20,6 +20,8 @@ class SymEnt
 		SymEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
 			_weight(weight), _movable(movable) {}
 
+		virtual ~SymEnt() {}
+
 		uint16_t GetID() const { return _id; }
 		uint8_t GetShapeID() const { return _shapeID; }
 		uint32_t GetWeight() const { return _weight; }
