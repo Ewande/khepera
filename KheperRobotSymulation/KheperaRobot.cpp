@@ -8,6 +8,15 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	_shapeID = SymEnt::KHEPERA_ROBOT;
 }
 
+KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
+{
+	_shapeID = SymEnt::KHEPERA_ROBOT;
+
+	file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
+	file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
+	file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
+}
+
 void KheperaRobot::UpdatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30

@@ -19,6 +19,7 @@ class SymEnt
 
 		SymEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
 			_weight(weight), _movable(movable) {}
+		SymEnt(std::ifstream& file, uint8_t shapeID);
 
 		virtual ~SymEnt() {}
 

@@ -6,19 +6,16 @@
 
 int main(int argc, char** argv)
 {
-	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
+	const int symulationDelay = 100; // in [ msec ]
+
+/*	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 30, 50);
 
 	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 250, 30);
 	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 15, 2, 10, 0);
 	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 130, 130, 150, 150, 130, 170);
-	Buffer b2;
-	const int symulationDelay = 100; // in [ msec ]
 
 	Symulation* symulation = new Symulation(200, 400);
-	CommunicationManager* commMan = new CommunicationManager(symulation);
-
-	symulation->SetCommunicationManager(commMan);
 
 	robot->SetLeftMotorSpeed(0);
 	robot->SetRightMotorSpeed(0);
@@ -31,9 +28,14 @@ int main(int argc, char** argv)
 
 	std::ofstream  file("test.wld", std::ios::out | std::ios::binary | std::ios::trunc);
 	symulation->Serialize(file);
-	file.close();
+	file.close(); */
+
+	std::ifstream worldFile("test.wld", std::ios::in | std::ios::binary);
+	Symulation* symulation = new Symulation(worldFile);
+	worldFile.close();
 
 
+	Buffer b2;
 	symulation->Serialize(b2);
 	for (int i = 0; i < b2.GetLength(); i++)
 	{
@@ -41,6 +43,10 @@ int main(int argc, char** argv)
 		if ((i + 1) % 32 == 0)
 			std::cout << std::endl;
 	}
+
+	CommunicationManager* commMan = new CommunicationManager(symulation);
+
+	symulation->SetCommunicationManager(commMan);
 
 	// init WINSock
 	WSADATA wsaData;

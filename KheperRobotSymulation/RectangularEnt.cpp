@@ -21,6 +21,19 @@ RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, doubl
 	_vertices[3] = Point(x4, y4);
 }
 
+RectangularEnt::RectangularEnt(std::ifstream& file) : SymEnt(file, SymEnt::RECTANGLE)
+{
+	_vertices = new Point[4];
+
+	for (int i = 0; i < 4; i++)
+	{
+		double x, y;
+		file.read(reinterpret_cast<char*>(&x), sizeof(x));
+		file.read(reinterpret_cast<char*>(&y), sizeof(y));
+		_vertices[i] = Point(x, y);
+	}
+}
+
 double RectangularEnt::CollisionLength(SymEnt& other, Point& proj)
 {
 	int other_shape = other.GetShapeID();

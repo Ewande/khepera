@@ -6,6 +6,8 @@
 #include <map>
 
 #include "SymEnt.h"
+#include "RectangularEnt.h"
+#include "CircularEnt.h"
 #include "KheperaRobot.h"
 #include "Buffer.h"
 #include "CommunicationManager.h"
@@ -18,6 +20,7 @@ class Symulation
 		friend DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData);
 
 		Symulation(unsigned int worldWidth, unsigned int worldHeight);
+		Symulation(std::ifstream& file);
 		~Symulation();
 
 		void AddEntity(SymEnt* newEntity);

@@ -10,6 +10,7 @@ class RectangularEnt : public SymEnt
 		// x, y -> coord of left-top corner
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double width, double height);
+		RectangularEnt(std::ifstream& file);
 
 		// points should be in clockwise order
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x1,

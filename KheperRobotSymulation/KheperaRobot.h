@@ -12,6 +12,7 @@ class KheperaRobot : public CircularEnt
 		KheperaRobot(uint16_t id, uint32_t weight, double x,
 			double y, double robotRadius, uint16_t wheelRadius,
 			uint16_t wheelDistance, float directionAngle);
+		KheperaRobot(std::ifstream& file);
 
 		void SetRightMotorSpeed(double speed) { _rightMotor.SetSpeed(speed); }
 		void SetLeftMotorSpeed(double speed) { _leftMotor.SetSpeed(speed); }

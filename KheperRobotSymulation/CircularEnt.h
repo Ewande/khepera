@@ -9,6 +9,7 @@ class CircularEnt : public SymEnt
 	public:
 		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double radius);
+		CircularEnt(std::ifstream& file);
 		virtual ~CircularEnt() { delete _center; }
 
 

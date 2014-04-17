@@ -17,6 +17,36 @@ Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight) :
 	InitializeCriticalSection(&_criticalSection);
 }
 
+Symulation::Symulation(std::ifstream& file) : _isRunning(false),
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
+{
+	uint16_t numberOfEntities;
+
+	file.read(reinterpret_cast<char*>(&_worldWidth), sizeof(_worldWidth));
+	file.read(reinterpret_cast<char*>(&_worldHeight), sizeof(_worldHeight));
+	file.read(reinterpret_cast<char*>(&_time), sizeof(_time));
+	file.read(reinterpret_cast<char*>(&numberOfEntities), sizeof(numberOfEntities));
+
+	for (uint16_t i = 0; i < numberOfEntities; i++)
+	{
+		uint8_t shapeID;
+		file.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
+		SymEnt* newEntity;
+
+		switch (shapeID)
+		{
+			case SymEnt::CIRCLE: newEntity = new CircularEnt(file); break;
+			case SymEnt::RECTANGLE: newEntity = new RectangularEnt(file); break;
+			case SymEnt::KHEPERA_ROBOT: newEntity = new KheperaRobot(file); break;
+
+			default: newEntity = NULL; /* TODO: Exception handling */
+		}
+		AddEntity(newEntity);
+	}
+
+	InitializeCriticalSection(&_criticalSection);
+}
+
 Symulation::~Symulation()
 {
 	_isRunning = false; // to stop _symulationThreadHandle
