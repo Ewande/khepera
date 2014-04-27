@@ -3,6 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <StackPanel Orientation="Vertical">
+            <TextBlock x:Name="txt" Text="Position: " MouseDown="OnMouseDown" Height="Auto" />
+            <Canvas x:Name="canvas" Height="300" Width="500" MouseLeftButtonDown="OnMouseDown"  MouseLeftButtonUp="OnMouseUp" Background="Transparent">
+            </Canvas>
+        </StackPanel>
     </Grid>
 </Window>
