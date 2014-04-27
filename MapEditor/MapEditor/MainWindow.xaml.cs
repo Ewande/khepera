@@ -30,7 +30,6 @@ namespace MapEditor
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             _startPoint = Mouse.GetPosition(canvas);
-            txt.Text = "Position: (" + _startPoint.X + ", " + _startPoint.Y + ")";
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -43,7 +42,6 @@ namespace MapEditor
             int rightX = Math.Max((int)_startPoint.X, (int)endPoint.X);
             int downY = Math.Max((int)_startPoint.Y, (int)endPoint.Y);
 
-            txt.Text = "upper left: (" + leftX + ", " + upY + "), bottom right: (" + rightX + ", " + downY + ")";
             RectangularEnt newEnt = new RectangularEnt(1, 666, false, leftX, upY, rightX, upY, rightX, downY, leftX, downY);
 
             newEnt.AddToCanvas(canvas);
