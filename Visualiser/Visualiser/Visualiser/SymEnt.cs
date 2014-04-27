@@ -13,10 +13,10 @@ namespace Visualiser
         public const byte CIRCLE_ID = 1;
         public const byte KHEPERA_ROBOT_ID = 2;
 
-        public UInt16 ID { get; private set; }
-        public byte ShapeID { get; private set; }
-        public UInt32 Weight { get; private set; }
-        public bool Movable { get; private set; }
+        public UInt16 ID { get; protected set; }
+        public byte ShapeID { get; protected set; }
+        public UInt32 Weight { get; protected set; }
+        public bool Movable { get; protected set; }
 
         public SymEnt(UInt16 id, byte shapeID, UInt32 weight, bool movable)
         {

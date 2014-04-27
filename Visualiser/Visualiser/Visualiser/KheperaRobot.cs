@@ -19,6 +19,7 @@ namespace Visualiser
             WheelRaduis = wheelRadius;
             WheelDistance = wheelDistance;
             DirectionAngle = directionAngle;
+            ShapeID = SymEnt.KHEPERA_ROBOT_ID;
         }
 
         /* TODO: Change drawing procedure, so that user will be able to distinguish betwin robots and static circles */
