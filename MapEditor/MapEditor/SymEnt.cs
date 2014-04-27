@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,6 @@ namespace MapEditor
         }
 
         public abstract void AddToCanvas(Canvas canvas); // Adds this object to canvas (System.Windows.Controls.Canvas)
+        public abstract void SaveToFile(BinaryWriter writer); // save this object to file containing world description
     }
 }

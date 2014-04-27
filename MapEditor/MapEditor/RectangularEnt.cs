@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace MapEditor
 
         public RectangularEnt(UInt16 id, UInt32 weight, bool movable,
             Point p1, Point p2, Point p3, Point p4) :
-            base(id, SymEnt.CIRCLE_ID, weight, movable)
+            base(id, SymEnt.RECTANGLE_ID, weight, movable)
         {
             _vertices = new Point[4];
 
@@ -75,6 +76,20 @@ namespace MapEditor
             canvas.Children.Add(line2);
             canvas.Children.Add(line3);
             canvas.Children.Add(line4);
+        }
+
+        public override void SaveToFile(BinaryWriter writer)
+        {
+            writer.Write(ShapeID);
+            writer.Write(ID);
+            writer.Write((byte) (Movable ? 1 : 0));
+            writer.Write(Weight);
+
+            for (int i = 0; i < 4; i++)
+            {
+                writer.Write(_vertices[i].X);
+                writer.Write(_vertices[i].Y);
+            }
         }
     }
 }
