@@ -53,9 +53,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddCommand.cs" />
+    <Compile Include="AddRectangularEntCommand.cs" />
+    <Compile Include="AddRectangularEntDialog.xaml.cs">
+      <DependentUpon>AddRectangularEntDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RectangularEnt.cs" />
     <Compile Include="SymEnt.cs" />
     <Compile Include="SymulationWorld.cs" />
+    <Page Include="AddRectangularEntDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

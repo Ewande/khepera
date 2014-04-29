@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace MapEditor
 {
-    abstract class SymEnt
+    public abstract class SymEnt
     {
         public const byte RECTANGLE_ID = 0;
         public const byte CIRCLE_ID = 1;

@@ -23,12 +23,14 @@ namespace MapEditor
         private Point _startPoint;
         private SymulationWorld _world;
         private UInt16 _nextID;
+        private AddCommand _activeCommand;
 
         public MainWindow()
         {
             InitializeComponent();
             _world = new SymulationWorld(500, 500);
             _nextID = 0;
+            _activeCommand = new AddRectangularEntCommand();
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -46,10 +48,14 @@ namespace MapEditor
             int rightX = Math.Max((int)_startPoint.X, (int)endPoint.X);
             int downY = Math.Max((int)_startPoint.Y, (int)endPoint.Y);
 
-            RectangularEnt newEnt = new RectangularEnt(_nextID++, 666, false, leftX, upY, rightX, upY, rightX, downY, leftX, downY);
+            SymEnt newEnt = _activeCommand.Exectue(leftX, rightX, upY, downY, _nextID);
 
-            newEnt.AddToCanvas(canvas);
-            _world.AddEnt(newEnt);
+            if (newEnt != null)
+            {
+                newEnt.AddToCanvas(canvas);
+                _world.AddEnt(newEnt);
+                ++_nextID;
+            }
         }
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
