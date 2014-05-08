@@ -53,11 +53,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AddCircularEntCommand.cs" />
     <Compile Include="AddCommand.cs" />
     <Compile Include="AddRectangularEntCommand.cs" />
     <Compile Include="AddRectangularEntDialog.xaml.cs">
       <DependentUpon>AddRectangularEntDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CircularEnt.cs" />
     <Compile Include="RectangularEnt.cs" />
     <Compile Include="SelectionRegion.cs" />
     <Compile Include="SymEnt.cs" />

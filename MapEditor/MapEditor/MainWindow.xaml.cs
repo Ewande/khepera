@@ -90,6 +90,16 @@ namespace MapEditor
             }
         }
 
+        private void EllipseButtonClick(object sender, RoutedEventArgs e)
+        {
+            _activeCommand = new AddCircularEntCommand();
+        }
+
+        private void RectangleButtonClick(object sender, RoutedEventArgs e)
+        {
+            _activeCommand = new AddRectangularEntCommand();
+        }
+
 
     }
 }
