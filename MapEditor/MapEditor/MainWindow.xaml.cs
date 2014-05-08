@@ -24,6 +24,8 @@ namespace MapEditor
         private SymulationWorld _world;
         private UInt16 _nextID;
         private AddCommand _activeCommand;
+        private bool _mouseButtonDown;
+        private SelectionRegion _selectionRegion;
 
         public MainWindow()
         {
@@ -31,36 +33,61 @@ namespace MapEditor
             _world = new SymulationWorld(500, 500);
             _nextID = 0;
             _activeCommand = new AddRectangularEntCommand();
+            _mouseButtonDown = false;
+            _selectionRegion = new SelectionRegion(canvas);
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             _startPoint = Mouse.GetPosition(canvas);
+            _mouseButtonDown = true;
         }
 
         private void OnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            Point endPoint = Mouse.GetPosition(canvas);
-
-            int leftX = Math.Min((int)_startPoint.X, (int)endPoint.X);
-            int upY = Math.Min((int)_startPoint.Y, (int)endPoint.Y);
-
-            int rightX = Math.Max((int)_startPoint.X, (int)endPoint.X);
-            int downY = Math.Max((int)_startPoint.Y, (int)endPoint.Y);
-
-            SymEnt newEnt = _activeCommand.Exectue(leftX, rightX, upY, downY, _nextID);
-
-            if (newEnt != null)
+            if (_mouseButtonDown)
             {
-                newEnt.AddToCanvas(canvas);
-                _world.AddEnt(newEnt);
-                ++_nextID;
+                _mouseButtonDown = false;
+                Point endPoint = Mouse.GetPosition(canvas);
+
+                int leftX = Math.Min((int)_startPoint.X, (int)endPoint.X);
+                int upY = Math.Min((int)_startPoint.Y, (int)endPoint.Y);
+
+                int rightX = Math.Max((int)_startPoint.X, (int)endPoint.X);
+                int downY = Math.Max((int)_startPoint.Y, (int)endPoint.Y);
+
+                SymEnt newEnt = _activeCommand.Exectue(leftX, rightX, upY, downY, _nextID);
+
+                if (newEnt != null)
+                {
+                    _world.AddEnt(newEnt);
+                    _world.Redraw(canvas);
+                    ++_nextID;
+                }
+
+                _selectionRegion.Reset();
             }
         }
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
             _world.SaveToFile("world.wld");
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_mouseButtonDown)
+            {
+                Point endPoint = Mouse.GetPosition(canvas);
+
+                int leftX = Math.Min((int)_startPoint.X, (int)endPoint.X);
+                int upperY = Math.Min((int)_startPoint.Y, (int)endPoint.Y);
+
+                int rightX = Math.Max((int)_startPoint.X, (int)endPoint.X);
+                int bottomY = Math.Max((int)_startPoint.Y, (int)endPoint.Y);
+
+                _selectionRegion.Update(leftX, rightX, upperY, bottomY);
+            }
         }
 
 

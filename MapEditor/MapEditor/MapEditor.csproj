@@ -59,6 +59,7 @@
       <DependentUpon>AddRectangularEntDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="RectangularEnt.cs" />
+    <Compile Include="SelectionRegion.cs" />
     <Compile Include="SymEnt.cs" />
     <Compile Include="SymulationWorld.cs" />
     <Page Include="AddRectangularEntDialog.xaml">

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MapEditor
 {
@@ -37,6 +38,12 @@ namespace MapEditor
 
             foreach (SymEnt ent in _entities)
                 ent.SaveToFile(writer);
+        }
+
+        public void Redraw(Canvas c)
+        {
+            foreach (SymEnt ent in _entities)
+                ent.AddToCanvas(c);
         }
 
         private List<SymEnt>    _entities;

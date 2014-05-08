@@ -4,7 +4,7 @@
         Title="MainWindow" Height="400" Width="600">
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <Canvas x:Name="canvas" Width="520" MouseLeftButtonDown="OnMouseDown"  MouseLeftButtonUp="OnMouseUp" Background="Transparent"/>
+            <Canvas x:Name="canvas" Width="520" MouseLeftButtonDown="OnMouseDown"  MouseLeftButtonUp="OnMouseUp" MouseMove="OnMouseMove" Background="Transparent"/>
             <Line Stroke="Black" StrokeThickness="3" />
             <StackPanel Orientation="Vertical" Margin="10,0,0,0">
                 <RadioButton Style="{StaticResource {x:Type ToggleButton}}" Margin="0,10,0,0">
