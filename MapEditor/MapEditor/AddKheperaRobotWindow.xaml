@@ -1,0 +1,40 @@
+﻿<Window x:Class="MapEditor.AddKheperaRobotWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AddKheperaRobotWindow" Height="300" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="Entity Id" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBlock x:Name="IdLabel" Grid.Column="1" Grid.Row="0" Text="ID" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="Weight" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="weightEdit" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="1" />
+
+        <TextBlock Grid.Column="0" Grid.Row="2" Text="Wheel radius" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="wheelRadiusEdit" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="2" />
+        
+        <TextBlock Grid.Column="0" Grid.Row="3" Text="Wheel distance" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="wheelDistanceEdit" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="5" />
+
+        <TextBlock Grid.Column="0" Grid.Row="4" Text="Starting angle" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <TextBox x:Name="angleEdit" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="0.0" />
+
+        <CheckBox x:Name="movableCheckbox" Content="Movable" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+        <Button Content="Add" Grid.Column="0" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" Click="AddButtonClick" />
+        <Button Content="Cancel" Grid.Column="1" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+</Window>

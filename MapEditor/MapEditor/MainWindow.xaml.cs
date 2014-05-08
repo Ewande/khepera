@@ -100,6 +100,11 @@ namespace MapEditor
             _activeCommand = new AddRectangularEntCommand();
         }
 
+        private void RobotButtonClick(object sender, RoutedEventArgs e)
+        {
+            _activeCommand = new AddKheperaRobotCommand();
+        }
+
 
     }
 }
