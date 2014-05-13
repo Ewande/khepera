@@ -71,7 +71,15 @@ namespace MapEditor
 
         private void OnSaveClick(object sender, RoutedEventArgs e)
         {
-            _world.SaveToFile("world.wld");
+
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.DefaultExt = ".wld";
+            dlg.Filter = "World description file (.wld)|*.wld";
+            if (dlg.ShowDialog() == true)
+            {
+                string filename = dlg.FileName;
+                _world.SaveToFile(filename);
+            }
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
