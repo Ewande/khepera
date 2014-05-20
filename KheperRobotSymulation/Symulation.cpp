@@ -10,15 +10,19 @@ DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData)
 	return 0; // unused thread return value
 }
 
-Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight) :
+Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight,
+	double symulationStep , int symulationDelay) :
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
-	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE), _symulationStep(symulationStep),
+	_symulationDelay(symulationDelay)
 {
 	InitializeCriticalSection(&_criticalSection);
 }
 
-Symulation::Symulation(std::ifstream& file) : _isRunning(false),
-	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
+Symulation::Symulation(std::ifstream& file, double symulationStep,
+	int symulationDelay) : _isRunning(false),
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE), _symulationStep(symulationStep),
+	_symulationDelay(symulationDelay)
 {
 	uint16_t numberOfEntities;
 
@@ -258,11 +262,11 @@ void Symulation::Run()
 		Lock();
 
 		_commMan->SendWorldDescriptionToVisualisers();
-		Update(1);
+		Update(_symulationStep);
 		std::cout << "RUNNING: " <<  i++ << std::endl;
 
 		Unlock();
-		Sleep(125);
+		Sleep(_symulationDelay);
 	}
 
 	std::cout << "THREAD END" << std::endl;
