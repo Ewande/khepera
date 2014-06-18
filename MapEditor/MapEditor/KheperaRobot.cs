@@ -32,6 +32,6 @@ namespace MapEditor
             writer.Write(DirectionAngle);
         }
 
-        /* TODO: Change drawing procedure, so that user will be able to distinguish betwin robots and static circles */
+        /* TODO: Change drawing procedure, so that user will be able to distinguish between robots and static circles */
     }
 }
