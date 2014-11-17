@@ -26,25 +26,61 @@ namespace Visualiser
 
         public override void AddToCanvas(Canvas canvas)
         {
-            Ellipse result = new Ellipse();
+            base.AddToCanvas(canvas);
+            double shiftedX = HorShift == 0 ? X : HorShift - X;
+            double shiftedY = VertShift == 0 ? Y : VertShift - Y;
 
-            result.Width = Radius * 2;
-            result.Height = Radius * 2;
-            result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
+            // coordinates of vector, if we add this vector to tmpX and tmpY we have point on robot circle
+            // line coming through this point and robot center goes at angle of DirectionAngle
+            double directionVectorX = Math.Cos(DirectionAngle) * Radius;
+            double directionVectorY = Math.Sin(DirectionAngle) * Radius;
 
-            double bottLeftX = HorShift == 0 ? X - Radius : HorShift - X + Radius;
-            double bottLeftY = VertShift == 0 ? Y - Radius : VertShift - Y - Radius;
+            // scale vector, to be the same length, as half of wheel distance
+            double prop = Radius / (WheelDistance * 2);
+            directionVectorX *= prop;
+            directionVectorY *= prop;
 
-            Canvas.SetLeft(result, bottLeftX);
-            Canvas.SetTop(result, bottLeftY);
+            // add vector perpendicular to directionVector going to the left
+            double leftWheelX = shiftedX - directionVectorY;
+            double leftWheelY = shiftedY - directionVectorX;
 
-            canvas.Children.Add(result);
+            // add vector perpendicular  to directionVector going to the right
+            double rightWheelX = shiftedX + directionVectorY;
+            double rightWheelY = shiftedY + directionVectorX;
 
-            // draw wheels directed in robot heading direction 
+            double proportion = WheelDistance / WheelRadius;
 
-            // line comming through center of robot at angle of DirectionAngle
-            double a = Math.Tan(DirectionAngle);
-            double b = Y - a * X;
+            double wheelVectorX = directionVectorX / proportion;
+            double wheelVectorY = directionVectorY / proportion;
+
+            Line wheelAxis = new Line()
+            {
+                X1 = leftWheelX,
+                Y1 = leftWheelY,
+                X2 = rightWheelX,
+                Y2 = rightWheelY,
+                Stroke = System.Windows.Media.Brushes.Black
+            };
+            Line leftWheel = new Line()
+            {
+                X1 = leftWheelX + wheelVectorX,
+                Y1 = leftWheelY - wheelVectorY,
+                X2 = leftWheelX - wheelVectorX,
+                Y2 = leftWheelY + wheelVectorY,
+                Stroke = System.Windows.Media.Brushes.Black
+            };
+
+            Line rightWheel = new Line()
+            {
+                X1 = rightWheelX + wheelVectorX,
+                Y1 = rightWheelY - wheelVectorY,
+                X2 = rightWheelX - wheelVectorX,
+                Y2 = rightWheelY + wheelVectorY,
+                Stroke = System.Windows.Media.Brushes.Black
+            };
+            canvas.Children.Add(wheelAxis);
+            canvas.Children.Add(leftWheel);
+            canvas.Children.Add(rightWheel);
         }
     }
 }
