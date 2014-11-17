@@ -10,6 +10,16 @@ CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, d
 	_center = new Point(x, y);
 }
 
+CircularEnt::CircularEnt(std::ifstream& file) : SymEnt(file, SymEnt::CIRCLE)
+{
+	double x, y;
+	file.read(reinterpret_cast<char*>(&x), sizeof(x));
+	file.read(reinterpret_cast<char*>(&y), sizeof(y));
+	_center = new Point(x, y);
+
+	file.read(reinterpret_cast<char*>(&_radius), sizeof(_radius));
+}
+
 
 double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 {
@@ -139,11 +149,20 @@ void CircularEnt::Translate(int x, int y)
 
 void CircularEnt::Serialize(Buffer& buffer)
 {
-	buffer.Pack(_shapeID);
-	buffer.Pack(htons(_id));
-	buffer.Pack(_movable);
-	buffer.Pack(htonl(_weight));
+	SymEnt::Serialize(buffer);
+
 	buffer.Pack(GetX());
 	buffer.Pack(GetY());
 	buffer.Pack(_radius);
+}
+
+void CircularEnt::Serialize(std::ofstream& file)
+{
+	double x = GetX();
+	double y = GetY();
+
+	SymEnt::Serialize(file);
+	file.write(reinterpret_cast<const char*>(&x), sizeof(x));
+	file.write(reinterpret_cast<const char*>(&y), sizeof(y));
+	file.write(reinterpret_cast<const char*>(&_radius), sizeof(_radius));
 }

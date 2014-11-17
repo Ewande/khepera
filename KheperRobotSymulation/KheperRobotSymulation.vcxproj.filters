@@ -14,6 +14,7 @@
     </ClCompile>
     <ClCompile Include="LinearEnt.cpp" />
     <ClCompile Include="MathLib.cpp" />
+    <ClCompile Include="SymEnt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />

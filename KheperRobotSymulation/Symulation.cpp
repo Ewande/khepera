@@ -12,7 +12,8 @@ DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData)
 
 Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds) :
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
-	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE), _symulationStep(DEFAULT_SYMULATION_STEP),
+	_symulationDelay(DEFAULT_SYMULATION_DELAY)
 {
 	if (addBounds)
 	{
@@ -25,6 +26,47 @@ Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight, bool a
 		_entities[RESERVED_ID_LEVEL + 3] = left_line;
 		_entities[RESERVED_ID_LEVEL + 4] = right_line;
 	}
+	InitializeCriticalSection(&_criticalSection);
+}
+
+Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight,
+	double symulationStep , int symulationDelay) :
+	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE), _symulationStep(symulationStep),
+	_symulationDelay(symulationDelay)
+{
+	InitializeCriticalSection(&_criticalSection);
+}
+
+Symulation::Symulation(std::ifstream& file, double symulationStep,
+	int symulationDelay) : _isRunning(false),
+	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE), _symulationStep(symulationStep),
+	_symulationDelay(symulationDelay)
+{
+	uint16_t numberOfEntities;
+
+	file.read(reinterpret_cast<char*>(&_worldWidth), sizeof(_worldWidth));
+	file.read(reinterpret_cast<char*>(&_worldHeight), sizeof(_worldHeight));
+	file.read(reinterpret_cast<char*>(&_time), sizeof(_time));
+	file.read(reinterpret_cast<char*>(&numberOfEntities), sizeof(numberOfEntities));
+
+	for (uint16_t i = 0; i < numberOfEntities; i++)
+	{
+		uint8_t shapeID;
+		file.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
+		SymEnt* newEntity;
+
+		switch (shapeID)
+		{
+			case SymEnt::CIRCLE: newEntity = new CircularEnt(file); break;
+			case SymEnt::RECTANGLE: newEntity = new RectangularEnt(file); break;
+			case SymEnt::KHEPERA_ROBOT: newEntity = new KheperaRobot(file); break;
+
+			default: newEntity = NULL; /* TODO: Exception handling */
+		}
+		AddEntity(newEntity);
+	}
+
 	InitializeCriticalSection(&_criticalSection);
 }
 
@@ -188,28 +230,6 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 }
 
 
-/*
-					Serialization format (all numbers in network byte order)
-			+-------------------+--------------------------------------+-------------------+
-			|                                                                              |
-			|                              WORLD_WIDTH                                     |
-			|                                32 bytes                                      |
-			+------------------------------------------------------------------------------+
-			|                                                                              |
-			|                              WORLD_HEIGHT                                    |
-			|                                32 bytes                                      |
-			+------------------------------------------------------------------------------+
-			|                                                                              |
-			|                                  TIME                                        |
-			|                                32 bytes                                      |
-			+-------------------+--------------------------------------+-------------------+
-			|                                      |                                       |
-			|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
-			|               16 bytes               |              variable length          |
-			+--------------------------------------+---------------------------------------+
-
-*/
-
 SymEnt* Symulation::GetEntity(uint16_t id)
 {
 	std::map<uint16_t, SymEnt*>::iterator it = _entities.find(id);
@@ -219,6 +239,28 @@ SymEnt* Symulation::GetEntity(uint16_t id)
 	else
 		return NULL;
 }
+
+/*
+		Serialization format (all numbers in network byte order)
+	+-------------------+--------------------------------------+-------------------+
+	|                                                                              |
+	|                              WORLD_WIDTH                                     |
+	|                                32 bytes                                      |
+	+------------------------------------------------------------------------------+
+	|                                                                              |
+	|                              WORLD_HEIGHT                                    |
+	|                                32 bytes                                      |
+	+------------------------------------------------------------------------------+
+	|                                                                              |
+	|                                  TIME                                        |
+	|                                32 bytes                                      |
+	+-------------------+--------------------------------------+-------------------+
+	|                                      |                                       |
+	|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
+	|               16 bytes               |              variable length          |
+	+--------------------------------------+---------------------------------------+
+
+*/
 
 void Symulation::Serialize(Buffer& buffer) const
 {
@@ -236,6 +278,24 @@ void Symulation::Serialize(Buffer& buffer) const
 	}
 }
 
+void Symulation::Serialize(std::ofstream& file) const
+{
+	file.write(reinterpret_cast<const char*>(&_worldWidth), sizeof(_worldWidth));
+	file.write(reinterpret_cast<const char*>(&_worldHeight), sizeof(_worldHeight));
+	file.write(reinterpret_cast<const char*>(&_time), sizeof(_time)); // do we have to save time to file?
+	
+	uint16_t size = _entities.size();
+	file.write(reinterpret_cast<const char*>(&size), sizeof(size));
+
+	std::map<uint16_t, SymEnt*>::const_iterator it = _entities.begin();
+
+	while (it != _entities.end())
+	{
+		it->second->Serialize(file);
+		it++;
+	}
+}
+
 void Symulation::Run()
 {
 	int i = 0;
@@ -244,11 +304,11 @@ void Symulation::Run()
 		Lock();
 
 		_commMan->SendWorldDescriptionToVisualisers();
-		Update(1);
+		Update(_symulationStep);
 		std::cout << "RUNNING: " <<  i++ << std::endl;
 
 		Unlock();
-		Sleep(125);
+		Sleep(_symulationDelay);
 	}
 
 	std::cout << "THREAD END" << std::endl;

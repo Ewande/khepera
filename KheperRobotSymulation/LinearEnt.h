@@ -19,6 +19,7 @@ public:
 	virtual void Translate(int x, int y);
 
 	virtual void Serialize(Buffer& buffer);
+	virtual void Serialize(std::ofstream& file) {}
 
 protected:
 	Point* _beg;

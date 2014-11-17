@@ -21,7 +21,7 @@ namespace Visualiser
 
         public RectangularEnt(UInt16 id, UInt32 weight, bool movable, 
             Point p1, Point p2, Point p3, Point p4) :
-            base(id, SymEnt.CIRCLE_ID, weight, movable)
+            base(id, SymEnt.RECTANGLE_ID, weight, movable)
         {
             _vertices = new Point[4];
 

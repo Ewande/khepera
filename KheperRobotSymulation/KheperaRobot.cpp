@@ -8,6 +8,15 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	_shapeID = SymEnt::KHEPERA_ROBOT;
 }
 
+KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
+{
+	_shapeID = SymEnt::KHEPERA_ROBOT;
+
+	file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
+	file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
+	file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
+}
+
 void KheperaRobot::UpdatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
@@ -81,7 +90,19 @@ DATA_LENGTH = 352 bytes
 void KheperaRobot::Serialize(Buffer& buffer)
 {
 	CircularEnt::Serialize(buffer);
+
 	buffer.Pack(htons(_wheelRadius));
 	buffer.Pack(htons(_wheelDistance));
 	buffer.Pack(_directionAngle);
+}
+
+void KheperaRobot::Serialize(std::ofstream& file)
+{
+	CircularEnt::Serialize(file);
+
+	file.write(reinterpret_cast<const char*>(&_wheelRadius), sizeof(_wheelRadius));
+	file.write(reinterpret_cast<const char*>(&_wheelDistance), sizeof(_wheelDistance));
+	file.write(reinterpret_cast<const char*>(&_directionAngle), sizeof(_directionAngle));
+
+	/* TODO: Serialize information about motors(probably about their type) */
 }

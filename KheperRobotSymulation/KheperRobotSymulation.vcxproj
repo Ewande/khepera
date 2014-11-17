@@ -105,6 +105,7 @@
     <ClCompile Include="MathLib.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
+    <ClCompile Include="SymEnt.cpp" />
     <ClCompile Include="Symulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

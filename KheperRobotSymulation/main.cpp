@@ -39,6 +39,8 @@ int main(int argc, char** argv)
 			std::cout << std::endl;
 	}
 
+	symulation->SetCommunicationManager(commMan);
+
 	// init WINSock
 	WSADATA wsaData;
 	int iResult;

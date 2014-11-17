@@ -1,26 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Visualiser
+namespace MapEditor
 {
-    abstract class SymEnt
+    public abstract class SymEnt
     {
         public const byte RECTANGLE_ID = 0;
         public const byte CIRCLE_ID = 1;
         public const byte KHEPERA_ROBOT_ID = 2;
-        public const byte LINE_ID = 3;
 
         public UInt16 ID { get; protected set; }
         public byte ShapeID { get; protected set; }
         public UInt32 Weight { get; protected set; }
         public bool Movable { get; protected set; }
-        // specyfies shift in display (0 - no shift, !=0 - new position is calculated as t' = shift - t)
-        public UInt32 HorShift { get; set; }
-        public UInt32 VertShift { get; set; }
 
         public SymEnt(UInt16 id, byte shapeID, UInt32 weight, bool movable)
         {
@@ -28,10 +25,9 @@ namespace Visualiser
             ShapeID = shapeID;
             Weight = weight;
             Movable = movable;
-            HorShift = 0;
-            VertShift = 0;
         }
 
         public abstract void AddToCanvas(Canvas canvas); // Adds this object to canvas (System.Windows.Controls.Canvas)
+        public abstract void SaveToFile(BinaryWriter writer); // save this object to file containing world description
     }
 }

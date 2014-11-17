@@ -11,10 +11,14 @@
 
 #include "SymEnt.h"
 #include "RectangularEnt.h"
+#include "CircularEnt.h"
 #include "KheperaRobot.h"
 #include "Buffer.h"
 #include "CommunicationManager.h"
 #include "LinearEnt.h"
+
+#define DEFAULT_SYMULATION_STEP 0.04
+#define DEFAULT_SYMULATION_DELAY 40
 
 class CommunicationManager;
 
@@ -24,6 +28,10 @@ class Symulation
 		friend DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData);
 
 		Symulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds);
+		Symulation(unsigned int worldWidth, unsigned int worldHeight,
+                double symulationStep = DEFAULT_SYMULATION_STEP, int symulationDelay = DEFAULT_SYMULATION_DELAY);
+		Symulation(std::ifstream& file, double symulationStep = DEFAULT_SYMULATION_STEP,
+			int symulationDelay = DEFAULT_SYMULATION_DELAY);
 		~Symulation();
 
 		void AddEntity(SymEnt* newEntity);
@@ -43,11 +51,14 @@ class Symulation
 		SymEnt* GetEntity(uint16_t id);
 
 		void Serialize(Buffer& buffer) const;
+		void Serialize(std::ofstream& file) const;
 	private:
 		std::map<uint16_t, SymEnt*>   _entities;
 		uint32_t                      _worldWidth;
 		uint32_t                      _worldHeight;
 		uint32_t                      _time;
+		double                        _symulationStep; // in [ s ]
+		uint16_t                      _symulationDelay; // in [ ms ]
 
 		bool                          _isRunning;
 		CommunicationManager*         _commMan;

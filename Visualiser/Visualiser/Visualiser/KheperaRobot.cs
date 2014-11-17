@@ -10,7 +10,7 @@ namespace Visualiser
 {
     class KheperaRobot : CircularEnt
     {
-        public UInt16 WheelRaduis { get; set;}
+        public UInt16 WheelRadius { get; set;}
         public UInt16 WheelDistance { get; set; }
         public double DirectionAngle { get; set; }
 
@@ -18,12 +18,11 @@ namespace Visualiser
             double y, double radius, UInt16 wheelRadius, UInt16 wheelDistance, double directionAngle) : 
             base(id, weight, movable, x, y, radius)
         {
-            WheelRaduis = wheelRadius;
+            WheelRadius = wheelRadius;
             WheelDistance = wheelDistance;
             DirectionAngle = directionAngle;
+            ShapeID = SymEnt.KHEPERA_ROBOT_ID;
         }
-
-        /* TODO: Change drawing procedure, so that user will be able to distinguish between robots and static circles */
 
         public override void AddToCanvas(Canvas canvas)
         {

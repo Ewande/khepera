@@ -12,16 +12,18 @@ RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, doubl
 		_bottLeft->GetY() - _width / 2.0 * ang_sin + _height / 2.0 * ang_cos);
 }
 
-/*RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x1,
-		double y1, double x2, double y2, double x3, double y3,
-		double x4, double y4) : SymEnt(id, SymEnt::RECTANGLE, weight, movable)
+RectangularEnt::RectangularEnt(std::ifstream& file) : SymEnt(file, SymEnt::RECTANGLE)
 {
-	_vertices = new Point[4];
-	_vertices[0] = Point(x1, y1);
-	_vertices[1] = Point(x2, y2);
-	_vertices[2] = Point(x3, y3);
-	_vertices[3] = Point(x4, y4);
-}*/
+/*	_vertices = new Point[4];
+
+	for (int i = 0; i < 4; i++)
+	{
+		double x, y;
+		file.read(reinterpret_cast<char*>(&x), sizeof(x));
+		file.read(reinterpret_cast<char*>(&y), sizeof(y));
+		_vertices[i] = Point(x, y);
+	}*/
+}
 
 double RectangularEnt::CollisionLength(SymEnt& other, Point& proj)
 {
@@ -184,4 +186,18 @@ void RectangularEnt::Serialize(Buffer& buffer)
 	buffer.Pack(_bottLeft->GetY() - _width * sin(M_PI * _angle / 180.0) + _height * cos(M_PI * _angle / 180.0));
 	buffer.Pack(_bottLeft->GetX() + _height * sin(M_PI * _angle / 180.0));
 	buffer.Pack(_bottLeft->GetY() + _height * cos(M_PI * _angle / 180.0));
+}
+
+void RectangularEnt::Serialize(std::ofstream& file)
+{
+/*	SymEnt::Serialize(file);
+
+	for (int i = 0; i < 4; i++)
+	{
+		double tmp = _vertices[i].GetX();
+		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
+
+		tmp = _vertices[i].GetY();
+		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
+	}*/
 }

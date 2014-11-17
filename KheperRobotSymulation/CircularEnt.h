@@ -9,6 +9,7 @@ class CircularEnt : public SymEnt
 	public:
 		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double radius);
+		CircularEnt(std::ifstream& file);
 		virtual ~CircularEnt() { delete _center; }
 
 
@@ -21,6 +22,7 @@ class CircularEnt : public SymEnt
 		virtual void Translate(int x, int y);
 
 		virtual void Serialize(Buffer& buffer);
+		virtual void Serialize(std::ofstream& file);
 
 	protected:
 		Point* _center;
