@@ -4,9 +4,20 @@
 #include "KheperaRobot.h"
 #include "LinearEnt.h"
 #include <iostream>
+#include <fstream>
+
+template <class T>
+void AssertEquals(const T& expected, const T& actual, const std::string& errorMsg)
+{
+	if (expected != actual)
+		std::cout << errorMsg.c_str() << " : expected: " << expected << " actual: " << actual << std::endl;
+}
+void TestRectangleSerialization();
 
 int main(int argc, char** argv)
 {
+	TestRectangleSerialization();
+
 	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 50, 50);
 
@@ -69,4 +80,27 @@ int main(int argc, char** argv)
 
 	getchar();
 	return 0;
+}
+
+void TestRectangleSerialization()
+{
+	uint16_t id = 0xDEAD;
+	uint32_t weight = 0xCAFE;
+	bool movable = true;
+	RectangularEnt originalRect(id, weight, movable, 100, 100, 200, 200, 90);
+
+	std::ofstream outputStream;
+	outputStream.open("testRectangleSerialized.bin", std::ios::out | std::ios::trunc | std::ios::binary);
+	originalRect.Serialize(outputStream);
+	outputStream.close();
+
+	std::ifstream inputStream;
+	inputStream.open("testRectangleSerialized.bin", std::ios::in | std::ios::binary);
+	uint8_t shapeID; // this is normally read by symulation class, see Symulation.cpp:56
+	inputStream.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
+	RectangularEnt deserializedRect(inputStream);
+
+	AssertEquals(id, deserializedRect.GetID(), "Blad: identyfikator ksztaltu nie zgadza sie");
+	AssertEquals(weight, deserializedRect.GetWeight(), "BLAD: waga ksztaltu nie zgadza sie");
+	// AssertEquals(movable, deserializedRect.IsMovable(), "BLAD: mozliwosc przesuwania ksztaltu nie zgadza sie");
 }
