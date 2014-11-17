@@ -23,8 +23,9 @@ void KheperaRobot::UpdatePosition(double deltaTime)
 	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
 	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
+	// CHANGED (now robot moves normally):
 	// (0,0) is in upper left corner, so unlike in cartesian coordinates, if robot moves up, his Y cords decereases
-	_center->SetCords(_center->GetX() + deltaX, _center->GetY() - deltaY); 
+	_center->SetCords(_center->GetX() + deltaX, _center->GetY() + deltaY); 
 	
 }
 

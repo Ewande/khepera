@@ -10,10 +10,21 @@ DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData)
 	return 0; // unused thread return value
 }
 
-Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight) :
+Symulation::Symulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds) :
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
 	_commMan(NULL), _symulationThreadHandle(INVALID_HANDLE_VALUE)
 {
+	if (addBounds)
+	{
+		LinearEnt* bottom_line = new LinearEnt(RESERVED_ID_LEVEL + 1, 0, 0, worldWidth, 0);
+		LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, worldHeight, worldWidth, worldHeight);
+		LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, worldHeight);
+		LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, worldWidth, 0, worldWidth, worldHeight);
+		_entities[RESERVED_ID_LEVEL + 1] = bottom_line;
+		_entities[RESERVED_ID_LEVEL + 2] = top_line;
+		_entities[RESERVED_ID_LEVEL + 3] = left_line;
+		_entities[RESERVED_ID_LEVEL + 4] = right_line;
+	}
 	InitializeCriticalSection(&_criticalSection);
 }
 
@@ -34,7 +45,9 @@ Symulation::~Symulation()
 
 void Symulation::AddEntity(SymEnt* newEntity)
 {
-	_entities[newEntity->GetID()] = newEntity;
+	int new_id = newEntity->GetID();
+	if (new_id < RESERVED_ID_LEVEL)
+		_entities[new_id] = newEntity;
 }
 
 void Symulation::Start()
@@ -75,12 +88,14 @@ void Symulation::CheckCollisions()
 			{
 				if (it1->second->GetID() != it2->second->GetID())
 				{
+					// orthogonal projection onto line (used only when sth is colliding with line)
 					Point proj;
 
 					double collision_len = it1->second->CollisionLength(*(it2->second), proj);
 					if (collision_len >= 0)
 					{
 						std::cout << "kolizja " << it1->second->GetID() << " i " << it2->second->GetID() << "\n";
+						std::cout << "--- dlugosc: " << collision_len << "\n\n";
 						removeCollision(*it1->second, *it2->second, collision_len, proj);
 					}
 				}
@@ -95,21 +110,40 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 {
 	int fst_shape = fst.GetShapeID();
 	int snd_shape = snd.GetShapeID();
-	if (!(fst_shape % 3) == !(snd_shape % 3)) // TO CHANGE
+	if (fst_shape != SymEnt::LINE && snd_shape != SymEnt::LINE)
 	{
-		CircularEnt &conv_fst = *dynamic_cast<CircularEnt*>(&fst), &conv_snd = *dynamic_cast<CircularEnt*>(&snd);
-		Point& center_fst = conv_fst.GetCenter(), center_snd = conv_snd.GetCenter();
+		Point *center_fst;
+		Point *center_snd;
+		
+		if (fst_shape == SymEnt::RECTANGLE)
+		{
+			RectangularEnt& conv_fst = *dynamic_cast<RectangularEnt*>(&fst);
+			center_fst = &conv_fst.GetCenter();
+		}
+		else
+		{
+			CircularEnt& conv_fst = *dynamic_cast<CircularEnt*>(&fst);
+			center_fst = &conv_fst.GetCenter();
+		}
 
-		double weights_sum = conv_fst.GetWeight() + conv_snd.GetWeight();
-		double fst_coeff = conv_snd.GetWeight() / weights_sum;
-		double snd_coeff = conv_fst.GetWeight() / weights_sum;
+		if (snd_shape == SymEnt::RECTANGLE)
+		{
+			RectangularEnt& conv_snd = *dynamic_cast<RectangularEnt*>(&snd);
+			center_snd = &conv_snd.GetCenter();
+		}
+		else
+		{
+			CircularEnt& conv_snd = *dynamic_cast<CircularEnt*>(&snd);
+			center_snd = &conv_snd.GetCenter();
+		}
 
-		double centers_diff = center_fst.GetDistance(center_snd);
-		double x_diff = center_fst.GetXDiff(center_snd);
-		double y_diff = center_fst.GetYDiff(center_snd);
+		double weights_sum = fst.GetWeight() + snd.GetWeight();
+		double fst_coeff = snd.GetWeight() / weights_sum;
+		double snd_coeff = fst.GetWeight() / weights_sum;
 
-		double x_diff_sgn = x_diff / abs(x_diff);
-		double y_diff_sgn = y_diff / abs(y_diff);
+		double centers_diff = center_fst->GetDistance(*center_snd);
+		double x_diff = center_fst->GetXDiff(*center_snd);
+		double y_diff = center_fst->GetYDiff(*center_snd);
 
 		double fst_x_trans = x_diff / centers_diff * collisionLen * fst_coeff;
 		double fst_y_trans = y_diff / centers_diff * collisionLen * fst_coeff;
@@ -128,11 +162,11 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 			snd_y_trans -= y_diff_sgn;
 		}*/
 
-		conv_fst.Translate((int) fst_x_trans, (int) fst_y_trans);
-		conv_snd.Translate((int) snd_x_trans, (int) snd_y_trans);
+		fst.Translate(fst_x_trans, fst_y_trans);
+		snd.Translate(snd_x_trans, snd_y_trans);
 	}
 
-	else if (fst_shape != snd_shape && fst_shape == SymEnt::RECTANGLE)
+	else if ((snd_shape == SymEnt::CIRCLE || snd_shape == SymEnt::KHEPERA_ROBOT) && fst_shape == SymEnt::LINE)
 	{
 		CircularEnt &conv_snd = *dynamic_cast<CircularEnt*>(&snd);
 
@@ -146,10 +180,10 @@ void Symulation::removeCollision(SymEnt& fst, SymEnt& snd, double collisionLen, 
 
 		std::cout << collisionLen << "| " << proj_diff << "| " << x_diff << " " << y_diff << "| " << x_trans << " " << y_trans << "\n";
 
-		snd.Translate((int)x_trans, (int)y_trans);
+		snd.Translate(x_trans, y_trans);
 
 	}
-	else if (fst_shape != snd_shape && snd_shape == SymEnt::RECTANGLE)
+	else if ((fst_shape == SymEnt::CIRCLE || fst_shape == SymEnt::KHEPERA_ROBOT) && snd_shape == SymEnt::LINE)
 		removeCollision(snd, fst, collisionLen, proj);
 }
 

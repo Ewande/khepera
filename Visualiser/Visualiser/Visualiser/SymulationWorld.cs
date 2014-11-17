@@ -8,6 +8,8 @@ namespace Visualiser
 {
     class SymulationWorld
     {
+        public const int INFINITY = 1000000;
+
         public UInt32                       WorldWidth { get; set; }
         public UInt32                       WorldHeight { get; set; }
         public UInt32                       Time { get; set; }

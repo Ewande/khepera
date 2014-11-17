@@ -12,6 +12,8 @@
     <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
       <Filter>ClientCommands</Filter>
     </ClCompile>
+    <ClCompile Include="LinearEnt.cpp" />
+    <ClCompile Include="MathLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
@@ -29,6 +31,8 @@
     <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h">
       <Filter>ClientCommands</Filter>
     </ClInclude>
+    <ClInclude Include="LinearEnt.h" />
+    <ClInclude Include="MathLib.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ClientCommands">

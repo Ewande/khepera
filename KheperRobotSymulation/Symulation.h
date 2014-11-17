@@ -2,13 +2,19 @@
 #define SYMULATION_H
 
 #define NUMBER_OF_CHECKS 10
+#define DIVIDING_LEVEL 3
+#define RESERVED_ID_LEVEL 1000
+#define NO_COLLISION	-100
+#define INF_COLLISION 1000000
 
 #include <map>
 
 #include "SymEnt.h"
+#include "RectangularEnt.h"
 #include "KheperaRobot.h"
 #include "Buffer.h"
 #include "CommunicationManager.h"
+#include "LinearEnt.h"
 
 class CommunicationManager;
 
@@ -17,7 +23,7 @@ class Symulation
 	public:
 		friend DWORD WINAPI SymulationThreadWrapperFunction(LPVOID threadData);
 
-		Symulation(unsigned int worldWidth, unsigned int worldHeight);
+		Symulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds);
 		~Symulation();
 
 		void AddEntity(SymEnt* newEntity);

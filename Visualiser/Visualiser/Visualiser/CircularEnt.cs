@@ -30,9 +30,11 @@ namespace Visualiser
             result.Height = Radius*2;
             result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
 
-            Canvas.SetLeft(result, X - Radius); /* TODO: Check if those are really center coordinates, not upper-right corner coordinates */
-            Canvas.SetTop(result, Y - Radius);
+            double bottLeftX = HorShift == 0 ? X - Radius : HorShift - X + Radius;
+            double bottLeftY = VertShift == 0 ? Y - Radius : VertShift - Y - Radius;
 
+            Canvas.SetLeft(result, bottLeftX);
+            Canvas.SetTop(result, bottLeftY);
             canvas.Children.Add(result);
         }
     }

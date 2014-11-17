@@ -56,6 +56,7 @@
     <Compile Include="CircularEnt.cs" />
     <Compile Include="EntityReceiver.cs" />
     <Compile Include="KheperaRobot.cs" />
+    <Compile Include="LinearEnt.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="RectangularEnt.cs" />
     <Compile Include="SymEnt.cs" />

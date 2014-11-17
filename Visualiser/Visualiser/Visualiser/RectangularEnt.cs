@@ -34,35 +34,35 @@ namespace Visualiser
         public override void AddToCanvas(Canvas canvas)
         {
             Line line1 = new Line() { 
-                X1 = this._vertices[0].X,
-                Y1 = this._vertices[0].Y,
-                X2 = this._vertices[1].X,
-                Y2 = this._vertices[1].Y,
+                X1 = HorShift == 0 ? _vertices[0].X : HorShift - _vertices[0].X,
+                Y1 = VertShift == 0 ? _vertices[0].Y : VertShift - _vertices[0].Y,
+                X2 = HorShift == 0 ? _vertices[1].X : HorShift - _vertices[1].X,
+                Y2 = VertShift == 0 ? _vertices[1].Y : VertShift - _vertices[1].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line2 = new Line()
             {
-                X1 = this._vertices[1].X,
-                Y1 = this._vertices[1].Y,
-                X2 = this._vertices[2].X,
-                Y2 = this._vertices[2].Y,
+                X1 = HorShift == 0 ? _vertices[1].X : HorShift - _vertices[1].X,
+                Y1 = VertShift == 0 ? _vertices[1].Y : VertShift - _vertices[1].Y,
+                X2 = HorShift == 0 ? _vertices[2].X : HorShift - _vertices[2].X,
+                Y2 = VertShift == 0 ? _vertices[2].Y : VertShift - _vertices[2].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
-            Line line3 = new Line() { 
-                X1 = this._vertices[2].X,
-                Y1 = this._vertices[2].Y,
-                X2 = this._vertices[3].X,
-                Y2 = this._vertices[3].Y,
+            Line line3 = new Line() {
+                X1 = HorShift == 0 ? _vertices[2].X : HorShift - _vertices[2].X,
+                Y1 = VertShift == 0 ? _vertices[2].Y : VertShift - _vertices[2].Y,
+                X2 = HorShift == 0 ? _vertices[3].X : HorShift - _vertices[3].X,
+                Y2 = VertShift == 0 ? _vertices[3].Y : VertShift - _vertices[3].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line4 = new Line() {
-                X1 = this._vertices[3].X,
-                Y1 = this._vertices[3].Y,
-                X2 = this._vertices[0].X,
-                Y2 = this._vertices[0].Y,
+                X1 = HorShift == 0 ? _vertices[3].X : HorShift - _vertices[3].X,
+                Y1 = VertShift == 0 ? _vertices[3].Y : VertShift - _vertices[3].Y,
+                X2 = HorShift == 0 ? _vertices[0].X : HorShift - _vertices[0].X,
+                Y2 = VertShift == 0 ? _vertices[0].Y : VertShift - _vertices[0].Y,
                 Stroke = System.Windows.Media.Brushes.Black
             };
 

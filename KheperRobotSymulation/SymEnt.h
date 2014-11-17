@@ -15,6 +15,7 @@ class SymEnt
 		static const uint8_t RECTANGLE = 0;
 		static const uint8_t CIRCLE = 1;
 		static const uint8_t KHEPERA_ROBOT = 2;
+		static const uint8_t LINE = 3;
 
 		SymEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
 			_weight(weight), _movable(movable) {}

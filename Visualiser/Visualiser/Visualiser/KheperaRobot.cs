@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace Visualiser
 {
@@ -21,6 +23,29 @@ namespace Visualiser
             DirectionAngle = directionAngle;
         }
 
-        /* TODO: Change drawing procedure, so that user will be able to distinguish betwin robots and static circles */
+        /* TODO: Change drawing procedure, so that user will be able to distinguish between robots and static circles */
+
+        public override void AddToCanvas(Canvas canvas)
+        {
+            Ellipse result = new Ellipse();
+
+            result.Width = Radius * 2;
+            result.Height = Radius * 2;
+            result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
+
+            double bottLeftX = HorShift == 0 ? X - Radius : HorShift - X + Radius;
+            double bottLeftY = VertShift == 0 ? Y - Radius : VertShift - Y - Radius;
+
+            Canvas.SetLeft(result, bottLeftX);
+            Canvas.SetTop(result, bottLeftY);
+
+            canvas.Children.Add(result);
+
+            // draw wheels directed in robot heading direction 
+
+            // line comming through center of robot at angle of DirectionAngle
+            double a = Math.Tan(DirectionAngle);
+            double b = Y - a * X;
+        }
     }
 }

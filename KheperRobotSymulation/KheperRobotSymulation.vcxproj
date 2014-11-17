@@ -86,6 +86,8 @@
     <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="KheperaRobot.h" />
+    <ClInclude Include="LinearEnt.h" />
+    <ClInclude Include="MathLib.h" />
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RectangularEnt.h" />
@@ -98,7 +100,9 @@
     <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp" />
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="KheperaRobot.cpp" />
+    <ClCompile Include="LinearEnt.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathLib.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
     <ClCompile Include="Symulation.cpp" />

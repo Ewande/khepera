@@ -28,6 +28,7 @@ namespace Visualiser
                 case SymEnt.CIRCLE_ID: result = ReadCircle(reader, entityID, movable, weight); break;
                 case SymEnt.RECTANGLE_ID: result = ReadRectangle(reader, entityID, movable, weight); break;
                 case SymEnt.KHEPERA_ROBOT_ID: result = ReadKheperaRobot(reader, entityID, movable, weight); break;
+                case SymEnt.LINE_ID: result = ReadLinearEnt(reader, entityID); break;
                 default: System.Windows.MessageBox.Show("Unknown ShapeID"); break;
             }
 
@@ -75,6 +76,17 @@ namespace Visualiser
 
             return new KheperaRobot(entityID, weight, movable, circularRobotPart.X, circularRobotPart.Y,
                 circularRobotPart.Radius, wheelRadius, wheelDistance, directionAngle);
+        }
+
+        private static LinearEnt ReadLinearEnt(BinaryReader reader, UInt16 entityID)
+        {
+            double begX = reader.ReadDouble();
+            double begY = reader.ReadDouble();
+
+            double endX = reader.ReadDouble();
+            double endY = reader.ReadDouble();
+
+            return new LinearEnt(entityID, begX, begY, endX, endY);
         }
     }
 }

@@ -49,6 +49,7 @@ namespace Visualiser
             for (int i = 0; i < numberOfEntites; i++)
             {
                 SymEnt entity = EntityReceiver.ReadNext(reader);
+                entity.VertShift = result.WorldHeight;
                 result.Entities.Add(entity.ID, entity);
             }
 

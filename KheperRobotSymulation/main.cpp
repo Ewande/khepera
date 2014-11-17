@@ -2,20 +2,22 @@
 #include "CircularEnt.h"
 #include "RectangularEnt.h"
 #include "KheperaRobot.h"
+#include "LinearEnt.h"
 #include <iostream>
 
 int main(int argc, char** argv)
 {
 	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
-	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 30, 50);
+	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 50, 50);
 
 	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 250, 30);
 	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 15, 2, 10, 0);
-	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 130, 130, 150, 150, 130, 170);
+	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, 45);
+
 	Buffer b2;
 	const int symulationDelay = 100; // in [ msec ]
 
-	Symulation* symulation = new Symulation(200, 400);
+	Symulation* symulation = new Symulation(500, 400, true);
 	CommunicationManager* commMan = new CommunicationManager(symulation);
 
 	symulation->SetCommunicationManager(commMan);
