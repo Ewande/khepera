@@ -27,70 +27,39 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 
 	if (other_shape == LINE)
 	{
+		/*  If the distance between circle center and orthogonal projection is shorter than the radius and if this projection belongs to
+			the line segment (0 <= u <= 1), there is a collision.
 
-		/*
-
-		- (x1, y1) and (x2, y2) are two ends of the line segment
-		- (_x, _y) is the center of current CircularEnt
-		- (x, y) is an orthogonal projection of point (_x, _y) into the line segment
-
-		If distance between (_x, _y) and (x, y) is shorter than the radius and if (x, y) belongs to
-		the line segment (0 <= u <= 1), there is a collision.
-
-		There is also a possibility that (x, y) doesn't belong to the line segment and there is a collision.
-		To check it we just have to calculate distance between both ends of the line segment and the center of
-		CircularEnt. If any of these distances is shorter than the radius, there is a collision.
-
+			There is also a possibility that projection doesn't belong to the line segment and there is a collision.
+			To check it we just have to calculate distance between both ends of the line segment and the center of
+			CircularEnt. If any of these distances is shorter than the radius, there is a collision.
 		*/
 
-		double _x = GetX();
-		double _y = GetY();
-		LinearEnt &converted = *dynamic_cast<LinearEnt*>(&other);
+		LinearEnt &conv = *dynamic_cast<LinearEnt*>(&other);
+		bool belongs;
+		Point orth_proj = orthogonalProjection(*_center, conv.GetBeg(), conv.GetEnd(), &belongs);
+		double ovr_dist = orth_proj.GetDistance(*_center);
 
-		double x1 = converted.GetBeg().GetX(),
-			y1 = converted.GetBeg().GetY();
-		double x2 = converted.GetEnd().GetX(),
-			y2 = converted.GetEnd().GetY();
-
-		double u = ((_x - x1) * (x2 - x1) + (_y - y1) * (y2 - y1)) /
-			((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-
-		double x = x1 + (x2 - x1) * u;
-		double y = y1 + (y2 - y1) * u;
-		double x_diff = x - _x;
-		double y_diff = y - _y;
-		double ovr_diff = sqrt(x_diff * x_diff + y_diff * y_diff);
-
-		if (ovr_diff <= _radius)
+		if (ovr_dist <= _radius)
 		{
-			if (u >= 0 && u <= 1)
+			if (belongs)
 			{
-				proj.SetCords(x, y);
-				return _radius - ovr_diff + 1;
+				proj.SetCords(orth_proj);
+				return _radius - ovr_dist + 1;
 			}
 
-			double dist_to_vertex = converted.GetBeg().GetDistance(*_center);
+			double dist_to_beg = conv.GetBeg().GetDistance(*_center), dist_to_end = conv.GetEnd().GetDistance(*_center);
+			double dist_to_vertex = min(dist_to_beg, dist_to_end);
 			if (dist_to_vertex <= _radius)
 			{
-				proj.SetCords(converted.GetBeg());
-				return _radius - dist_to_vertex + 1;
-			}
-
-			dist_to_vertex = converted.GetEnd().GetDistance(*_center);
-			if (dist_to_vertex <= _radius)
-			{
-				proj.SetCords(converted.GetEnd());
+				proj.SetCords(dist_to_beg == dist_to_vertex ? conv.GetBeg() : conv.GetEnd());
 				return _radius - dist_to_vertex + 1;
 			}
 		}
-
-		return -1;
 	}
 
 	else if (other_shape == RECTANGLE)
-	{
 		return other.CollisionLength(*this, proj);
-	}
 
 	else if (other_shape == CIRCLE || other_shape == KHEPERA_ROBOT)
 	{
