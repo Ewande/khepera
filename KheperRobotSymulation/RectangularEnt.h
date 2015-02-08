@@ -10,7 +10,7 @@
 class RectangularEnt : public SymEnt
 {
 	public:
-		// x, y -> coord of left-top corner
+		// x, y -> left-bottom corner coords, rotating clockwise
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double width, double height, double angle = 0);
 		RectangularEnt(std::ifstream& file);
@@ -33,7 +33,7 @@ class RectangularEnt : public SymEnt
 		Point* _center;
 		double _width;
 		double _height;
-		double _angle; // in degrees
+		double _angle; // in degrees, rotating clockwise
 };
 
 #endif

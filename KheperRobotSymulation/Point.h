@@ -14,8 +14,8 @@ public:
 	double GetX() { return d_x; }
 	double GetY() { return d_y; }
 
-	void SetCords(double x, double y) { d_x = x; d_y = y; }
-	void SetCords(Point& other) { d_x = other.GetX(); d_y = other.GetY(); }
+	void SetCoords(double x, double y) { d_x = x; d_y = y; }
+	void SetCoords(Point& other) { d_x = other.GetX(); d_y = other.GetY(); }
 	void Translate(double x, double y) { d_x += x; d_y += y; }
 
 	double GetDistance(Point& other);

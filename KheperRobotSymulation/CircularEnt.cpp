@@ -44,7 +44,7 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 		{
 			if (belongs)
 			{
-				proj.SetCords(orth_proj);
+				proj.SetCoords(orth_proj);
 				return _radius - ovr_dist + 1;
 			}
 
@@ -52,7 +52,7 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 			double dist_to_vertex = min(dist_to_beg, dist_to_end);
 			if (dist_to_vertex <= _radius)
 			{
-				proj.SetCords(dist_to_beg == dist_to_vertex ? conv.GetBeg() : conv.GetEnd());
+				proj.SetCoords(dist_to_beg == dist_to_vertex ? conv.GetBeg() : conv.GetEnd());
 				return _radius - dist_to_vertex + 1;
 			}
 		}
@@ -70,7 +70,7 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 		return radiuses_sum - centres_diff + 1;
 	}
 
-	return -1;
+	return NO_COLLISION;
 }
 
 void CircularEnt::Translate(int x, int y)

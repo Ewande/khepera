@@ -30,7 +30,6 @@ double RectangularEnt::CollisionLength(SymEnt& other, Point& proj)
 	int other_shape = other.GetShapeID();
 	if (other_shape == SymEnt::CIRCLE || other_shape == SymEnt::KHEPERA_ROBOT)
 	{
-		//std::cout << "Startujemy: pozycja x=" << _bottLeft->GetX() << ", y=" << _bottLeft->GetY() << "\n";
 		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
 		Point *clone = new Point(*_bottLeft);
 		double coll_len = check_and_divide(converted, *clone, _width, _height, 1);
@@ -39,7 +38,7 @@ double RectangularEnt::CollisionLength(SymEnt& other, Point& proj)
 		return coll_len;
 	}
 	else
-		return -1;
+		return NO_COLLISION;
 }
 
 void RectangularEnt::Translate(int x, int y)
@@ -57,18 +56,15 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 	width /= 2.0;
 	height /= 2.0;
 
-	Point center(bottLeft.GetX() + width * ang_cos + height * ang_sin,
-		bottLeft.GetY() + width * ang_sin + height * ang_cos);
+	// center point is calculated as a result of multiplication of 3 transformation matrices (-translate bottLeft, rotate _angle, translate bottLeft)
+	Point center(bottLeft.GetX() + width * ang_cos - height * ang_sin, bottLeft.GetY() + width * ang_sin + height * ang_cos);
 	double radius = center.GetDistance(bottLeft);
 
 	double radiuses_sum = radius + other.GetRadius();
 	double centres_diff = center.GetDistance(other.GetCenter());
 
 	if (centres_diff > radiuses_sum)
-	{
-		//std::cout << "Brak kolizji na poz. " << level << ", promien: " << radius << "\n";
 		return NO_COLLISION;
-	}
 	else
 	{
 		double max_coll = NO_COLLISION;
@@ -76,21 +72,14 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 
 		Point copy = Point(bottLeft);
 
-		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level));
-		//std::cout << "lewy dolny: " << bottLeft.GetX() << " " << bottLeft.GetY() << "\n";
-		bottLeft.Translate(width * ang_cos, -width * ang_sin);
-		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level));
-		//std::cout << "prawy dolny: " << bottLeft.GetX() << " " << bottLeft.GetY() << "\n";
-		bottLeft.SetCords(copy);
-		bottLeft.Translate(height * ang_sin, height * ang_cos);
-		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level));
-		//std::cout << "lewy gorny: " << bottLeft.GetX() << " " << bottLeft.GetY() << "\n";
-		max_coll = max(max_coll, check_and_divide(other, center, width, height, level));
-		//std::cout << "prawy gorny: " << bottLeft.GetX() << " " << bottLeft.GetY() << "\n";
-		bottLeft.SetCords(copy);
-		//if (max_coll < INF_COLLISION)
-			//std::cout << level << ": " << max_coll << ", suma promieni - odleglosc srodkow" <<
-			//radiuses_sum - centres_diff << std::endl;
+		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level)); // bottom left
+		bottLeft.Translate(- height * ang_sin, height * ang_cos);
+		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level)); // upper left
+		bottLeft.SetCoords(copy);
+		bottLeft.Translate(width * ang_cos, width * ang_sin);
+		max_coll = max(max_coll, check_and_divide(other, bottLeft, width, height, level)); // bottom right
+		max_coll = max(max_coll, check_and_divide(other, center, width, height, level)); // upper right
+		bottLeft.SetCoords(copy);
 
 		return min(max_coll, radiuses_sum - centres_diff) + 1;
 	}
@@ -174,18 +163,21 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 
 void RectangularEnt::Serialize(Buffer& buffer)
 {
+	double ang_cos = cosD(_angle);
+	double ang_sin = sinD(_angle);
+
 	buffer.Pack(_shapeID);
 	buffer.Pack(htons(_id));
 	buffer.Pack(_movable);
 	buffer.Pack(htonl(_weight));
 	buffer.Pack(_bottLeft->GetX());
 	buffer.Pack(_bottLeft->GetY());
-	buffer.Pack(_bottLeft->GetX() + _width * cos(M_PI * _angle / 180.0));
-	buffer.Pack(_bottLeft->GetY() - _width * sin(M_PI * _angle / 180.0));
-	buffer.Pack(_bottLeft->GetX() + _width * cos(M_PI * _angle / 180.0) + _height * sin(M_PI * _angle / 180.0));
-	buffer.Pack(_bottLeft->GetY() - _width * sin(M_PI * _angle / 180.0) + _height * cos(M_PI * _angle / 180.0));
-	buffer.Pack(_bottLeft->GetX() + _height * sin(M_PI * _angle / 180.0));
-	buffer.Pack(_bottLeft->GetY() + _height * cos(M_PI * _angle / 180.0));
+	buffer.Pack(_bottLeft->GetX() - _height * ang_sin);
+	buffer.Pack(_bottLeft->GetY() + _height * ang_cos);
+	buffer.Pack(_bottLeft->GetX() - _height * ang_sin + _width * ang_cos);
+	buffer.Pack(_bottLeft->GetY() + _height * ang_cos + _width * ang_sin);
+	buffer.Pack(_bottLeft->GetX() + _width * ang_cos);
+	buffer.Pack(_bottLeft->GetY() + _width * ang_sin);
 }
 
 void RectangularEnt::Serialize(std::ofstream& file)
