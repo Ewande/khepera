@@ -28,29 +28,29 @@ int main(int argc, char** argv)
 	Buffer b2;
 	const int symulationDelay = 100; // in [ msec ]
 
-	Symulation* symulation = new Symulation(500, 400, true);
-	CommunicationManager* commMan = new CommunicationManager(symulation);
+	Simulation* simulation = new Simulation(500, 400, true);
+	CommunicationManager* commMan = new CommunicationManager(simulation);
 
-	symulation->SetCommunicationManager(commMan);
+	simulation->setCommunicationManager(commMan);
 
-	robot->SetLeftMotorSpeed(0);
-	robot->SetRightMotorSpeed(0);
+	robot->setLeftMotorSpeed(0);
+	robot->setRightMotorSpeed(0);
 
-	symulation->AddEntity(c);
-	symulation->AddEntity(r);
-	symulation->AddEntity(c2);
-	symulation->AddEntity(robot);
-	symulation->AddEntity(rotatedRect);
+	simulation->addEntity(c);
+	simulation->addEntity(r);
+	simulation->addEntity(c2);
+	simulation->addEntity(robot);
+	simulation->addEntity(rotatedRect);
 
-	symulation->Serialize(b2);
-	for (int i = 0; i < b2.GetLength(); i++)
+	simulation->serialize(b2);
+	for (int i = 0; i < b2.getLength(); i++)
 	{
-		printf("%x ", b2.GetBuffer()[i]);
+		printf("%x ", b2.getBuffer()[i]);
 		if ((i + 1) % 32 == 0)
 			std::cout << std::endl;
 	}
 
-	symulation->SetCommunicationManager(commMan);
+	simulation->setCommunicationManager(commMan);
 
 	// init WINSock
 	WSADATA wsaData;
@@ -63,17 +63,17 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	if (commMan->Init())
+	if (commMan->init())
 	{
 		std::cout << "DONE!" << std::endl;
 
-		symulation->Start();
-		commMan->RunServerLoop();
+		simulation->start();
+		commMan->runServerLoop();
 	}
 	else
 		std::cout << "ERROR!" << std::endl;
 
-	delete symulation;
+	delete simulation;
 	delete commMan;
 
 	WSACleanup();
@@ -91,7 +91,7 @@ void TestRectangleSerialization()
 
 	std::ofstream outputStream;
 	outputStream.open("testRectangleSerialized.bin", std::ios::out | std::ios::trunc | std::ios::binary);
-	originalRect.Serialize(outputStream);
+	originalRect.serialize(outputStream);
 	outputStream.close();
 
 	std::ifstream inputStream;
@@ -100,7 +100,7 @@ void TestRectangleSerialization()
 	inputStream.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
 	RectangularEnt deserializedRect(inputStream);
 
-	AssertEquals(id, deserializedRect.GetID(), "Blad: identyfikator ksztaltu nie zgadza sie");
-	AssertEquals(weight, deserializedRect.GetWeight(), "BLAD: waga ksztaltu nie zgadza sie");
+	AssertEquals(id, deserializedRect.getID(), "Blad: identyfikator ksztaltu nie zgadza sie");
+	AssertEquals(weight, deserializedRect.getWeight(), "BLAD: waga ksztaltu nie zgadza sie");
 	// AssertEquals(movable, deserializedRect.IsMovable(), "BLAD: mozliwosc przesuwania ksztaltu nie zgadza sie");
 }

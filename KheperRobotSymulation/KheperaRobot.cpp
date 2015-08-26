@@ -5,26 +5,26 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	float directionAngle) : CircularEnt(id, weight, true, x, y, robotRadius),
 	_wheelRadius(wheelRadius), _wheelDistance(wheelDistance), _directionAngle(directionAngle)
 {
-	_shapeID = SymEnt::KHEPERA_ROBOT;
+	_shapeID = SimEnt::KHEPERA_ROBOT;
 }
 
 KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
 {
-	_shapeID = SymEnt::KHEPERA_ROBOT;
+	_shapeID = SimEnt::KHEPERA_ROBOT;
 
 	file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
 	file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
 	file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
 }
 
-void KheperaRobot::UpdatePosition(double deltaTime)
+void KheperaRobot::updatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
 	// here is more precise equation: http://robotics.stackexchange.com/a/1679
 
 	// angles of which wheels turned during deltaTime
-	double leftWheelTurnAngle = _leftMotor.GetSpeed() * deltaTime;
-	double rightWheelTurnAngle = _rightMotor.GetSpeed() * deltaTime;
+	double leftWheelTurnAngle = _leftMotor.getSpeed() * deltaTime;
+	double rightWheelTurnAngle = _rightMotor.getSpeed() * deltaTime;
 
 	double deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
 	_directionAngle += deltaFI;
@@ -33,7 +33,7 @@ void KheperaRobot::UpdatePosition(double deltaTime)
 	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
 	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
-	_center->SetCoords(_center->GetX() + deltaX, _center->GetY() + deltaY); 
+	_center->setCoords(_center->getX() + deltaX, _center->getY() + deltaY); 
 	
 }
 
@@ -86,18 +86,18 @@ DATA_LENGTH = 352 bytes
 
 */
 
-void KheperaRobot::Serialize(Buffer& buffer)
+void KheperaRobot::serialize(Buffer& buffer)
 {
-	CircularEnt::Serialize(buffer);
+	CircularEnt::serialize(buffer);
 
-	buffer.Pack(htons(_wheelRadius));
-	buffer.Pack(htons(_wheelDistance));
-	buffer.Pack(_directionAngle);
+	buffer.pack(htons(_wheelRadius));
+	buffer.pack(htons(_wheelDistance));
+	buffer.pack(_directionAngle);
 }
 
-void KheperaRobot::Serialize(std::ofstream& file)
+void KheperaRobot::serialize(std::ofstream& file)
 {
-	CircularEnt::Serialize(file);
+	CircularEnt::serialize(file);
 
 	file.write(reinterpret_cast<const char*>(&_wheelRadius), sizeof(_wheelRadius));
 	file.write(reinterpret_cast<const char*>(&_wheelDistance), sizeof(_wheelDistance));

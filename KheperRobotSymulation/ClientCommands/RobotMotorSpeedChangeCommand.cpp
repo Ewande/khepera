@@ -9,7 +9,7 @@ RobotMotorSpeedChangeCommand::~RobotMotorSpeedChangeCommand()
 {
 }
 
-uint16_t RobotMotorSpeedChangeCommand::Execute(Symulation* sym, SOCKET sock)
+uint16_t RobotMotorSpeedChangeCommand::execute(Simulation* sim, SOCKET sock)
 {
 	uint16_t robotID;
 	uint8_t  motorID;
@@ -22,21 +22,21 @@ uint16_t RobotMotorSpeedChangeCommand::Execute(Symulation* sym, SOCKET sock)
 
 	recv(sock, reinterpret_cast<char*>(&newSpeed), sizeof(newSpeed), 0);
 
-	SymEnt* entity = sym->GetEntity(robotID);
+	SimEnt* entity = sim->getEntity(robotID);
 	if (entity != NULL)
 	{
 		KheperaRobot* robot = dynamic_cast<KheperaRobot*>(entity);
 		if (robot != NULL)
 		{
 			// we will be changing speed, so nobody othere should write or read at the same time
-			sym->Lock(); 
+			sim->lock(); 
 			switch (motorID)
 			{
-				case LEFT_MOTOR_ID: robot->SetLeftMotorSpeed(newSpeed); break;
-				case RIGHT_MOTOR_ID: robot->SetRightMotorSpeed(newSpeed); break;
-				default: sym->Unlock(); return ClientCommand::ERROR_CODE_INVALID_MOTOR_ID;
+				case LEFT_MOTOR_ID: robot->setLeftMotorSpeed(newSpeed); break;
+				case RIGHT_MOTOR_ID: robot->setRightMotorSpeed(newSpeed); break;
+				default: sim->unlock(); return ClientCommand::ERROR_CODE_INVALID_MOTOR_ID;
 			}
-			sym->Unlock();
+			sim->unlock();
 		}
 		else
 			return ClientCommand::ERROR_CODE_INVALID_ENTITY_ID;

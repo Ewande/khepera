@@ -31,7 +31,7 @@ class RobotMotorSpeedChangeCommand : public ClientCommand
 		RobotMotorSpeedChangeCommand();
 		virtual ~RobotMotorSpeedChangeCommand();
 
-		virtual uint16_t Execute(Symulation* sym, SOCKET sock);
+		virtual uint16_t execute(Simulation* sim, SOCKET sock);
 	private:
 
 };

@@ -6,8 +6,8 @@
 class Motor
 {
 	public:
-		double GetSpeed() const { return _speed; } // returns speed in [ rad / sec ]
-		void SetSpeed(double speed) { _speed = speed; }
+		double getSpeed() const { return _speed; } // returns speed in [ rad / sec ]
+		void setSpeed(double speed) { _speed = speed; }
 
 	protected:
 		double  _speed; // [ rad / sec ]

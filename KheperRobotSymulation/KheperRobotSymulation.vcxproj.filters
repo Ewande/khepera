@@ -8,13 +8,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
-    <ClCompile Include="Symulation.cpp" />
     <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
       <Filter>ClientCommands</Filter>
     </ClCompile>
     <ClCompile Include="LinearEnt.cpp" />
     <ClCompile Include="MathLib.cpp" />
-    <ClCompile Include="SymEnt.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SimEnt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Buffer.h" />
@@ -24,8 +24,6 @@
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RectangularEnt.h" />
-    <ClInclude Include="SymEnt.h" />
-    <ClInclude Include="Symulation.h" />
     <ClInclude Include="ClientCommands\ClientCommand.h">
       <Filter>ClientCommands</Filter>
     </ClInclude>
@@ -34,6 +32,8 @@
     </ClInclude>
     <ClInclude Include="LinearEnt.h" />
     <ClInclude Include="MathLib.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SimEnt.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ClientCommands">

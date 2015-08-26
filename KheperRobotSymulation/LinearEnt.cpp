@@ -1,11 +1,11 @@
 #include "LinearEnt.h"
 
 LinearEnt::LinearEnt(uint16_t id, double begX, double begY,
-	double endX, double endY) : SymEnt(id, SymEnt::LINE, 0, false)
+	double endX, double endY) : SimEnt(id, SimEnt::LINE, 0, false)
 {
 	_beg = new Point(begX, begY);
 	_end = new Point(endX, endY);
-	_length = _beg->GetDistance(*_end);
+	_length = _beg->getDistance(*_end);
 }
 
 LinearEnt::~LinearEnt()
@@ -15,30 +15,30 @@ LinearEnt::~LinearEnt()
 }
 
 
-double LinearEnt::CollisionLength(SymEnt& other, Point& proj)
+double LinearEnt::collisionLength(SimEnt& other, Point& proj)
 {
-	int other_shape = other.GetShapeID();
+	int other_shape = other.getShapeID();
 
-	if (other_shape == SymEnt::CIRCLE || other_shape == SymEnt::KHEPERA_ROBOT)
-		return other.CollisionLength(*this, proj);
+	if (other_shape == SimEnt::CIRCLE || other_shape == SimEnt::KHEPERA_ROBOT)
+		return other.collisionLength(*this, proj);
 	else
 		return -1;
 }
 
-void LinearEnt::Translate(int x, int y)
+void LinearEnt::translate(int x, int y)
 {
-	_beg->Translate(x, y);
-	_end->Translate(x, y);
+	_beg->translate(x, y);
+	_end->translate(x, y);
 }
 
-void LinearEnt::Serialize(Buffer& buffer)
+void LinearEnt::serialize(Buffer& buffer)
 {
-	buffer.Pack(_shapeID);
-	buffer.Pack(htons(_id));
-	buffer.Pack(_movable);
-	buffer.Pack(htonl(_weight));
-	buffer.Pack(_beg->GetX());
-	buffer.Pack(_beg->GetY());
-	buffer.Pack(_end->GetX());
-	buffer.Pack(_end->GetY());
+	buffer.pack(_shapeID);
+	buffer.pack(htons(_id));
+	buffer.pack(_movable);
+	buffer.pack(htonl(_weight));
+	buffer.pack(_beg->getX());
+	buffer.pack(_beg->getY());
+	buffer.pack(_end->getX());
+	buffer.pack(_end->getY());
 }

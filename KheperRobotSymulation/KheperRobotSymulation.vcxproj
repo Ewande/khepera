@@ -91,8 +91,8 @@
     <ClInclude Include="Motor.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="RectangularEnt.h" />
-    <ClInclude Include="SymEnt.h" />
-    <ClInclude Include="Symulation.h" />
+    <ClInclude Include="SimEnt.h" />
+    <ClInclude Include="Simulation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
@@ -105,8 +105,8 @@
     <ClCompile Include="MathLib.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="RectangularEnt.cpp" />
-    <ClCompile Include="SymEnt.cpp" />
-    <ClCompile Include="Symulation.cpp" />
+    <ClCompile Include="SimEnt.cpp" />
+    <ClCompile Include="Simulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

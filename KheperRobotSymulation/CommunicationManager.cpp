@@ -3,9 +3,9 @@
 const int CommunicationManager::NUMBER_OF_CONTROLLERS_COMMANDS = 
 	ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID + 1;
 
-CommunicationManager::CommunicationManager(Symulation* sym) : _isStopped(false)
+CommunicationManager::CommunicationManager(Simulation* sim) : _isStopped(false)
 {
-	_symulation = sym;
+	_simulation = sim;
 
 	InitializeCriticalSection(&_clientsMutex);
 
@@ -42,7 +42,7 @@ CommunicationManager::~CommunicationManager()
 	DeleteCriticalSection(&_clientsMutex);
 }
 
-bool CommunicationManager::Init()
+bool CommunicationManager::init()
 {
 	struct addrinfo *result = NULL, *ptr = NULL, hints;
 
@@ -92,7 +92,7 @@ bool CommunicationManager::Init()
 	return true;
 }
 
-void CommunicationManager::RunServerLoop()
+void CommunicationManager::runServerLoop()
 {
 	while (!_isStopped)
 	{
@@ -122,17 +122,17 @@ void CommunicationManager::RunServerLoop()
 	}
 }
 
-void CommunicationManager::SendWorldDescriptionToVisualisers()
+void CommunicationManager::sendWorldDescriptionToVisualisers()
 {
 	Buffer b;
-	_symulation->Serialize(b);
+	_simulation->serialize(b);
 
 	EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
 
 	for (std::set<SOCKET>::iterator it = _visualisers.begin();
 		it != _visualisers.end(); it++)
 	{
-		send(*it, reinterpret_cast<const char*>(b.GetBuffer()), b.GetLength(), 0);
+		send(*it, reinterpret_cast<const char*>(b.getBuffer()), b.getLength(), 0);
 	}
 
 	LeaveCriticalSection(&_clientsMutex);
@@ -185,7 +185,7 @@ void CommunicationManager::ReceiveRobotControlersMessages(fd_set* sockets)
 				std::cout << "Received command id: " << commandID << std::endl;
 				if (commandID < NUMBER_OF_CONTROLLERS_COMMANDS)
 					// TODO: Send back error code in case of errors
-					_robotsControlersCommandsList[commandID]->Execute(_symulation, *it);
+					_robotsControlersCommandsList[commandID]->execute(_simulation, *it);
 				it++;
 			}
 		}

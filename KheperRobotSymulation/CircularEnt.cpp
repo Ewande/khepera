@@ -5,12 +5,12 @@
 #include <iostream>
 
 CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y,
-	double radius) : SymEnt(id, SymEnt::CIRCLE, weight, movable), _radius(radius)
+	double radius) : SimEnt(id, SimEnt::CIRCLE, weight, movable), _radius(radius)
 {
 	_center = new Point(x, y);
 }
 
-CircularEnt::CircularEnt(std::ifstream& file) : SymEnt(file, SymEnt::CIRCLE)
+CircularEnt::CircularEnt(std::ifstream& file) : SimEnt(file, SimEnt::CIRCLE)
 {
 	double x, y;
 	file.read(reinterpret_cast<char*>(&x), sizeof(x));
@@ -21,9 +21,9 @@ CircularEnt::CircularEnt(std::ifstream& file) : SymEnt(file, SymEnt::CIRCLE)
 }
 
 
-double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
+double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 {
-	int other_shape = other.GetShapeID();
+	int other_shape = other.getShapeID();
 
 	if (other_shape == LINE)
 	{
@@ -37,35 +37,35 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 
 		LinearEnt &conv = *dynamic_cast<LinearEnt*>(&other);
 		bool belongs;
-		Point orth_proj = orthogonalProjection(*_center, conv.GetBeg(), conv.GetEnd(), &belongs);
-		double ovr_dist = orth_proj.GetDistance(*_center);
+		Point orth_proj = orthogonalProjection(*_center, conv.getBeg(), conv.getEnd(), &belongs);
+		double ovr_dist = orth_proj.getDistance(*_center);
 
 		if (ovr_dist <= _radius)
 		{
 			if (belongs)
 			{
-				proj.SetCoords(orth_proj);
+				proj.setCoords(orth_proj);
 				return _radius - ovr_dist + 1;
 			}
 
-			double dist_to_beg = conv.GetBeg().GetDistance(*_center), dist_to_end = conv.GetEnd().GetDistance(*_center);
+			double dist_to_beg = conv.getBeg().getDistance(*_center), dist_to_end = conv.getEnd().getDistance(*_center);
 			double dist_to_vertex = min(dist_to_beg, dist_to_end);
 			if (dist_to_vertex <= _radius)
 			{
-				proj.SetCoords(dist_to_beg == dist_to_vertex ? conv.GetBeg() : conv.GetEnd());
+				proj.setCoords(dist_to_beg == dist_to_vertex ? conv.getBeg() : conv.getEnd());
 				return _radius - dist_to_vertex + 1;
 			}
 		}
 	}
 
 	else if (other_shape == RECTANGLE)
-		return other.CollisionLength(*this, proj);
+		return other.collisionLength(*this, proj);
 
 	else if (other_shape == CIRCLE || other_shape == KHEPERA_ROBOT)
 	{
 		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
-		double radiuses_sum = _radius + converted.GetRadius();
-		double centres_diff = _center->GetDistance(converted.GetCenter());
+		double radiuses_sum = _radius + converted.getRadius();
+		double centres_diff = _center->getDistance(converted.getCenter());
 
 		return radiuses_sum - centres_diff + 1;
 	}
@@ -73,9 +73,9 @@ double CircularEnt::CollisionLength(SymEnt& other, Point& proj)
 	return NO_COLLISION;
 }
 
-void CircularEnt::Translate(int x, int y)
+void CircularEnt::translate(int x, int y)
 {
-	_center->Translate(x, y);
+	_center->translate(x, y);
 }
 
 /*
@@ -116,21 +116,21 @@ void CircularEnt::Translate(int x, int y)
 
 */
 
-void CircularEnt::Serialize(Buffer& buffer)
+void CircularEnt::serialize(Buffer& buffer)
 {
-	SymEnt::Serialize(buffer);
+	SimEnt::serialize(buffer);
 
-	buffer.Pack(GetX());
-	buffer.Pack(GetY());
-	buffer.Pack(_radius);
+	buffer.pack(getX());
+	buffer.pack(getY());
+	buffer.pack(_radius);
 }
 
-void CircularEnt::Serialize(std::ofstream& file)
+void CircularEnt::serialize(std::ofstream& file)
 {
-	double x = GetX();
-	double y = GetY();
+	double x = getX();
+	double y = getY();
 
-	SymEnt::Serialize(file);
+	SimEnt::serialize(file);
 	file.write(reinterpret_cast<const char*>(&x), sizeof(x));
 	file.write(reinterpret_cast<const char*>(&y), sizeof(y));
 	file.write(reinterpret_cast<const char*>(&_radius), sizeof(_radius));

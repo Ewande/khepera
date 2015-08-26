@@ -12,17 +12,17 @@ class KheperaRobot : public CircularEnt
 			uint16_t wheelDistance, float directionAngle);
 		KheperaRobot(std::ifstream& file);
 
-		void SetRightMotorSpeed(double speed) { _rightMotor.SetSpeed(speed); }
-		void SetLeftMotorSpeed(double speed) { _leftMotor.SetSpeed(speed); }
+		void setRightMotorSpeed(double speed) { _rightMotor.setSpeed(speed); }
+		void setLeftMotorSpeed(double speed) { _leftMotor.setSpeed(speed); }
 
-		double GetRightMotorSpeed() const { return _rightMotor.GetSpeed(); }
-		double GetLeftMotorSpeed() const { return _leftMotor.GetSpeed(); }
+		double getRightMotorSpeed() const { return _rightMotor.getSpeed(); }
+		double getLeftMotorSpeed() const { return _leftMotor.getSpeed(); }
 
 		// deltaTime in [ sec ]
-		void UpdatePosition(double deltaTime);
+		void updatePosition(double deltaTime);
 
-		virtual void Serialize(Buffer& buffer);
-		virtual void Serialize(std::ofstream& file);
+		virtual void serialize(Buffer& buffer);
+		virtual void serialize(std::ofstream& file);
 
 
 	protected:

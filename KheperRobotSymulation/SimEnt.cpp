@@ -1,4 +1,4 @@
-#include "SymEnt.h"
+#include "SimEnt.h"
 
 /*
 	Serialization format (integers in network-byte-order, doubles and floats in host-byte-order)
@@ -19,7 +19,7 @@
 
 */
 
-SymEnt::SymEnt(std::ifstream& file, uint8_t shapeID)
+SimEnt::SimEnt(std::ifstream& file, uint8_t shapeID)
 {
 	_shapeID = shapeID;
 	file.read(reinterpret_cast<char*>(&_id), sizeof(_id));
@@ -27,15 +27,15 @@ SymEnt::SymEnt(std::ifstream& file, uint8_t shapeID)
 	file.read(reinterpret_cast<char*>(&_weight), sizeof(_weight));
 }
 
-void SymEnt::Serialize(Buffer& buffer)
+void SimEnt::serialize(Buffer& buffer)
 {
-	buffer.Pack(_shapeID);
-	buffer.Pack(htons(_id));
-	buffer.Pack(_movable);
-	buffer.Pack(htonl(_weight));
+	buffer.pack(_shapeID);
+	buffer.pack(htons(_id));
+	buffer.pack(_movable);
+	buffer.pack(htonl(_weight));
 }
 
-void SymEnt::Serialize(std::ofstream& file)
+void SimEnt::serialize(std::ofstream& file)
 {
 	file.write(reinterpret_cast<const char*>(&_shapeID), sizeof(_shapeID));
 	file.write(reinterpret_cast<const char*>(&_id), sizeof(_id));

@@ -9,7 +9,7 @@
 #include "Buffer.h"
 #include "Point.h"
 
-class SymEnt
+class SimEnt
 {
 	public:
 		// shapes IDs definitions
@@ -18,25 +18,25 @@ class SymEnt
 		static const uint8_t KHEPERA_ROBOT = 2;
 		static const uint8_t LINE = 3;
 
-		SymEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
+		SimEnt(uint16_t id, uint8_t shape, uint32_t weight, bool movable) : _id(id), _shapeID(shape),
 			_weight(weight), _movable(movable) {}
-		SymEnt(std::ifstream& file, uint8_t shapeID);
+		SimEnt(std::ifstream& file, uint8_t shapeID);
 
-		virtual ~SymEnt() {}
+		virtual ~SimEnt() {}
 
-		uint16_t GetID() const { return _id; }
-		uint8_t GetShapeID() const { return _shapeID; }
-		uint32_t GetWeight() const { return _weight; }
+		uint16_t getID() const { return _id; }
+		uint8_t getShapeID() const { return _shapeID; }
+		uint32_t getWeight() const { return _weight; }
 
 
-		virtual double CollisionLength(SymEnt& other, Point& proj) = 0;
+		virtual double collisionLength(SimEnt& other, Point& proj) = 0;
 		// virtual void Rotate(double angle) = 0; TODO: Later
-		virtual void Translate(int x, int y) = 0;
+		virtual void translate(int x, int y) = 0;
 
 		// serialize for network transmission
-		virtual void Serialize(Buffer& buffer) = 0;
+		virtual void serialize(Buffer& buffer) = 0;
 		// serialize for file storage WARNING: Uses host-byte-order
-		virtual void Serialize(std::ofstream& file) = 0;
+		virtual void serialize(std::ofstream& file) = 0;
 	protected:
 
 		/* TODO: Maybe we should store color information, so that visualiser user will be able to distinct diffrent entities */

@@ -1,10 +1,10 @@
 #ifndef CIRCULAR_ENT_H
 #define CIRCULAR_ENT_H
 
-#include "SymEnt.h"
+#include "SimEnt.h"
 #include "Point.h"
 
-class CircularEnt : public SymEnt
+class CircularEnt : public SimEnt
 {
 	public:
 		// x, y -> center coords
@@ -14,16 +14,16 @@ class CircularEnt : public SymEnt
 		virtual ~CircularEnt() { delete _center; }
 
 
-		double CollisionLength(SymEnt& other, Point& proj);
-		double GetX() { return _center->GetX(); }
-		double GetY() { return _center->GetY(); }
-		double GetRadius() { return _radius; }
-		Point& GetCenter() { return *_center; }
+		double collisionLength(SimEnt& other, Point& proj);
+		double getX() { return _center->getX(); }
+		double getY() { return _center->getY(); }
+		double getRadius() { return _radius; }
+		Point& getCenter() { return *_center; }
 
-		virtual void Translate(int x, int y);
+		virtual void translate(int x, int y);
 
-		virtual void Serialize(Buffer& buffer);
-		virtual void Serialize(std::ofstream& file);
+		virtual void serialize(Buffer& buffer);
+		virtual void serialize(std::ofstream& file);
 
 	protected:
 		Point* _center;

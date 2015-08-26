@@ -7,12 +7,12 @@
 #include <Ws2tcpip.h>
 #include <iostream>
 
-#include "Symulation.h"
+#include "Simulation.h"
 
 #include "ClientCommands\ClientCommand.h"
 #include "ClientCommands\RobotMotorSpeedChangeCommand.h"
 
-class Symulation;
+class Simulation;
 class ClientCommand;
 
 class CommunicationManager
@@ -23,20 +23,20 @@ class CommunicationManager
 		static const int NUMBER_OF_CONTROLLERS_COMMANDS;
 			
 
-		CommunicationManager(Symulation* symulation);
+		CommunicationManager(Simulation* simulation);
 		~CommunicationManager();
 
-		bool Init();
+		bool init();
 
 		// starts server loop, which receives and responds to clients requests
 		// WARNING: blocks current thread
-		void RunServerLoop(); 
+		void runServerLoop(); 
 
 		// called by Symulation after every time when symulation state is updated, to inform visualisers about it
-		void SendWorldDescriptionToVisualisers();
+		void sendWorldDescriptionToVisualisers();
 	private:
 		SOCKET                     _listenSocket; 
-		Symulation*                _symulation;
+		Simulation*                _simulation;
 		bool                       _isStopped; // if there was request to stop communication manager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 

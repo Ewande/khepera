@@ -14,10 +14,10 @@ class Buffer
 		~Buffer();
 
 		template <typename T>
-		void Pack(const T& data);
+		void pack(const T& data);
 
-		uint8_t* GetBuffer() { return &_buffer[0]; }
-		int GetLength() const { return _buffer.size(); }
+		uint8_t* getBuffer() { return &_buffer[0]; }
+		int getLength() const { return _buffer.size(); }
 
 	private:
 		// no clonning
@@ -27,7 +27,7 @@ class Buffer
 };
 
 template <typename T>
-void Buffer::Pack(const T& data)
+void Buffer::pack(const T& data)
 {
 	const uint8_t* ptr = reinterpret_cast<const uint8_t*>(&data);
 

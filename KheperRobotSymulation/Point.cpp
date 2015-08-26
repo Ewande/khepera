@@ -1,15 +1,15 @@
 #include "Point.h"
 
-double Point::GetDistance(Point& other)
+double Point::getDistance(Point& other)
 {
-	double x_diff = GetXDiff(other);
-	double y_diff = GetYDiff(other);
+	double x_diff = getXDiff(other);
+	double y_diff = getYDiff(other);
 	return sqrt(x_diff * x_diff + y_diff * y_diff);
 }
 
-double Point::Dot(Point& other)
+double Point::dot(Point& other)
 {
-	return d_x * other.GetX() + d_y * other.GetY();
+	return d_x * other.getX() + d_y * other.getY();
 }
 
 Point operator+(Point& fst, Point& snd)

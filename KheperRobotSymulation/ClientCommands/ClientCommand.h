@@ -4,9 +4,9 @@
 #include <stdint.h>
 #include <WinSock2.h>
 
-#include "../Symulation.h"
+#include "../Simulation.h"
 
-class Symulation;
+class Simulation;
 
 class ClientCommand
 {
@@ -25,7 +25,7 @@ class ClientCommand
 		virtual ~ClientCommand() {}
 
 		// Execute this command on given symulation object, get necessary args from socket, should return error code
-		virtual uint16_t Execute(Symulation* sym, SOCKET sock) = 0;
+		virtual uint16_t execute(Simulation* sim, SOCKET sock) = 0;
 	protected:
 		uint8_t   _id;
 };
