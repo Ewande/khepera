@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, 45);
 
 	Buffer b2;
-	const int symulationDelay = 100; // in [ msec ]
+	const int simulationDelay = 100; // in [ msec ]
 
 	Simulation* simulation = new Simulation(500, 400, true);
 	CommunicationManager* commMan = new CommunicationManager(simulation);
@@ -43,14 +43,12 @@ int main(int argc, char** argv)
 	simulation->addEntity(rotatedRect);
 
 	simulation->serialize(b2);
-	for (int i = 0; i < b2.getLength(); i++)
+	/*for (int i = 0; i < b2.getLength(); i++)
 	{
 		printf("%x ", b2.getBuffer()[i]);
 		if ((i + 1) % 32 == 0)
 			std::cout << std::endl;
-	}
-
-	simulation->setCommunicationManager(commMan);
+	}*/
 
 	// init WINSock
 	WSADATA wsaData;
@@ -58,7 +56,8 @@ int main(int argc, char** argv)
 
 	// Initialize Winsock
 	iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (iResult != 0) {
+	if (iResult != 0)
+    {
 		printf("WSAStartup failed: %d\n", iResult);
 		return 1;
 	}

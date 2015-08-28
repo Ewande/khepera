@@ -266,7 +266,7 @@ void Simulation::serialize(Buffer& buffer) const
 {
 	buffer.pack(htonl(_worldWidth));
 	buffer.pack(htonl(_worldHeight));
-	buffer.pack(htonl(_time));
+	buffer.pack(_time);
 	buffer.pack(htons(static_cast<uint16_t>(_entities.size())));
 
 	std::map<uint16_t, SimEnt*>::const_iterator it = _entities.begin();
@@ -304,6 +304,7 @@ void Simulation::run()
 		lock();
 
 		_commMan->sendWorldDescriptionToVisualisers();
+        _commMan->sendRobotsStatesToControllers();
 		update(_simulationStep);
 		std::cout << "RUNNING: " <<  i++ << std::endl;
 

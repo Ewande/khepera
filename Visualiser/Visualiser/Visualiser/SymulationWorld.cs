@@ -12,7 +12,7 @@ namespace Visualiser
 
         public UInt32                       WorldWidth { get; set; }
         public UInt32                       WorldHeight { get; set; }
-        public UInt32                       Time { get; set; }
+        public Double                       Time { get; set; }
 
         public Dictionary<UInt16, SymEnt>   Entities { get; private set; }
 

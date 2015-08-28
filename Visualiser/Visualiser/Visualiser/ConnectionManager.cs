@@ -42,7 +42,7 @@ namespace Visualiser
 
             result.WorldWidth = (UInt32) IPAddress.NetworkToHostOrder(reader.ReadInt32());
             result.WorldHeight = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            result.Time = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            result.Time = reader.ReadDouble();
 
             int numberOfEntites = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
 

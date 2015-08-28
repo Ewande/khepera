@@ -25,6 +25,7 @@ class CommunicationManager;
 class Simulation
 {
 	public:
+        friend class CommunicationManager;
 		friend DWORD WINAPI SimulationThreadWrapperFunction(LPVOID threadData);
 
         Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds);
@@ -56,7 +57,7 @@ class Simulation
 		std::map<uint16_t, SimEnt*>   _entities;
 		uint32_t                      _worldWidth;
 		uint32_t                      _worldHeight;
-		uint32_t                      _time;
+		double                        _time;
 		double                        _simulationStep; // in [ s ]
 		uint16_t                      _simulationDelay; // in [ ms ]
 
