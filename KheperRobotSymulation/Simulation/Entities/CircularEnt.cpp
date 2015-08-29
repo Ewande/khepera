@@ -73,7 +73,7 @@ double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 	return NO_COLLISION;
 }
 
-void CircularEnt::translate(int x, int y)
+void CircularEnt::translate(double x, double y)
 {
 	_center->translate(x, y);
 }

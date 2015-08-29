@@ -41,7 +41,7 @@ double RectangularEnt::collisionLength(SimEnt& other, Point& proj)
 		return NO_COLLISION;
 }
 
-void RectangularEnt::translate(int x, int y)
+void RectangularEnt::translate(double x, double y)
 {
 	_bottLeft->translate(x, y);
 }
@@ -163,13 +163,10 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 
 void RectangularEnt::serialize(Buffer& buffer)
 {
-	double ang_cos = cosD(_angle);
-	double ang_sin = sinD(_angle);
+    SimEnt::serialize(buffer);
 
-	buffer.pack(_shapeID);
-    buffer.pack(htons(_id));
-    buffer.pack(_movable);
-    buffer.pack(htonl(_weight));
+    double ang_cos = cosD(_angle);
+    double ang_sin = sinD(_angle);
     buffer.pack(_bottLeft->getX());
     buffer.pack(_bottLeft->getY());
     buffer.pack(_bottLeft->getX() - _height * ang_sin);

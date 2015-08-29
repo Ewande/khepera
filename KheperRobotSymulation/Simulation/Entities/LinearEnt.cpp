@@ -25,7 +25,7 @@ double LinearEnt::collisionLength(SimEnt& other, Point& proj)
 		return -1;
 }
 
-void LinearEnt::translate(int x, int y)
+void LinearEnt::translate(double x, double y)
 {
 	_beg->translate(x, y);
 	_end->translate(x, y);

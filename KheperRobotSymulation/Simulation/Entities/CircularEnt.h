@@ -2,14 +2,13 @@
 #define CIRCULAR_ENT_H
 
 #include "SimEnt.h"
-#include "Point.h"
+#include "../Math/Point.h"
 
 class CircularEnt : public SimEnt
 {
 	public:
 		// x, y -> center coords
-		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x,
-			double y, double radius);
+		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y, double radius);
 		CircularEnt(std::ifstream& file);
 		virtual ~CircularEnt() { delete _center; }
 
@@ -20,7 +19,7 @@ class CircularEnt : public SimEnt
 		double getRadius() { return _radius; }
 		Point& getCenter() { return *_center; }
 
-		virtual void translate(int x, int y);
+		virtual void translate(double x, double y);
 
 		virtual void serialize(Buffer& buffer);
 		virtual void serialize(std::ofstream& file);

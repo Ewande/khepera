@@ -1,47 +1,25 @@
 #include "Simulation.h"
-#include <iostream>
 
-DWORD WINAPI SimulationThreadWrapperFunction(LPVOID threadData)
-{
-    Simulation* sim = static_cast<Simulation*>(threadData);
-
-	sim->run();
-
-	return 0; // unused thread return value
-}
-
-Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds) :
-	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
-	_commMan(NULL), _simulationThreadHandle(INVALID_HANDLE_VALUE), _simulationStep(DEFAULT_SIMULATION_STEP),
-	_simulationDelay(DEFAULT_SIMULATION_DELAY)
-{
-	if (addBounds)
-	{
-		LinearEnt* bottom_line = new LinearEnt(RESERVED_ID_LEVEL + 1, 0, 0, worldWidth, 0);
-		LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, worldHeight, worldWidth, worldHeight);
-		LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, worldHeight);
-		LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, worldWidth, 0, worldWidth, worldHeight);
-		_entities[RESERVED_ID_LEVEL + 1] = bottom_line;
-		_entities[RESERVED_ID_LEVEL + 2] = top_line;
-		_entities[RESERVED_ID_LEVEL + 3] = left_line;
-		_entities[RESERVED_ID_LEVEL + 4] = right_line;
-	}
-	InitializeCriticalSection(&_criticalSection);
-}
-
-Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight,
-	double symulationStep , int symulationDelay) :
-	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false),
-	_commMan(NULL), _simulationThreadHandle(INVALID_HANDLE_VALUE), _simulationStep(symulationStep),
-	_simulationDelay(symulationDelay)
-{
-	InitializeCriticalSection(&_criticalSection);
-}
-
-Simulation::Simulation(std::ifstream& file, double simulationStep,
-	int simulationDelay) : _isRunning(false),
-	_commMan(NULL), _simulationThreadHandle(INVALID_HANDLE_VALUE), _simulationStep(simulationStep),
+Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds,
+	double simulationStep , int simulationDelay) :
+	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false), _simulationStep(simulationStep),
 	_simulationDelay(simulationDelay)
+{
+    if (addBounds)
+    {
+        LinearEnt* bottom_line = new LinearEnt(RESERVED_ID_LEVEL + 1, 0, 0, worldWidth, 0);
+        LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, worldHeight, worldWidth, worldHeight);
+        LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, worldHeight);
+        LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, worldWidth, 0, worldWidth, worldHeight);
+        _entities[RESERVED_ID_LEVEL + 1] = bottom_line;
+        _entities[RESERVED_ID_LEVEL + 2] = top_line;
+        _entities[RESERVED_ID_LEVEL + 3] = left_line;
+        _entities[RESERVED_ID_LEVEL + 4] = right_line;
+    }
+}
+
+Simulation::Simulation(std::ifstream& file, double simulationStep, int simulationDelay)
+    : _isRunning(false), _simulationStep(simulationStep), _simulationDelay(simulationDelay)
 {
 	uint16_t numberOfEntities;
 
@@ -66,13 +44,11 @@ Simulation::Simulation(std::ifstream& file, double simulationStep,
 		}
 		addEntity(newEntity);
 	}
-
-	InitializeCriticalSection(&_criticalSection);
 }
 
 Simulation::~Simulation()
 {
-	_isRunning = false; // to stop _symulationThreadHandle
+	_isRunning = false; // to stop _simulationThreadHandle
 
 	std::map<uint16_t, SimEnt*>::iterator it = _entities.begin();
 
@@ -81,8 +57,6 @@ Simulation::~Simulation()
 		delete it->second;
 		it++;
 	}
-
-	DeleteCriticalSection(&_criticalSection);
 }
 
 void Simulation::addEntity(SimEnt* newEntity)
@@ -96,9 +70,6 @@ void Simulation::start()
 {
 	_time = 0;
 	_isRunning = true;
-
-	_simulationThreadHandle = CreateThread(NULL, 0, SimulationThreadWrapperFunction,
-		static_cast<LPVOID>(this), 0, NULL);
 }
 
 void Simulation::update(double deltaTime)
@@ -109,10 +80,7 @@ void Simulation::update(double deltaTime)
 
 	while (it != _entities.end())
 	{
-		if (it->second->getShapeID() == SimEnt::KHEPERA_ROBOT)
-		{
-			dynamic_cast<KheperaRobot*>(it->second)->updatePosition(deltaTime);
-		}
+		it->second->updatePosition(deltaTime);
 		it++;
 	}
 	checkCollisions();
@@ -241,7 +209,7 @@ SimEnt* Simulation::getEntity(uint16_t id)
 }
 
 /*
-		Serialization format (all numbers in network byte order)
+		Serialization format (all numbers except for time in network byte order - time is in host-byte order)
 	+-------------------+--------------------------------------+-------------------+
 	|                                                                              |
 	|                              WORLD_WIDTH                                     |
@@ -253,7 +221,7 @@ SimEnt* Simulation::getEntity(uint16_t id)
 	+------------------------------------------------------------------------------+
 	|                                                                              |
 	|                                  TIME                                        |
-	|                                32 bytes                                      |
+	|                                64 bytes                                      |
 	+-------------------+--------------------------------------+-------------------+
 	|                                      |                                       |
 	|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
@@ -294,23 +262,4 @@ void Simulation::serialize(std::ofstream& file) const
 		it->second->serialize(file);
 		it++;
 	}
-}
-
-void Simulation::run()
-{
-	int i = 0;
-	while (_isRunning)
-	{
-		lock();
-
-		_commMan->sendWorldDescriptionToVisualisers();
-        _commMan->sendRobotsStatesToControllers();
-		update(_simulationStep);
-		std::cout << "RUNNING: " <<  i++ << std::endl;
-
-		unlock();
-		Sleep(_simulationDelay);
-	}
-
-	std::cout << "THREAD END" << std::endl;
 }

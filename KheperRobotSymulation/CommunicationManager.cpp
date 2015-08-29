@@ -1,25 +1,22 @@
 #include "CommunicationManager.h"
 
-const int CommunicationManager::NUMBER_OF_CONTROLLERS_COMMANDS = 
+const int CommunicationManager::NUMBER_OF_CONTROLLER_COMMANDS = 
 	ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID + 1;
 
-CommunicationManager::CommunicationManager(Simulation* sim) : _isStopped(false)
+CommunicationManager::CommunicationManager(DistrSimulation* sim) : _isStopped(false), _simulation(sim)
 {
-	_simulation = sim;
-
 	InitializeCriticalSection(&_clientsMutex);
 
 	// initialize arrays with clients commands
-	_robotsControlersCommandsList = new ClientCommand*[NUMBER_OF_CONTROLLERS_COMMANDS];
-	_robotsControlersCommandsList[ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID] =
+    _validControllerCommands = new ClientCommand*[NUMBER_OF_CONTROLLER_COMMANDS];
+    _validControllerCommands[ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID] =
 		new RobotMotorSpeedChangeCommand();
 }
 
 CommunicationManager::~CommunicationManager()
 {
 	/* close visualisers sockets */
-	for (std::set<SOCKET>::iterator it = _visualisers.begin();
-		it != _visualisers.end(); it++)
+	for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
 	{
 		shutdown(*it, SD_SEND);
 		closesocket(*it);
@@ -33,10 +30,10 @@ CommunicationManager::~CommunicationManager()
 	}
 
 	// delete commands
-	for (int i = 0; i < NUMBER_OF_CONTROLLERS_COMMANDS; i++)
-		delete _robotsControlersCommandsList[i];
+	for (int i = 0; i < NUMBER_OF_CONTROLLER_COMMANDS; i++)
+        delete _validControllerCommands[i];
 
-	delete[] _robotsControlersCommandsList;
+    delete[] _validControllerCommands;
 
 	DeleteCriticalSection(&_clientsMutex);
 }
@@ -103,8 +100,7 @@ void CommunicationManager::runServerLoop()
 			FD_SET(it->second, &receivingSockets);
 
 		// add visualisers
-		for (std::set<SOCKET>::iterator it = _visualisers.begin();
-			it != _visualisers.end(); it++)
+		for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
 			FD_SET(*it, &receivingSockets);
 
 		// add server's listen socket
@@ -142,7 +138,7 @@ void CommunicationManager::sendRobotsStatesToControllers()
         Buffer b;
         SimEnt* robot = _simulation->getEntity(it->first);
         // -- TO DO: sending sensors readings instead of simulation step number
-        uint32_t step = _simulation->_time / DEFAULT_SIMULATION_STEP;
+        uint32_t step = (uint32_t)(_simulation->_time / DEFAULT_SIMULATION_STEP);
         b.pack(htonl(step));
         //robot->serialize(b);
         send(it->second, reinterpret_cast<const char*>(b.getBuffer()), b.getLength(), 0);
@@ -209,9 +205,9 @@ void CommunicationManager::receive_robot_controlers_messages(fd_set* sockets)
 			else
 			{
 				std::cout << "Received command id: " << commandID << std::endl;
-				if (commandID < NUMBER_OF_CONTROLLERS_COMMANDS)
+				if (commandID < NUMBER_OF_CONTROLLER_COMMANDS)
 					// TODO: Send back error code in case of errors
-					_robotsControlersCommandsList[commandID]->execute(_simulation, it->second);
+                    _validControllerCommands[commandID]->execute(_simulation, it->second);
 				it++;
 			}
 		}

@@ -9,7 +9,7 @@ RobotMotorSpeedChangeCommand::~RobotMotorSpeedChangeCommand()
 {
 }
 
-uint16_t RobotMotorSpeedChangeCommand::execute(Simulation* sim, SOCKET sock)
+uint16_t RobotMotorSpeedChangeCommand::execute(DistrSimulation* sim, SOCKET sock)
 {
 	uint16_t robotID;
 	uint8_t  motorID;

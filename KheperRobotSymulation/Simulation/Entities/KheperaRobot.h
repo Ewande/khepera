@@ -2,7 +2,17 @@
 #define ROBOT_H
 
 #include "CircularEnt.h"
-#include "Motor.h"
+#include <stdint.h>
+
+class Motor
+{
+    public:
+        double getSpeed() const { return _speed; } // returns speed in [ rad / sec ]
+        void setSpeed(double speed) { _speed = speed; }
+
+    protected:
+        double  _speed; // [ rad / sec ]
+};
 
 class KheperaRobot : public CircularEnt
 {

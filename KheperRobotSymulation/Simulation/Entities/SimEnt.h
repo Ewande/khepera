@@ -6,8 +6,8 @@
 #include <Ws2tcpip.h>
 #include <fstream>
 
-#include "Buffer.h"
-#include "Point.h"
+#include "../Buffer.h"
+#include "../Math/Point.h"
 
 class SimEnt
 {
@@ -28,10 +28,11 @@ class SimEnt
 		uint8_t getShapeID() const { return _shapeID; }
 		uint32_t getWeight() const { return _weight; }
 
-
 		virtual double collisionLength(SimEnt& other, Point& proj) = 0;
-		// virtual void Rotate(double angle) = 0; TODO: Later
-		virtual void translate(int x, int y) = 0;
+		// virtual void rotate(double angle) = 0; TODO: Later
+		virtual void translate(double x, double y) = 0;
+
+        virtual void updatePosition(double deltaTime) {}
 
 		// serialize for network transmission
 		virtual void serialize(Buffer& buffer) = 0;

@@ -2,8 +2,7 @@
 #define ROBOT_ENGINE_SPEED_CHANGE_COMMAND
 
 #include "ClientCommand.h"
-
-#include "../KheperaRobot.h"
+#include "../Simulation/Entities/KheperaRobot.h"
 
 /*
           Serialization format (integers in network-byte-order, doubles and floats in host-byte-order)
@@ -31,7 +30,7 @@ class RobotMotorSpeedChangeCommand : public ClientCommand
 		RobotMotorSpeedChangeCommand();
 		virtual ~RobotMotorSpeedChangeCommand();
 
-		virtual uint16_t execute(Simulation* sim, SOCKET sock);
+		virtual uint16_t execute(DistrSimulation* sim, SOCKET sock);
 	private:
 
 };

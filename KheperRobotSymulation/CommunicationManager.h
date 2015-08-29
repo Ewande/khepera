@@ -7,12 +7,12 @@
 #include <Ws2tcpip.h>
 #include <iostream>
 
-#include "Simulation.h"
+#include "DistrSimulation.h"
 
-#include "ClientCommands\ClientCommand.h"
-#include "ClientCommands\RobotMotorSpeedChangeCommand.h"
+#include "ClientCommands/ClientCommand.h"
+#include "ClientCommands/RobotMotorSpeedChangeCommand.h"
 
-class Simulation;
+class DistrSimulation;
 class ClientCommand;
 
 class CommunicationManager
@@ -23,10 +23,10 @@ class CommunicationManager
 
 		const int LISTEN_PORT = 6020;
 		const char* LISTEN_PORT_STR = "6020";
-		static const int NUMBER_OF_CONTROLLERS_COMMANDS;
+		static const int NUMBER_OF_CONTROLLER_COMMANDS;
 			
 
-		CommunicationManager(Simulation* simulation);
+		CommunicationManager(DistrSimulation* simulation);
 		~CommunicationManager();
 
 		bool init();
@@ -41,7 +41,7 @@ class CommunicationManager
         void sendRobotsStatesToControllers();
 	private:
 		SOCKET                     _listenSocket; 
-		Simulation*                _simulation;
+		DistrSimulation*                _simulation;
 		bool                       _isStopped; // if there was request to stop communication manager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 
@@ -49,8 +49,7 @@ class CommunicationManager
 		std::map<int, SOCKET>      _robotsControllers;
 		std::set<SOCKET>           _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
 
-		// arrays of ClientCommand*
-		ClientCommand**            _robotsControlersCommandsList;
+		ClientCommand**            _validControllerCommands;
 
 		bool accept_new_client(); // accepts client, that is trying to connect, and adds it to appropriate clients set
 

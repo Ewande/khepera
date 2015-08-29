@@ -3,9 +3,9 @@
 
 #include "SimEnt.h"
 #include "CircularEnt.h"
-#include "Simulation.h"
-#include "Point.h"
-#include "MathLib.h"
+#include "../Simulation.h"
+#include "../Math/Point.h"
+#include "../Math/MathLib.h"
 
 class RectangularEnt : public SimEnt
 {
@@ -21,7 +21,7 @@ class RectangularEnt : public SimEnt
 		Point& getBottLeft() { return *_bottLeft; }
 		Point& getCenter() { return *_center; }
 
-		virtual void translate(int x, int y);
+		virtual void translate(double x, double y);
 
 		virtual void serialize(Buffer& buffer);
 		virtual void serialize(std::ofstream& file);

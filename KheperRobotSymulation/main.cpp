@@ -1,8 +1,5 @@
 #include "CommunicationManager.h"
-#include "CircularEnt.h"
-#include "RectangularEnt.h"
-#include "KheperaRobot.h"
-#include "LinearEnt.h"
+#include "DistrSimulation.h"
 #include <iostream>
 #include <fstream>
 
@@ -28,7 +25,7 @@ int main(int argc, char** argv)
 	Buffer b2;
 	const int simulationDelay = 100; // in [ msec ]
 
-	Simulation* simulation = new Simulation(500, 400, true);
+	DistrSimulation* simulation = new DistrSimulation(500, 400, true);
 	CommunicationManager* commMan = new CommunicationManager(simulation);
 
 	simulation->setCommunicationManager(commMan);

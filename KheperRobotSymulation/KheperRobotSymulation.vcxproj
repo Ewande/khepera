@@ -80,33 +80,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Buffer.h" />
-    <ClInclude Include="CircularEnt.h" />
+    <ClInclude Include="Simulation\Buffer.h" />
+    <ClInclude Include="DistrSimulation.h" />
+    <ClInclude Include="Simulation\Entities\CircularEnt.h" />
     <ClInclude Include="ClientCommands\ClientCommand.h" />
     <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h" />
     <ClInclude Include="CommunicationManager.h" />
-    <ClInclude Include="KheperaRobot.h" />
-    <ClInclude Include="LinearEnt.h" />
-    <ClInclude Include="MathLib.h" />
-    <ClInclude Include="Motor.h" />
-    <ClInclude Include="Point.h" />
-    <ClInclude Include="RectangularEnt.h" />
-    <ClInclude Include="SimEnt.h" />
-    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="Simulation\Entities\KheperaRobot.h" />
+    <ClInclude Include="Simulation\Entities\LinearEnt.h" />
+    <ClInclude Include="Simulation\Math\MathLib.h" />
+    <ClInclude Include="Simulation\Math\Point.h" />
+    <ClInclude Include="Simulation\Entities\RectangularEnt.h" />
+    <ClInclude Include="Simulation\Entities\SimEnt.h" />
+    <ClInclude Include="Simulation\Simulation.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Buffer.cpp" />
-    <ClCompile Include="CircularEnt.cpp" />
+    <ClCompile Include="Simulation\Buffer.cpp" />
+    <ClCompile Include="DistrSimulation.cpp" />
+    <ClCompile Include="Simulation\Entities\CircularEnt.cpp" />
     <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp" />
     <ClCompile Include="CommunicationManager.cpp" />
-    <ClCompile Include="KheperaRobot.cpp" />
-    <ClCompile Include="LinearEnt.cpp" />
+    <ClCompile Include="Simulation\Entities\KheperaRobot.cpp" />
+    <ClCompile Include="Simulation\Entities\LinearEnt.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MathLib.cpp" />
-    <ClCompile Include="Point.cpp" />
-    <ClCompile Include="RectangularEnt.cpp" />
-    <ClCompile Include="SimEnt.cpp" />
-    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Simulation\Math\MathLib.cpp" />
+    <ClCompile Include="Simulation\Math\Point.cpp" />
+    <ClCompile Include="Simulation\Entities\RectangularEnt.cpp" />
+    <ClCompile Include="Simulation\Entities\SimEnt.cpp" />
+    <ClCompile Include="Simulation\Simulation.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

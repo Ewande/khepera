@@ -2,7 +2,7 @@
 #define LINEAR_ENT_H
 
 #include "SimEnt.h"
-#include "Point.h"
+#include "../Math/Point.h"
 
 class LinearEnt : public SimEnt
 {
@@ -16,7 +16,7 @@ public:
 
 	double collisionLength(SimEnt& other, Point& proj);
 
-	virtual void translate(int x, int y);
+	virtual void translate(double x, double y);
 
 	virtual void serialize(Buffer& buffer);
 	virtual void serialize(std::ofstream& file) {}
