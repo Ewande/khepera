@@ -166,25 +166,29 @@ bool CommunicationManager::accept_new_client()
 	if (newClientType == 1)
 	{
 		EnterCriticalSection(&_clientsMutex);
-
-		_visualisers.insert(ClientSocket);
-
+		    _visualisers.insert(ClientSocket);
 		LeaveCriticalSection(&_clientsMutex);
 	}
     else
     {
+        
         uint16_t controlledRobotId;
         recv(ClientSocket, reinterpret_cast<char*>(&controlledRobotId), sizeof(controlledRobotId), 0);
         controlledRobotId = ntohs(controlledRobotId);
-        std::cout << "id to control = " << controlledRobotId << "\n";
         SimEnt* robot = _simulation->getEntity(controlledRobotId);
-        if (robot != NULL && robot->getShapeID() == SimEnt::KHEPERA_ROBOT)
+        if (robot != NULL && robot->getShapeID() == SimEnt::KHEPERA_ROBOT 
+            && _robotsControllers.find(controlledRobotId) != _robotsControllers.end())
         {
             std::cout << "CONTROLLER FOR ROBOT WITH ID = " << controlledRobotId << " SUCCESSFULLY CONNECTED\n";
-            _robotsControllers.insert(std::pair<int, SOCKET>(controlledRobotId, ClientSocket));
+            EnterCriticalSection(&_clientsMutex);
+                _robotsControllers.insert(std::pair<int, SOCKET>(controlledRobotId, ClientSocket));
+            LeaveCriticalSection(&_clientsMutex);
         }
         else
+        {
+            closesocket(ClientSocket);
             std::cout << "NO ROBOT WITH ID = " << controlledRobotId << " TO CONTROL.\n";
+        }
     }
 
 	return true;
@@ -201,7 +205,7 @@ void CommunicationManager::receive_robot_controlers_messages(fd_set* sockets)
 			uint8_t commandID;
 			int dataLength = recv(it->second, reinterpret_cast<char*>(&commandID), 1, 0);
 			if (dataLength < 1)
-				_robotsControllers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
+				_robotsControllers.erase(it++);
 			else
 			{
 				std::cout << "Received command id: " << commandID << std::endl;
@@ -226,8 +230,15 @@ void CommunicationManager::receive_visualisers_messages(fd_set* sockets)
 		{
 			uint8_t message;
 			int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
-			if (dataLength < 1)
-				_visualisers.erase(it++); // see http://stackoverflow.com/a/263958, the same applies to std::set
+            if (dataLength < 1)
+            {
+                std::cout << "REMOVING CLIENT" << std::endl;
+                EnterCriticalSection(&_clientsMutex);
+                    closesocket(*it);
+                    _visualisers.erase(it++);
+                LeaveCriticalSection(&_clientsMutex);
+
+            }
 			else
 			{
 				// FIXME: For testing purpose only!

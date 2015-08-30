@@ -21,14 +21,14 @@ namespace Visualiser
             WheelRadius = wheelRadius;
             WheelDistance = wheelDistance;
             DirectionAngle = directionAngle;
-            ShapeID = SymEnt.KHEPERA_ROBOT_ID;
+            ShapeID = SimEnt.KHEPERA_ROBOT_ID;
         }
 
         public override void AddToCanvas(Canvas canvas)
         {
             base.AddToCanvas(canvas);
-            double shiftedX = HorShift == 0 ? X : HorShift - X;
-            double shiftedY = VertShift == 0 ? Y : VertShift - Y;
+            double shiftedX = HorFunc(X);
+            double shiftedY = VertFunc(Y);
 
             // coordinates of vector, if we add this vector to tmpX and tmpY we have point on robot circle
             // line coming through this point and robot center goes at angle of DirectionAngle

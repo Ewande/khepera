@@ -13,9 +13,9 @@ namespace Visualiser
     // some kind of SymEnt factory
     class EntityReceiver
     {
-        public static SymEnt ReadNext(BinaryReader reader)
+        public static SimEnt ReadNext(BinaryReader reader)
         {
-            SymEnt result = null;
+            SimEnt result = null;
 
             // read common values for all entities
             byte shapeID = reader.ReadByte();
@@ -25,10 +25,10 @@ namespace Visualiser
 
             switch (shapeID)
             {
-                case SymEnt.CIRCLE_ID: result = ReadCircle(reader, entityID, movable, weight); break;
-                case SymEnt.RECTANGLE_ID: result = ReadRectangle(reader, entityID, movable, weight); break;
-                case SymEnt.KHEPERA_ROBOT_ID: result = ReadKheperaRobot(reader, entityID, movable, weight); break;
-                case SymEnt.LINE_ID: result = ReadLinearEnt(reader, entityID); break;
+                case SimEnt.CIRCLE_ID: result = ReadCircle(reader, entityID, movable, weight); break;
+                case SimEnt.RECTANGLE_ID: result = ReadRectangle(reader, entityID, movable, weight); break;
+                case SimEnt.KHEPERA_ROBOT_ID: result = ReadKheperaRobot(reader, entityID, movable, weight); break;
+                case SimEnt.LINE_ID: result = ReadLinearEnt(reader, entityID); break;
                 default: System.Windows.MessageBox.Show("Unknown ShapeID"); break;
             }
 

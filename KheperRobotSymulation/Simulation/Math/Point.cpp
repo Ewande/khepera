@@ -9,14 +9,14 @@ double Point::getDistance(Point& other)
 
 double Point::dot(Point& other)
 {
-	return d_x * other.getX() + d_y * other.getY();
+	return _x * other.getX() + _y * other.getY();
 }
 
 Point operator+(Point& fst, Point& snd)
 {
-	return Point(fst.d_x + snd.d_x, fst.d_y + snd.d_y);
+	return Point(fst._x + snd._x, fst._y + snd._y);
 }
 Point operator-(Point& fst, Point& snd)
 {
-	return Point(fst.d_x - snd.d_x, fst.d_y - snd.d_y);
+	return Point(fst._x - snd._x, fst._y - snd._y);
 }

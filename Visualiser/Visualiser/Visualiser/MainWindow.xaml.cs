@@ -21,47 +21,62 @@ namespace Visualiser
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Thread _worldReceiverThread;
         private ConnectionManager _connMan;
+        private bool _connected;
 
         public MainWindow()
         {
             InitializeComponent();
+            _connMan = new ConnectionManager();
         }
 
-        private delegate void UpdateWorldCallback(SymulationWorld world);
+        private delegate void UpdateWorldCallback(SimulationWorld world);
 
         private void WorldReceiverThread()
         {
-            for (int i = 0; i < 100000; i++)
+            while(_connected)
             {
-                SymulationWorld symulationWorld = _connMan.ReciveWorldDesc();
-                worldCanvas.Dispatcher.Invoke(new UpdateWorldCallback(PaintSymulationWorld), symulationWorld);
+                SimulationWorld simulationWorld = _connMan.ReciveWorldDesc();
+                worldCanvas.Dispatcher.Invoke(new UpdateWorldCallback(PaintSimulationWorld), simulationWorld);
             }
+            _connMan.Disconnect();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            _connMan = new ConnectionManager();
-            if (_connMan.Connect(host.Text))
+            if (!_connected)
             {
-                // receive world descriptions on separate thread and don't block GUI thread, so that app remains responsive
-                Thread worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
-                worldReceiverThread.Start();
+                if (_connMan.Connect(host.Text))
+                {
+                    _connected = true;
+                    button.Content = "DISCONNECT";
+                    host.IsEnabled = false;
+                    // receive world descriptions on separate thread and don't block GUI thread, so that app remains responsive
+                    _worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
+                    _worldReceiverThread.Start();
+                }
+                else
+                    MessageBox.Show("Could not connect to the server.");
             }
             else
-                MessageBox.Show("Couldnt connect");
+            {
+                _connected = false;
+                button.Content = "CONNECT";
+                host.IsEnabled = true;
+            }
 
 
         }
 
-        private void PaintSymulationWorld(SymulationWorld symulationWorld)
+        private void PaintSimulationWorld(SimulationWorld simulationWorld)
         {
             /* TODO: If window is smaller then symulation world, we should probably scale every coordinates and dimensions, 
              * so that we can paint whole world in smaller window */
 
             worldCanvas.Children.Clear();
 
-            foreach (SymEnt entity in symulationWorld.Entities.Values)
+            foreach (SimEnt entity in simulationWorld.Entities.Values)
             {
                 entity.AddToCanvas(worldCanvas);
             }

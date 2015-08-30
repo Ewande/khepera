@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace Visualiser
 {
-    class RectangularEnt : SymEnt
+    class RectangularEnt : SimEnt
     {
         private Point[]   _vertices;
 
@@ -21,7 +21,7 @@ namespace Visualiser
 
         public RectangularEnt(UInt16 id, UInt32 weight, bool movable, 
             Point p1, Point p2, Point p3, Point p4) :
-            base(id, SymEnt.RECTANGLE_ID, weight, movable)
+            base(id, SimEnt.RECTANGLE_ID, weight, movable)
         {
             _vertices = new Point[4];
 
@@ -34,35 +34,35 @@ namespace Visualiser
         public override void AddToCanvas(Canvas canvas)
         {
             Line line1 = new Line() { 
-                X1 = HorShift == 0 ? _vertices[0].X : HorShift - _vertices[0].X,
-                Y1 = VertShift == 0 ? _vertices[0].Y : VertShift - _vertices[0].Y,
-                X2 = HorShift == 0 ? _vertices[1].X : HorShift - _vertices[1].X,
-                Y2 = VertShift == 0 ? _vertices[1].Y : VertShift - _vertices[1].Y,
+                X1 = HorFunc(_vertices[0].X),
+                Y1 = VertFunc(_vertices[0].Y),
+                X2 = HorFunc(_vertices[1].X),
+                Y2 = VertFunc(_vertices[1].Y),
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line2 = new Line()
             {
-                X1 = HorShift == 0 ? _vertices[1].X : HorShift - _vertices[1].X,
-                Y1 = VertShift == 0 ? _vertices[1].Y : VertShift - _vertices[1].Y,
-                X2 = HorShift == 0 ? _vertices[2].X : HorShift - _vertices[2].X,
-                Y2 = VertShift == 0 ? _vertices[2].Y : VertShift - _vertices[2].Y,
+                X1 = HorFunc(_vertices[1].X),
+                Y1 = VertFunc(_vertices[1].Y),
+                X2 = HorFunc(_vertices[2].X),
+                Y2 = VertFunc(_vertices[2].Y),
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line3 = new Line() {
-                X1 = HorShift == 0 ? _vertices[2].X : HorShift - _vertices[2].X,
-                Y1 = VertShift == 0 ? _vertices[2].Y : VertShift - _vertices[2].Y,
-                X2 = HorShift == 0 ? _vertices[3].X : HorShift - _vertices[3].X,
-                Y2 = VertShift == 0 ? _vertices[3].Y : VertShift - _vertices[3].Y,
+                X1 = HorFunc(_vertices[2].X),
+                Y1 = VertFunc(_vertices[2].Y),
+                X2 = HorFunc(_vertices[3].X),
+                Y2 = VertFunc(_vertices[3].Y),
                 Stroke = System.Windows.Media.Brushes.Black
             };
 
             Line line4 = new Line() {
-                X1 = HorShift == 0 ? _vertices[3].X : HorShift - _vertices[3].X,
-                Y1 = VertShift == 0 ? _vertices[3].Y : VertShift - _vertices[3].Y,
-                X2 = HorShift == 0 ? _vertices[0].X : HorShift - _vertices[0].X,
-                Y2 = VertShift == 0 ? _vertices[0].Y : VertShift - _vertices[0].Y,
+                X1 = HorFunc(_vertices[3].X),
+                Y1 = VertFunc(_vertices[3].Y),
+                X2 = HorFunc(_vertices[0].X),
+                Y2 = VertFunc(_vertices[0].Y),
                 Stroke = System.Windows.Media.Brushes.Black
             };
 

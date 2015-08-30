@@ -8,14 +8,14 @@ using System.Windows.Shapes;
 
 namespace Visualiser
 {
-    class CircularEnt : SymEnt
+    class CircularEnt : SimEnt
     {
         public double X { get; set; }
         public double Y { get; set; }
         public double Radius { get; set; }
 
         public CircularEnt(UInt16 id, UInt32 weight, bool movable, double x, double y, double radius) : 
-            base(id, SymEnt.CIRCLE_ID, weight, movable)
+            base(id, SimEnt.CIRCLE_ID, weight, movable)
         {
             Radius = radius;
             X = x;
@@ -30,8 +30,8 @@ namespace Visualiser
             result.Height = Radius*2;
             result.Stroke = System.Windows.Media.Brushes.Black; /* TODO: Color information should be sent by server */
 
-            double bottLeftX = HorShift == 0 ? X - Radius : HorShift - X + Radius;
-            double bottLeftY = VertShift == 0 ? Y - Radius : VertShift - Y - Radius;
+            double bottLeftX = HorFunc(X - Radius);
+            double bottLeftY = VertFunc(Y + Radius);
 
             Canvas.SetLeft(result, bottLeftX);
             Canvas.SetTop(result, bottLeftY);

@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace Visualiser
 {
-    abstract class SymEnt
+    abstract class SimEnt
     {
         public const byte RECTANGLE_ID = 0;
         public const byte CIRCLE_ID = 1;
@@ -18,18 +18,17 @@ namespace Visualiser
         public byte ShapeID { get; protected set; }
         public UInt32 Weight { get; protected set; }
         public bool Movable { get; protected set; }
-        // specyfies shift in display (0 - no shift, !=0 - new position is calculated as t' = shift - t)
-        public UInt32 HorShift { get; set; }
-        public UInt32 VertShift { get; set; }
+        public Func<double, double> HorFunc;
+        public Func<double, double> VertFunc;
 
-        public SymEnt(UInt16 id, byte shapeID, UInt32 weight, bool movable)
+        public SimEnt(UInt16 id, byte shapeID, UInt32 weight, bool movable)
         {
             ID = id;
             ShapeID = shapeID;
             Weight = weight;
             Movable = movable;
-            HorShift = 0;
-            VertShift = 0;
+            HorFunc = x => x;
+            VertFunc = x => x;
         }
 
         public abstract void AddToCanvas(Canvas canvas); // Adds this object to canvas (System.Windows.Controls.Canvas)

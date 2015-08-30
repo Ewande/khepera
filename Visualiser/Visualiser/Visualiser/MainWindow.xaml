@@ -18,7 +18,7 @@
             </Grid.ColumnDefinitions>
             <TextBox x:Name="host" Grid.Column="2" FontSize="20"/>
             <TextBlock Text="Host: " Grid.Column="1" FontSize="20" HorizontalAlignment="Right"/>
-            <Button Content="Start" Click="Button_Click" Grid.Column="0" Height="30"/>
+            <Button x:Name="button"  Content="CONNECT" Click="Button_Click" Grid.Column="0" Height="30"/>
         </Grid>
         
     </Grid>

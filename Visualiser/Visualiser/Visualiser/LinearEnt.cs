@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace Visualiser
 {
-    class LinearEnt : SymEnt
+    class LinearEnt : SimEnt
     {
         private Point _beg, _end;
 
@@ -18,7 +18,7 @@ namespace Visualiser
         }
 
         public LinearEnt(UInt16 id, Point beg, Point end) :
-            base(id, SymEnt.CIRCLE_ID, SymulationWorld.INFINITY, false)
+            base(id, SimEnt.CIRCLE_ID, SimulationWorld.INFINITY, false)
         {
             _beg = beg;
             _end = end;
@@ -28,10 +28,10 @@ namespace Visualiser
         {
             Line line = new Line()
             {
-                X1 = HorShift == 0 ? _beg.X : HorShift - _beg.X,
-                Y1 = VertShift == 0 ? _beg.Y : VertShift - _beg.Y,
-                X2 = HorShift == 0 ? _end.X : HorShift - _end.X,
-                Y2 = VertShift == 0 ? _end.Y : VertShift - _end.Y,
+                X1 = HorFunc(_beg.X),
+                Y1 = VertFunc(_beg.Y),
+                X2 = HorFunc(_end.X),
+                Y2 = VertFunc(_end.Y),
                 Stroke = System.Windows.Media.Brushes.Black
             };
             canvas.Children.Add(line);

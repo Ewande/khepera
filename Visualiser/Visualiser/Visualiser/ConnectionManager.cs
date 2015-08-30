@@ -23,19 +23,32 @@ namespace Visualiser
 
         public bool Connect(string hostname)
         {
-            _tcpClient.Connect(hostname, SERVER_PORT_NUMBER); /* TODO: Catch exception, when connecting fails */
-
-            if (_tcpClient.Connected)
+            try
             {
-                _tcpClient.GetStream().WriteByte(1); // identify as visualiser
+                _tcpClient.Connect(hostname, SERVER_PORT_NUMBER); /* TODO: Catch exception, when connecting fails */
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            if (_tcpClient.Connected)
+                _tcpClient.GetStream().WriteByte(1); // identify as visualiser
 
             return _tcpClient.Connected;
         }
 
-        public SymulationWorld ReciveWorldDesc() // retrives world description from server
+        public void Disconnect()
         {
-            SymulationWorld result = new SymulationWorld();
+            if (_tcpClient.Connected)
+            {
+                _tcpClient.Close();
+                _tcpClient = new TcpClient();
+            }
+        }
+
+        public SimulationWorld ReciveWorldDesc() // retrives world description from server
+        {
+            SimulationWorld result = new SimulationWorld();
 
             NetworkStream stream = _tcpClient.GetStream();
             BinaryReader reader = new BinaryReader(stream);
@@ -48,8 +61,8 @@ namespace Visualiser
 
             for (int i = 0; i < numberOfEntites; i++)
             {
-                SymEnt entity = EntityReceiver.ReadNext(reader);
-                entity.VertShift = result.WorldHeight;
+                SimEnt entity = EntityReceiver.ReadNext(reader);
+                entity.VertFunc = x => result.WorldHeight - x;
                 result.Entities.Add(entity.ID, entity);
             }
 

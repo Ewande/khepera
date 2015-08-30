@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Visualiser
 {
-    class SymulationWorld
+    class SimulationWorld
     {
         public const int INFINITY = 1000000;
 
@@ -14,11 +14,11 @@ namespace Visualiser
         public UInt32                       WorldHeight { get; set; }
         public Double                       Time { get; set; }
 
-        public Dictionary<UInt16, SymEnt>   Entities { get; private set; }
+        public Dictionary<UInt16, SimEnt>   Entities { get; private set; }
 
-        public SymulationWorld()
+        public SimulationWorld()
         {
-            Entities = new Dictionary<ushort, SymEnt>();
+            Entities = new Dictionary<UInt16, SimEnt>();
         }
     }
 }
