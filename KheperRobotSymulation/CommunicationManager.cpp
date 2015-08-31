@@ -122,10 +122,8 @@ void CommunicationManager::sendWorldDescriptionToVisualisers()
 	_simulation->serialize(b);
 
 	EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
-
 	for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
 		send(*it, reinterpret_cast<const char*>(b.getBuffer()), b.getLength(), 0);
-
 	LeaveCriticalSection(&_clientsMutex);
 }
 
@@ -163,6 +161,9 @@ bool CommunicationManager::accept_new_client()
 	// receive new client type information, and it to appropriate container
 	uint8_t newClientType;
 	recv(ClientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
+
+    unsigned long mode = 1;
+    ioctlsocket(ClientSocket, FIONBIO, &mode);
 	if (newClientType == 1)
 	{
 		EnterCriticalSection(&_clientsMutex);
