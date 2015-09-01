@@ -1,13 +1,13 @@
 #include "RectangularEnt.h"
 
 RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
-	double y, double width, double height, double angle) : SimEnt(id, SimEnt::RECTANGLE, weight, movable),
+	double y, double width, double height, float angle) : SimEnt(id, SimEnt::RECTANGLE, weight, movable),
 	_width(width), _height(height), _angle(angle)
 {
 	_bottLeft = new Point(x, y);
 
-	double ang_cos = cosD(_angle);
-	double ang_sin = sinD(_angle);
+	double ang_cos = cos(_angle);
+	double ang_sin = sin(_angle);
 	_center = new Point(_bottLeft->getX() + _width / 2.0 * ang_cos + _height / 2.0 * ang_sin,
 		_bottLeft->getY() - _width / 2.0 * ang_sin + _height / 2.0 * ang_cos);
 }
@@ -51,8 +51,8 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 	if (level > DIVIDING_LEVEL)
 		return INF_COLLISION;
 
-	double ang_cos = cosD(_angle);
-	double ang_sin = sinD(_angle);
+	double ang_cos = cos(_angle);
+	double ang_sin = sin(_angle);
 	width /= 2.0;
 	height /= 2.0;
 
@@ -165,8 +165,8 @@ void RectangularEnt::serialize(Buffer& buffer)
 {
     SimEnt::serialize(buffer);
 
-    double ang_cos = cosD(_angle);
-    double ang_sin = sinD(_angle);
+    double ang_cos = cos(_angle);
+    double ang_sin = sin(_angle);
     buffer.pack(_bottLeft->getX());
     buffer.pack(_bottLeft->getY());
     buffer.pack(_bottLeft->getX() - _height * ang_sin);

@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 
 	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 250, 30);
 	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 15, 2, 10, 0);
-	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, 45);
+	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, M_PI / 4);
 
 	Buffer b2;
 	const int simulationDelay = 100; // in [ msec ]

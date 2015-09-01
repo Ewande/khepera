@@ -7,7 +7,8 @@
 
 class Sensor
 {
-
+    public:
+        Sensor() {}
 };
 
 class Motor
@@ -23,9 +24,8 @@ class Motor
 class KheperaRobot : public CircularEnt
 {
 	public:
-		KheperaRobot(uint16_t id, uint32_t weight, double x,
-			double y, double robotRadius, uint16_t wheelRadius,
-			uint16_t wheelDistance, float directionAngle);
+		KheperaRobot(uint16_t id, uint32_t weight, double x, double y, double robotRadius, uint16_t wheelRadius,
+			uint16_t wheelDistance, float directionAngle = 0);
 		KheperaRobot(std::ifstream& file);
         ~KheperaRobot();
 
