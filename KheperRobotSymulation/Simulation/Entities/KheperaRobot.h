@@ -3,6 +3,12 @@
 
 #include "CircularEnt.h"
 #include <stdint.h>
+#include <list>
+
+class Sensor
+{
+
+};
 
 class Motor
 {
@@ -21,6 +27,7 @@ class KheperaRobot : public CircularEnt
 			double y, double robotRadius, uint16_t wheelRadius,
 			uint16_t wheelDistance, float directionAngle);
 		KheperaRobot(std::ifstream& file);
+        ~KheperaRobot();
 
 		void setRightMotorSpeed(double speed) { _rightMotor.setSpeed(speed); }
 		void setLeftMotorSpeed(double speed) { _leftMotor.setSpeed(speed); }
@@ -39,13 +46,12 @@ class KheperaRobot : public CircularEnt
 		uint16_t    _wheelRadius;
 		uint16_t    _wheelDistance;
 
-		double       _directionAngle; // angle beetween x axis and robot heading direction (don't know if in radians or degrees)
+		double       _directionAngle; // angle beetween x axis and robot heading direction, in radians
 
 		Motor       _leftMotor;
 		Motor       _rightMotor;
 
-		/* TODO: Add sensors */
-
+        std::list<Sensor*> _sensors;
 };
 
 #endif

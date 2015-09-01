@@ -6,6 +6,10 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	_wheelRadius(wheelRadius), _wheelDistance(wheelDistance), _directionAngle(directionAngle)
 {
 	_shapeID = SimEnt::KHEPERA_ROBOT;
+
+    Sensor* frontLeft = new Sensor();
+    // other sensors
+    _sensors.push_back(frontLeft);
 }
 
 KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
@@ -15,6 +19,15 @@ KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
 	file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
 	file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
 	file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
+}
+
+KheperaRobot::~KheperaRobot()
+{
+    while (!_sensors.empty())
+    {
+        delete _sensors.back();
+        _sensors.pop_back();
+    }
 }
 
 void KheperaRobot::updatePosition(double deltaTime)
@@ -33,8 +46,7 @@ void KheperaRobot::updatePosition(double deltaTime)
 	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
 	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
-	_center->setCoords(_center->getX() + deltaX, _center->getY() + deltaY); 
-	
+    translate(deltaX, deltaY);
 }
 
 /*
@@ -43,46 +55,46 @@ void KheperaRobot::updatePosition(double deltaTime)
 			+-------------------+--------------------------------------+-------------------+
 			|                   |                                      |                   |
 			|   SHAPE_ID        |              ENTITY_ID               |    MOVABLE        |
-			|    8 bytes        |               16 bytes               |    8 bytes        |
+			|    8 bit s        |               16 bits                |    8 bits         |
 			+-------------------+--------------------------------------+-------------------+
 			|                                                                              |
 			|                                WEIGHT                                        |
-			|                                32 bytes                                      |
+			|                                32 bits                                       |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
 			|                                                                              |
 			|                                X COORD                                       |
-			|                                64 bytes                                      |
+			|                                64 bits                                       |
 			|                                                                              |
 			|                                                                              |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
 			|                                                                              |
 			|                                Y COORD                                       |
-			|                                64 bytes                                      |
+			|                                64 bits                                       |
 			|                                                                              |
 			|                                                                              |
 			+------------------------------------------------------------------------------+
 			|                                                                              |
 			|                                                                              |
 			|                              ROBOT_RADIUS                                    | 
-			|                                64 bytes                                      |
+			|                                64 bits                                       |
 			|                                                                              |
 			|                                                                              |
 			+--------------------------------------+---------------------------------------+
 			|                                      |                                       |
 			|             WHEEL_RADIUS             |            WHEEL_DISTANCE             |
-			|               16 bytes               |                16 bytes               |
+			|               16 bits                |                16 bits                |
 			+--------------------------------------+---------------------------------------+
 			|                                                                              |
 			|                                                                              |
 			|                                 DIRECTION_ANGLE                              |
-			|                                     64 bytes                                 |
+			|                                     64 bits                                  |
 			|                                                                              |
 			|                                                                              |
 			+--------------------------------------+---------------------------------------+
 
-DATA_LENGTH = 352 bytes
+DATA_LENGTH = 352 bits
 
 */
 

@@ -22,7 +22,7 @@ double LinearEnt::collisionLength(SimEnt& other, Point& proj)
 	if (other_shape == SimEnt::CIRCLE || other_shape == SimEnt::KHEPERA_ROBOT)
 		return other.collisionLength(*this, proj);
 	else
-		return -1;
+		return NO_COLLISION;
 }
 
 void LinearEnt::translate(double x, double y)
