@@ -9,7 +9,7 @@ Sensor::Sensor(double range, float rangeAngle, float placingAngle)
 void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity)
 {
     Point rangeBeg(_robot->getCenter());
-    float sensorAngle = _placingAngle + M_PI / 2 - _robot->getDirectionAngle();
+    float sensorAngle = _placingAngle - _robot->getDirectionAngle();
     rangeBeg.translate((_robot->getRadius() + 1) * cos(sensorAngle), (_robot->getRadius() + 1) * sin(sensorAngle));
     const int ends = 3;
     Point rangeEnds[3];

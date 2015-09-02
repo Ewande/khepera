@@ -50,13 +50,20 @@ Simulation::~Simulation()
 {
 	_isRunning = false; // to stop _simulationThreadHandle
 
-	std::map<uint16_t, SimEnt*>::iterator it = _entities.begin();
+	SimEntMap::iterator it = _entities.begin();
 
 	while (it != _entities.end())
 	{
 		delete it->second;
 		it++;
 	}
+
+    std::list<Sensor*>::iterator sensIt = _sensors.begin();
+    while (sensIt != _sensors.end())
+    {
+        delete *sensIt;
+        sensIt++;
+    }
 }
 
 void Simulation::addEntity(SimEnt* newEntity)

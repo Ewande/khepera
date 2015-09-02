@@ -25,8 +25,9 @@ int main(int argc, char** argv)
     RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, M_PI / 4);
     //-- ROBOTS AND SENSORS
     uint16_t robotId = 2;
-	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, 45);
-    Sensor* frontRight = new Sensor(15, M_PI / 4, M_PI / 18);
+	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, M_PI / 4);
+    Sensor* frontRight = new Sensor(15, M_PI / 4, M_PI / 12);
+    Sensor* frontLeft = new Sensor(15, M_PI / 4, 23 * M_PI / 12);
     //----
 
 	simulation->setCommunicationManager(commMan);
@@ -38,6 +39,7 @@ int main(int argc, char** argv)
 	simulation->addEntity(rotatedRect);
 
     simulation->addSensor(frontRight, robotId);
+    simulation->addSensor(frontLeft, robotId);
 
 	// WINSock
 	WSADATA wsaData;

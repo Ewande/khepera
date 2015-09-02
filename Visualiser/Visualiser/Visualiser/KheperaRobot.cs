@@ -13,6 +13,7 @@ namespace Visualiser
         public UInt16 WheelRadius { get; set;}
         public UInt16 WheelDistance { get; set; }
         public double DirectionAngle { get; set; }
+        public List<Sensor> Sensors { get; set; }
 
         public KheperaRobot(UInt16 id, UInt32 weight, bool movable, double x, 
             double y, double radius, UInt16 wheelRadius, UInt16 wheelDistance, double directionAngle) : 
@@ -22,6 +23,12 @@ namespace Visualiser
             WheelDistance = wheelDistance;
             DirectionAngle = directionAngle;
             ShapeID = SimEnt.KHEPERA_ROBOT_ID;
+            Sensors = new List<Sensor>();
+        }
+
+        public void AddSensor(Sensor sensor)
+        {
+            Sensors.Add(sensor);
         }
 
         public override void AddToCanvas(Canvas canvas)
@@ -81,6 +88,20 @@ namespace Visualiser
             canvas.Children.Add(wheelAxis);
             canvas.Children.Add(leftWheel);
             canvas.Children.Add(rightWheel);
+
+            foreach(Sensor sensor in Sensors)
+            {
+                Line point = new Line()
+                {
+                    X1 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle - 1 * Math.PI / 20) * (Radius - 3)),
+                    Y1 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle - 1 * Math.PI / 20) * (Radius - 3)),
+                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
+                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
+                    Stroke = System.Windows.Media.Brushes.Red,
+                    StrokeThickness = 2
+                };
+                canvas.Children.Add(point);
+            }
         }
     }
 }

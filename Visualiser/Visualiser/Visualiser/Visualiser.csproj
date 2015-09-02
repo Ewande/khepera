@@ -59,6 +59,7 @@
     <Compile Include="LinearEnt.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="RectangularEnt.cs" />
+    <Compile Include="Sensor.cs" />
     <Compile Include="SimEnt.cs" />
     <Compile Include="SimulationWorld.cs" />
     <Page Include="MainWindow.xaml">

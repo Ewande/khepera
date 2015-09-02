@@ -163,7 +163,7 @@ bool CommunicationManager::accept_new_client()
 	recv(ClientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
 
     unsigned long mode = 1;
-    ioctlsocket(ClientSocket, FIONBIO, &mode);
+    //ioctlsocket(ClientSocket, FIONBIO, &mode);
 	if (newClientType == 1)
 	{
 		EnterCriticalSection(&_clientsMutex);
@@ -178,7 +178,7 @@ bool CommunicationManager::accept_new_client()
         controlledRobotId = ntohs(controlledRobotId);
         SimEnt* robot = _simulation->getEntity(controlledRobotId);
         if (robot != NULL && robot->getShapeID() == SimEnt::KHEPERA_ROBOT 
-            && _robotsControllers.find(controlledRobotId) != _robotsControllers.end())
+            && _robotsControllers.find(controlledRobotId) == _robotsControllers.end())
         {
             std::cout << "CONTROLLER FOR ROBOT WITH ID = " << controlledRobotId << " SUCCESSFULLY CONNECTED\n";
             EnterCriticalSection(&_clientsMutex);
