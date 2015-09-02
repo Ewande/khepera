@@ -1,7 +1,7 @@
 #ifndef LINEAR_ENT_H
 #define LINEAR_ENT_H
 
-#include "../Simulation.h"
+#include "../Constants.h"
 #include "SimEnt.h"
 #include "../Math/Point.h"
 

@@ -2,15 +2,11 @@
 #define ROBOT_H
 
 #include "CircularEnt.h"
+#include "../Sensor.h"
 #include <stdint.h>
 #include <list>
 
-class Sensor
-{
-    public:
-        Sensor() {}
-};
-
+class Sensor;
 class Motor
 {
     public:
@@ -37,6 +33,7 @@ class KheperaRobot : public CircularEnt
 
 		// deltaTime in [ sec ]
 		void updatePosition(double deltaTime);
+        void addSensor(Sensor* sensor);
 
 		virtual void serialize(Buffer& buffer);
 		virtual void serialize(std::ofstream& file);

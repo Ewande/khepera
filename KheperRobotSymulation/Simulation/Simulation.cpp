@@ -66,6 +66,28 @@ void Simulation::addEntity(SimEnt* newEntity)
 		_entities[new_id] = newEntity;
 }
 
+bool Simulation::addSensor(Sensor* sensor, uint16_t* id)
+{
+    if (id)
+    {
+        SimEnt* entity = getEntity(*id);
+        if (entity && entity->getShapeID() == SimEnt::KHEPERA_ROBOT)
+        {
+            KheperaRobot* robot = dynamic_cast<KheperaRobot*>(entity);
+            sensor->placeOnRobot(robot);
+            robot->addSensor(sensor);
+            _sensors.push_back(sensor);
+            return true;
+        }
+        return false;
+    }
+    else
+    {
+        _sensors.push_back(sensor);
+        return true;
+    }
+}
+
 void Simulation::start()
 {
 	_time = 0;
@@ -84,6 +106,7 @@ void Simulation::update(double deltaTime)
 		it++;
 	}
 	checkCollisions();
+    updateSensorsState();
 }
 
 void Simulation::checkCollisions()
@@ -197,6 +220,11 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 		removeCollision(snd, fst, collisionLen, proj);
 }
 
+void Simulation::updateSensorsState()
+{
+    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+        (*it)->updateState(_entities.begin(), _entities.end());
+}
 
 SimEnt* Simulation::getEntity(uint16_t id)
 {

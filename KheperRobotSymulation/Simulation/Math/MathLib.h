@@ -4,7 +4,7 @@
 #include <cmath>
 #include "Point.h"
 
-#define M_PI        3.14159265358979323846
+#define M_PI        (float) 3.14159265358979323846
 
 //	computes cosinus with an argument in arc degrees
 double cosD(double arcDegrees);

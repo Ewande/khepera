@@ -3,7 +3,7 @@
 
 #include "SimEnt.h"
 #include "CircularEnt.h"
-#include "../Simulation.h"
+#include "../Constants.h"
 #include "../Math/Point.h"
 #include "../Math/MathLib.h"
 

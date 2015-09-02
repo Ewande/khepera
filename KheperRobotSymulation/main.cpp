@@ -13,25 +13,23 @@ void TestRectangleSerialization();
 
 int main(int argc, char** argv)
 {
-	TestRectangleSerialization();
+	//TestRectangleSerialization();
 
+    DistrSimulation* simulation = new DistrSimulation(500, 400, true);
+    CommunicationManager* commMan = new CommunicationManager(simulation);
+
+    //-- STATIC ENTITIES
 	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 50, 50);
-
 	CircularEnt* c2 = new CircularEnt(3, 45, true, 150, 250, 30);
-	KheperaRobot* robot = new KheperaRobot(2, 10, 250, 150, 15, 2, 10, 0);
-	RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, M_PI / 4);
-
-	Buffer b2;
-	const int simulationDelay = 100; // in [ msec ]
-
-	DistrSimulation* simulation = new DistrSimulation(500, 400, true);
-	CommunicationManager* commMan = new CommunicationManager(simulation);
+    RectangularEnt* rotatedRect = new RectangularEnt(4, 45, false, 110, 150, 40, 30, M_PI / 4);
+    //-- ROBOTS AND SENSORS
+    uint16_t robotId = 2;
+	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, 0);
+    Sensor* frontRight = new Sensor(3, 15, M_PI / 4, M_PI / 18);
+    //----
 
 	simulation->setCommunicationManager(commMan);
-
-	robot->setLeftMotorSpeed(0);
-	robot->setRightMotorSpeed(0);
 
 	simulation->addEntity(c);
 	simulation->addEntity(r);
@@ -39,15 +37,9 @@ int main(int argc, char** argv)
 	simulation->addEntity(robot);
 	simulation->addEntity(rotatedRect);
 
-	simulation->serialize(b2);
-	/*for (int i = 0; i < b2.getLength(); i++)
-	{
-		printf("%x ", b2.getBuffer()[i]);
-		if ((i + 1) % 32 == 0)
-			std::cout << std::endl;
-	}*/
+    simulation->addSensor(frontRight, &robotId);
 
-	// init WINSock
+	// WINSock
 	WSADATA wsaData;
 	int iResult;
 

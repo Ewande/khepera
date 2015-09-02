@@ -6,10 +6,8 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	_wheelRadius(wheelRadius), _wheelDistance(wheelDistance), _directionAngle(directionAngle)
 {
 	_shapeID = SimEnt::KHEPERA_ROBOT;
-
-    Sensor* frontLeft = new Sensor();
-    // other sensors
-    _sensors.push_back(frontLeft);
+    setLeftMotorSpeed(0);
+    setRightMotorSpeed(0);
 }
 
 KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
@@ -47,6 +45,11 @@ void KheperaRobot::updatePosition(double deltaTime)
 	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
     translate(deltaX, deltaY);
+}
+
+void KheperaRobot::addSensor(Sensor* sensor)
+{
+    _sensors.push_back(sensor);
 }
 
 /*

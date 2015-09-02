@@ -1,16 +1,6 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-// SIMULATION CONSTANTS
-#define NUMBER_OF_CHECKS            10
-#define DIVIDING_LEVEL              3
-#define RESERVED_ID_LEVEL           1000
-#define NO_COLLISION	            -100
-#define INF_COLLISION               1000000
-
-#define DEFAULT_SIMULATION_STEP     0.04
-#define DEFAULT_SIMULATION_DELAY    40
-
 #include <map>
 #include <iostream>
 
@@ -20,6 +10,7 @@
 #include "Entities/KheperaRobot.h"
 #include "Entities/LinearEnt.h"
 #include "Buffer.h"
+#include "Constants.h"
 
 class Simulation
 {
@@ -31,18 +22,20 @@ class Simulation
         ~Simulation();
 
 		void addEntity(SimEnt* newEntity);
+        bool addSensor(Sensor* sensor, uint16_t* id = 0);
 		void start();
 		void update(double deltaTime); // deltaTime in [ sec ]
-
-		void checkCollisions();
-		void removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj);
-
 		SimEnt* getEntity(uint16_t id);
 
 		void serialize(Buffer& buffer) const;
 		void serialize(std::ofstream& file) const;
 	protected:
-		std::map<uint16_t, SimEnt*>   _entities;
+        void checkCollisions();
+        void removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj);
+        void updateSensorsState();
+
+		SimEntMap                     _entities;
+        std::list<Sensor*>            _sensors;
 		uint32_t                      _worldWidth;
 		uint32_t                      _worldHeight;
 		double                        _time;
