@@ -66,26 +66,18 @@ void Simulation::addEntity(SimEnt* newEntity)
 		_entities[new_id] = newEntity;
 }
 
-bool Simulation::addSensor(Sensor* sensor, uint16_t* id)
+bool Simulation::addSensor(Sensor* sensor, uint16_t id)
 {
-    if (id)
+    SimEnt* entity = getEntity(id);
+    if (entity && entity->getShapeID() == SimEnt::KHEPERA_ROBOT)
     {
-        SimEnt* entity = getEntity(*id);
-        if (entity && entity->getShapeID() == SimEnt::KHEPERA_ROBOT)
-        {
-            KheperaRobot* robot = dynamic_cast<KheperaRobot*>(entity);
-            sensor->placeOnRobot(robot);
-            robot->addSensor(sensor);
-            _sensors.push_back(sensor);
-            return true;
-        }
-        return false;
-    }
-    else
-    {
+        KheperaRobot* robot = dynamic_cast<KheperaRobot*>(entity);
+        sensor->placeOnRobot(robot);
+        robot->addSensor(sensor);
         _sensors.push_back(sensor);
         return true;
     }
+    return false;
 }
 
 void Simulation::start()

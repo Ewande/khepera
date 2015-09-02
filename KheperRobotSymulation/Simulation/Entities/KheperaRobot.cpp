@@ -108,6 +108,15 @@ void KheperaRobot::serialize(Buffer& buffer)
 	buffer.pack(htons(_wheelRadius));
 	buffer.pack(htons(_wheelDistance));
 	buffer.pack(_directionAngle);
+    /*uint8_t sensorCount = _sensors.size();
+    buffer.pack(sensorCount);
+    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+    {
+        buffer.pack((*it)->_placingAngle);
+        buffer.pack((*it)->_rangeAngle);
+        buffer.pack((*it)->_range);
+        buffer.pack((*it)->_state);
+    }*/
 }
 
 void KheperaRobot::serialize(std::ofstream& file)

@@ -30,6 +30,7 @@ class KheperaRobot : public CircularEnt
 
 		double getRightMotorSpeed() const { return _rightMotor.getSpeed(); }
 		double getLeftMotorSpeed() const { return _leftMotor.getSpeed(); }
+        double getDirectionAngle() { return _directionAngle; }
 
 		// deltaTime in [ sec ]
 		void updatePosition(double deltaTime);

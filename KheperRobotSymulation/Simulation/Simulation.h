@@ -22,7 +22,7 @@ class Simulation
         ~Simulation();
 
 		void addEntity(SimEnt* newEntity);
-        bool addSensor(Sensor* sensor, uint16_t* id = 0);
+        bool addSensor(Sensor* sensor, uint16_t id);
 		void start();
 		void update(double deltaTime); // deltaTime in [ sec ]
 		SimEnt* getEntity(uint16_t id);
