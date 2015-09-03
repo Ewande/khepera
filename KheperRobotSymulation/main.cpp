@@ -26,8 +26,8 @@ int main(int argc, char** argv)
     //-- ROBOTS AND SENSORS
     uint16_t robotId = 2;
 	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, M_PI / 4);
-    Sensor* frontRight = new Sensor(15, M_PI / 4, M_PI / 12);
-    Sensor* frontLeft = new Sensor(15, M_PI / 4, 23 * M_PI / 12);
+    Sensor* frontRight = new Sensor(30, M_PI / 8, M_PI / 12);
+    Sensor* frontLeft = new Sensor(30, M_PI / 8, 23 * M_PI / 12);
     //----
 
 	simulation->setCommunicationManager(commMan);

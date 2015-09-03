@@ -97,10 +97,48 @@ namespace Visualiser
                     Y1 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle - 1 * Math.PI / 20) * (Radius - 3)),
                     X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
                     Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
-                    Stroke = System.Windows.Media.Brushes.Red,
+                    Stroke = sensor.State == 0 ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.Green,
                     StrokeThickness = 2
                 };
+                System.Windows.Media.DoubleCollection dashes = new System.Windows.Media.DoubleCollection();
+                dashes.Add(2);
+                dashes.Add(2);
+                Line left = new Line()
+                {
+                    X1 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle) * (Radius + 1)),
+                    Y1 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle) * (Radius + 1)),
+                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle - sensor.RangeAngle / 2)
+                            * (Radius + 1 + sensor.Range)),
+                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle - sensor.RangeAngle / 2)
+                            * (Radius + 1 + sensor.Range)),
+                    Stroke = System.Windows.Media.Brushes.Black,
+                    StrokeDashArray = dashes
+                };
+                Line right = new Line()
+                {
+                    X1 = left.X1,
+                    Y1 = left.Y1,
+                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle + sensor.RangeAngle / 2)
+                            * (Radius + 1 + sensor.Range)),
+                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle + sensor.RangeAngle / 2)
+                            * (Radius + 1 + sensor.Range)),
+                    Stroke = System.Windows.Media.Brushes.Black,
+                    StrokeDashArray = dashes
+                };
+                Line connector = new Line()
+                {
+                    X1 = left.X2,
+                    Y1 = left.Y2,
+                    X2 = right.X2,
+                    Y2 = right.Y2,
+                    Stroke = System.Windows.Media.Brushes.Black,
+                    StrokeDashArray = dashes
+
+                };
                 canvas.Children.Add(point);
+                canvas.Children.Add(left);
+                canvas.Children.Add(right);
+                canvas.Children.Add(connector);
             }
         }
     }
