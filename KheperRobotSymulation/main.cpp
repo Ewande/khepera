@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 {
 	//TestRectangleSerialization();
 
-    DistrSimulation* simulation = new DistrSimulation(500, 400, true);
+    DistrSimulation* simulation = new DistrSimulation(500, 400, false);// true);
     CommunicationManager* commMan = new CommunicationManager(simulation);
 
     //-- STATIC ENTITIES
@@ -26,8 +26,15 @@ int main(int argc, char** argv)
     //-- ROBOTS AND SENSORS
     uint16_t robotId = 2;
 	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, M_PI / 4);
-    Sensor* frontRight = new Sensor(30, M_PI / 8, M_PI / 12);
-    Sensor* frontLeft = new Sensor(30, M_PI / 8, 23 * M_PI / 12);
+    //Sensor* front = new Sensor(30, M_PI / 4, 0);
+    Sensor* frontRight = new Sensor(30, M_PI / 4, M_PI / 12);
+    Sensor* frontLeft = new Sensor(30, M_PI / 4, 23 * M_PI / 12);
+    Sensor* middleLeft = new Sensor(30, M_PI / 4, 20 * M_PI / 12);
+    Sensor* middleRight = new Sensor(30, M_PI / 4, 4 * M_PI / 12);
+    Sensor* left = new Sensor(30, M_PI / 4, 18 * M_PI / 12);
+    Sensor* right = new Sensor(30, M_PI / 4, 6 * M_PI / 12);
+    Sensor* bottomLeft = new Sensor(30, M_PI / 4, 11 * M_PI / 12);
+    Sensor* bottomRight = new Sensor(30, M_PI / 4, 13 * M_PI / 12);
     //----
 
 	simulation->setCommunicationManager(commMan);
@@ -38,8 +45,15 @@ int main(int argc, char** argv)
 	simulation->addEntity(robot);
 	simulation->addEntity(rotatedRect);
 
+    //simulation->addSensor(front, robotId);
     simulation->addSensor(frontRight, robotId);
     simulation->addSensor(frontLeft, robotId);
+    simulation->addSensor(right, robotId);
+    simulation->addSensor(left, robotId);
+    simulation->addSensor(middleRight, robotId);
+    simulation->addSensor(middleLeft, robotId);
+    simulation->addSensor(bottomRight, robotId);
+    simulation->addSensor(bottomLeft, robotId);
 
 	// WINSock
 	WSADATA wsaData;

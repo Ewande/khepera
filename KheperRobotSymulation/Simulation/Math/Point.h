@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include <cmath>
+#include "../Constants.h"
 
 class Point
 {
@@ -19,6 +20,7 @@ public:
 	double getXDiff(Point& other) { return _x - other.getX(); }
 	double getYDiff(Point& other) { return _y - other.getY(); }
 	double dot(Point& other);
+    bool isBetween(Point& first, Point& second);
 
 	friend Point operator+(Point& fst, Point& snd);
 	friend Point operator-(Point& fst, Point& snd);

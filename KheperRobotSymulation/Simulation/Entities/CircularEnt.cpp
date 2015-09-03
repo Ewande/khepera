@@ -39,6 +39,16 @@ double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 		bool belongs;
 		Point orth_proj = orthogonalProjection(*_center, conv.getBeg(), conv.getEnd(), &belongs);
 		double ovr_dist = orth_proj.getDistance(*_center);
+        /*if (_shapeID == SimEnt::KHEPERA_ROBOT && conv.getID() == 1004)
+        {
+            std::cout << "dist to orth_proj: " << ovr_dist << std::endl;
+            double A = conv.getEnd().getY() - conv.getBeg().getY(), B = conv.getBeg().getX() - conv.getEnd().getX(),
+                C = conv.getEnd().getX() * conv.getBeg().getY() - conv.getBeg().getX() * conv.getEnd().getY();
+            double top = abs(A * _center->getX() + B * _center->getY() + C);
+            double bott = sqrt(A * A + B * B);
+            double res = top / bott;
+            std::cout << "dist - 2. approach: " << res << std::endl;
+        }*/
 
 		if (ovr_dist <= _radius)
 		{

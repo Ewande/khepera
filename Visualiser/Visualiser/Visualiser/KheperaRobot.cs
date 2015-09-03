@@ -93,35 +93,48 @@ namespace Visualiser
             {
                 Line point = new Line()
                 {
-                    X1 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle - 1 * Math.PI / 20) * (Radius - 3)),
-                    Y1 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle - 1 * Math.PI / 20) * (Radius - 3)),
-                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
-                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle + 1 * Math.PI / 20) * (Radius - 3)),
+                    X1 = HorFunc(X + Math.Cos(DirectionAngle - sensor.PlacingAngle - 1 * Math.PI / 20) * (Radius - 3)),
+                    Y1 = VertFunc(Y + Math.Sin(DirectionAngle - sensor.PlacingAngle - 1 * Math.PI / 20) * (Radius - 3)),
+                    X2 = HorFunc(X + Math.Cos(DirectionAngle - sensor.PlacingAngle + 1 * Math.PI / 20) * (Radius - 3)),
+                    Y2 = VertFunc(Y + Math.Sin(DirectionAngle - sensor.PlacingAngle + 1 * Math.PI / 20) * (Radius - 3)),
                     Stroke = sensor.State == 0 ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.Green,
                     StrokeThickness = 2
                 };
                 System.Windows.Media.DoubleCollection dashes = new System.Windows.Media.DoubleCollection();
                 dashes.Add(2);
                 dashes.Add(2);
+                double begX = X + Math.Cos(DirectionAngle - sensor.PlacingAngle) * (Radius + 1);
+                double begY = Y + Math.Sin(DirectionAngle - sensor.PlacingAngle) * (Radius + 1);
                 Line left = new Line()
                 {
-                    X1 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle) * (Radius + 1)),
-                    Y1 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle) * (Radius + 1)),
-                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle - sensor.RangeAngle / 2)
-                            * (Radius + 1 + sensor.Range)),
-                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle - sensor.RangeAngle / 2)
-                            * (Radius + 1 + sensor.Range)),
+                    X1 = HorFunc(begX),
+                    Y1 = VertFunc(begY),
+                    X2 = HorFunc(begX + Math.Cos(DirectionAngle - sensor.PlacingAngle + sensor.RangeAngle / 2)
+                            * sensor.Range),
+                    Y2 = VertFunc(begY + Math.Sin(DirectionAngle - sensor.PlacingAngle + sensor.RangeAngle / 2)
+                            * sensor.Range),
+                    Stroke = System.Windows.Media.Brushes.Black,
+                    StrokeDashArray = dashes
+                };
+                Line center = new Line()
+                {
+                    X1 = HorFunc(begX),
+                    Y1 = VertFunc(begY),
+                    X2 = HorFunc(begX + Math.Cos(DirectionAngle - sensor.PlacingAngle)
+                            * sensor.Range),
+                    Y2 = VertFunc(begY + Math.Sin(DirectionAngle - sensor.PlacingAngle)
+                            * sensor.Range),
                     Stroke = System.Windows.Media.Brushes.Black,
                     StrokeDashArray = dashes
                 };
                 Line right = new Line()
                 {
-                    X1 = left.X1,
-                    Y1 = left.Y1,
-                    X2 = HorFunc(X + Math.Cos(sensor.PlacingAngle - DirectionAngle + sensor.RangeAngle / 2)
-                            * (Radius + 1 + sensor.Range)),
-                    Y2 = VertFunc(Y - Math.Sin(sensor.PlacingAngle - DirectionAngle + sensor.RangeAngle / 2)
-                            * (Radius + 1 + sensor.Range)),
+                    X1 = HorFunc(begX),
+                    Y1 = VertFunc(begY),
+                    X2 = HorFunc(begX + Math.Cos(DirectionAngle - sensor.PlacingAngle - sensor.RangeAngle / 2)
+                            * sensor.Range),
+                    Y2 = VertFunc(begY + Math.Sin(DirectionAngle - sensor.PlacingAngle - sensor.RangeAngle / 2)
+                            * sensor.Range),
                     Stroke = System.Windows.Media.Brushes.Black,
                     StrokeDashArray = dashes
                 };
@@ -138,6 +151,7 @@ namespace Visualiser
                 canvas.Children.Add(point);
                 canvas.Children.Add(left);
                 canvas.Children.Add(right);
+                canvas.Children.Add(center);
                 canvas.Children.Add(connector);
             }
         }

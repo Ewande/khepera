@@ -12,6 +12,11 @@ double Point::dot(Point& other)
 	return _x * other.getX() + _y * other.getY();
 }
 
+bool Point::isBetween(Point& first, Point& second)
+{
+    return getDistance(first) + getDistance(second) - first.getDistance(second) <= EPS;
+}
+
 Point operator+(Point& fst, Point& snd)
 {
 	return Point(fst._x + snd._x, fst._y + snd._y);

@@ -10,6 +10,7 @@
 #define RESERVED_ID_LEVEL           1000
 #define NO_COLLISION	            -100
 #define INF_COLLISION               1000000
+#define EPS                         0.0001
 
 #define DEFAULT_SIMULATION_STEP     0.04
 #define DEFAULT_SIMULATION_DELAY    40
