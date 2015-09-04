@@ -30,7 +30,7 @@ class KheperaRobot : public CircularEnt
 
 		double getRightMotorSpeed() const { return _rightMotor.getSpeed(); }
 		double getLeftMotorSpeed() const { return _leftMotor.getSpeed(); }
-        double getDirectionAngle() { return _directionAngle; }
+        float getDirectionAngle() const { return _directionAngle; }
 
 		// deltaTime in [ sec ]
 		void updatePosition(double deltaTime);
@@ -44,7 +44,7 @@ class KheperaRobot : public CircularEnt
 		uint16_t    _wheelRadius;
 		uint16_t    _wheelDistance;
 
-		double       _directionAngle; // angle beetween x axis and robot heading direction, in radians
+		float       _directionAngle; // angle beetween x axis and robot heading direction, in radians
 
 		Motor       _leftMotor;
 		Motor       _rightMotor;

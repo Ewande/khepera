@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 {
 	//TestRectangleSerialization();
 
-    DistrSimulation* simulation = new DistrSimulation(500, 400, false);// true);
+    DistrSimulation* simulation = new DistrSimulation(420, 300, true);
     CommunicationManager* commMan = new CommunicationManager(simulation);
 
     //-- STATIC ENTITIES
@@ -40,10 +40,10 @@ int main(int argc, char** argv)
 	simulation->setCommunicationManager(commMan);
 
 	simulation->addEntity(c);
-	simulation->addEntity(r);
+	//simulation->addEntity(r);
 	simulation->addEntity(c2);
 	simulation->addEntity(robot);
-	simulation->addEntity(rotatedRect);
+	//simulation->addEntity(rotatedRect);
 
     //simulation->addSensor(front, robotId);
     simulation->addSensor(frontRight, robotId);

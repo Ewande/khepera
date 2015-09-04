@@ -12,11 +12,11 @@ namespace Visualiser
     {
         public UInt16 WheelRadius { get; set;}
         public UInt16 WheelDistance { get; set; }
-        public double DirectionAngle { get; set; }
+        public float DirectionAngle { get; set; }
         public List<Sensor> Sensors { get; set; }
 
         public KheperaRobot(UInt16 id, UInt32 weight, bool movable, double x, 
-            double y, double radius, UInt16 wheelRadius, UInt16 wheelDistance, double directionAngle) : 
+            double y, double radius, UInt16 wheelRadius, UInt16 wheelDistance, float directionAngle) : 
             base(id, weight, movable, x, y, radius)
         {
             WheelRadius = wheelRadius;

@@ -71,7 +71,7 @@ namespace Visualiser
 
             UInt16 wheelRadius = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
             UInt16 wheelDistance = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-            double directionAngle = reader.ReadDouble();
+            float directionAngle = reader.ReadSingle();
 
             KheperaRobot robot =  new KheperaRobot(entityID, weight, movable, circularRobotPart.X, circularRobotPart.Y,
                 circularRobotPart.Radius, wheelRadius, wheelDistance, directionAngle);

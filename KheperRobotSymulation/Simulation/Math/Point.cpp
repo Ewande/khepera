@@ -1,6 +1,6 @@
 #include "Point.h"
 
-double Point::getDistance(Point& other)
+double Point::getDistance(Point& other) const
 {
 	double x_diff = getXDiff(other);
 	double y_diff = getYDiff(other);

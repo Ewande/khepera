@@ -124,7 +124,7 @@ void Simulation::checkCollisions()
 					Point proj;
 
 					double collision_len = it1->second->collisionLength(*(it2->second), proj);
-					if (collision_len >= 0)
+					if (collision_len >= EPS)
 					{
 						std::cout << "kolizja " << it1->second->getID() << " i " << it2->second->getID() << "\n";
 						std::cout << "--- dlugosc: " << collision_len << "\n\n";

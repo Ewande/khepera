@@ -9,16 +9,16 @@ class Point
 public:
 	Point(double x = 0, double y = 0) : _x(x), _y(y) {}
 	
-	double getX() { return _x; }
-	double getY() { return _y; }
+	double getX() const { return _x; }
+	double getY() const { return _y; }
 
 	void setCoords(double x, double y) { _x = x; _y = y; }
 	void setCoords(Point& other) { _x = other.getX(); _y = other.getY(); }
 	void translate(double x, double y) { _x += x; _y += y; }
 
-	double getDistance(Point& other);
-	double getXDiff(Point& other) { return _x - other.getX(); }
-	double getYDiff(Point& other) { return _y - other.getY(); }
+	double getDistance(Point& other) const;
+	double getXDiff(Point& other) const { return _x - other.getX(); }
+	double getYDiff(Point& other) const { return _y - other.getY(); }
 	double dot(Point& other);
     bool isBetween(Point& first, Point& second);
 

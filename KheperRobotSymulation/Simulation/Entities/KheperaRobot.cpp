@@ -38,11 +38,11 @@ void KheperaRobot::updatePosition(double deltaTime)
 	double rightWheelTurnAngle = _rightMotor.getSpeed() * deltaTime;
 
 	double deltaFI = ((_wheelRadius / (float) _wheelDistance) * (rightWheelTurnAngle - leftWheelTurnAngle));
-	_directionAngle += deltaFI;
+	_directionAngle += (float) deltaFI;
 
 	// _directionAngle is in radians 
-	double deltaX = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
-	double deltaY = (_wheelRadius / 2.0)*(leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
+	double deltaX = (_wheelRadius / 2.0) * (leftWheelTurnAngle + rightWheelTurnAngle) * cos(_directionAngle);
+	double deltaY = (_wheelRadius / 2.0) * (leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
     translate(deltaX, deltaY);
 }
@@ -92,7 +92,7 @@ void KheperaRobot::addSensor(Sensor* sensor)
 			|                                                                              |
 			|                                                                              |
 			|                                 DIRECTION_ANGLE                              |
-			|                                     64 bits                                  |
+			|                                     32 bits                                  |
 			|                                                                              |
 			|                                                                              |
 			+--------------------------------------+---------------------------------------+

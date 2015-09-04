@@ -41,7 +41,7 @@ class CommunicationManager
         void sendRobotsStatesToControllers();
 	private:
 		SOCKET                     _listenSocket; 
-		DistrSimulation*                _simulation;
+		DistrSimulation*           _simulation;
 		bool                       _isStopped; // if there was request to stop communication manager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 

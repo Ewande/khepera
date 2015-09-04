@@ -22,6 +22,7 @@ class Sensor
         KheperaRobot* _robot;
         float _placingAngle;
         float _state;
+        int _beams;
 };
 
 #endif
