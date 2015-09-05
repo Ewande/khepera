@@ -20,6 +20,7 @@ public:
 	double getXDiff(Point& other) const { return _x - other.getX(); }
 	double getYDiff(Point& other) const { return _y - other.getY(); }
 	double dot(Point& other);
+    double cross(Point& other); // returns z-coord of resultative vector (x and y are 0 when we consider 2D points)
     bool isBetween(Point& first, Point& second);
 
 	friend Point operator+(Point& fst, Point& snd);

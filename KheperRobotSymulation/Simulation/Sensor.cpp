@@ -59,6 +59,37 @@ void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::cons
                             minDetection = min(minDetection, rangeBeg.getDistance(right));
                     }
                 }
+                else if (shape == SimEnt::LINE)
+                {
+                    LinearEnt* entity = dynamic_cast<LinearEnt*>(it->second);
+                    Point& beg = entity->getBeg();
+                    Point& end = entity->getEnd();
+
+                    // check if ends of linear entity are between ends of current beam
+                    Point trans_line_beg = entity->getBeg() - rangeBeg;
+                    Point trans_line_end = entity->getEnd() - rangeBeg;
+                    Point trans_beam_end = rangeEnds[i] - rangeBeg;
+                    double beg_cross = trans_line_beg.getX() * trans_beam_end.getY() 
+                                        - trans_beam_end.getX() * trans_line_beg.getY();
+                    double end_cross = trans_line_end.getX() * trans_beam_end.getY()
+                                        - trans_beam_end.getX() * trans_line_end.getY();
+                    if (beg_cross && end_cross && sign(beg_cross) != sign(end_cross))
+                    {
+                        // check if ends of current beam are between ends of linear ent
+                        Point trans2_beam_beg = rangeBeg - entity->getBeg();
+                        Point trans2_beam_end = rangeEnds[i] - entity->getBeg();
+                        Point trans2_line_end = entity->getEnd() - entity->getBeg();
+                        double beg2_cross = trans2_beam_beg.getX() * trans2_line_end.getY()
+                            - trans2_line_end.getX() * trans2_beam_beg.getY();
+                        double end2_cross = trans2_beam_end.getX() * trans2_line_end.getY()
+                            - trans2_line_end.getX() * trans2_beam_end.getY();
+                        if (beg2_cross && end2_cross && sign(beg2_cross) != sign(end2_cross))
+                        {
+                            minDetection = _range * (end2_cross / end2_cross - beg2_cross);
+                        }
+
+                    }
+                }
             }
         }
     }

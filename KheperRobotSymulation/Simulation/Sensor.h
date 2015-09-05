@@ -2,6 +2,7 @@
 #define SENSOR_H
 
 #include "Entities/KheperaRobot.h"
+#include "Entities/LinearEnt.h"
 #include "Constants.h"
 #include "Math/MathLib.h"
 

@@ -95,27 +95,18 @@ void Simulation::start()
 
 void Simulation::update(double deltaTime)
 {
-	std::map<uint16_t, SimEnt*>::iterator it = _entities.begin();
-
 	_time += deltaTime;
-
-	while (it != _entities.end())
-	{
+    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
 		it->second->updatePosition(deltaTime);
-		it++;
-	}
 	checkCollisions();
     updateSensorsState();
 }
 
 void Simulation::checkCollisions()
 {
-	std::map<uint16_t, SimEnt*>::iterator it1, it2;
+	SimEntMap::iterator it1, it2;
 	for (int i = 0; i < NUMBER_OF_CHECKS; i++)
 		for (it1 = _entities.begin(); it1 != _entities.end(); it1++)
-		{
-			int shapeId = it1->second->getShapeID();
-
 			for (it2 = it1; it2 != _entities.end(); it2++)
 			{
 				if (it1->second->getID() != it2->second->getID())
@@ -124,7 +115,7 @@ void Simulation::checkCollisions()
 					Point proj;
 
 					double collision_len = it1->second->collisionLength(*(it2->second), proj);
-					if (collision_len >= EPS)
+					if (collision_len > EPS)
 					{
 						std::cout << "kolizja " << it1->second->getID() << " i " << it2->second->getID() << "\n";
 						std::cout << "--- dlugosc: " << collision_len << "\n\n";
@@ -132,11 +123,7 @@ void Simulation::checkCollisions()
 					}
 				}
 			}
-		}
-
-
 }
-
 
 void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj)
 {
@@ -144,8 +131,8 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 	int snd_shape = snd.getShapeID();
 	if (fst_shape != SimEnt::LINE && snd_shape != SimEnt::LINE)
 	{
-		Point *center_fst;
-		Point *center_snd;
+		Point* center_fst;
+		Point* center_snd;
 		
 		if (fst_shape == SimEnt::RECTANGLE)
 		{
@@ -227,7 +214,7 @@ void Simulation::updateSensorsState()
 
 SimEnt* Simulation::getEntity(uint16_t id)
 {
-	std::map<uint16_t, SimEnt*>::iterator it = _entities.find(id);
+	SimEntMap::iterator it = _entities.find(id);
 
 	if (it != _entities.end())
 		return _entities[id];
