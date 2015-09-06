@@ -38,7 +38,8 @@ namespace Visualiser
                 Y1 = VertFunc(_vertices[0].Y),
                 X2 = HorFunc(_vertices[1].X),
                 Y2 = VertFunc(_vertices[1].Y),
-                Stroke = System.Windows.Media.Brushes.Black
+                Stroke = System.Windows.Media.Brushes.Black,
+                SnapsToDevicePixels = true
             };
 
             Line line2 = new Line()
@@ -47,7 +48,8 @@ namespace Visualiser
                 Y1 = VertFunc(_vertices[1].Y),
                 X2 = HorFunc(_vertices[2].X),
                 Y2 = VertFunc(_vertices[2].Y),
-                Stroke = System.Windows.Media.Brushes.Black
+                Stroke = System.Windows.Media.Brushes.Black,
+                SnapsToDevicePixels = true
             };
 
             Line line3 = new Line() {
@@ -55,7 +57,8 @@ namespace Visualiser
                 Y1 = VertFunc(_vertices[2].Y),
                 X2 = HorFunc(_vertices[3].X),
                 Y2 = VertFunc(_vertices[3].Y),
-                Stroke = System.Windows.Media.Brushes.Black
+                Stroke = System.Windows.Media.Brushes.Black,
+                SnapsToDevicePixels = true
             };
 
             Line line4 = new Line() {
@@ -63,7 +66,8 @@ namespace Visualiser
                 Y1 = VertFunc(_vertices[3].Y),
                 X2 = HorFunc(_vertices[0].X),
                 Y2 = VertFunc(_vertices[0].Y),
-                Stroke = System.Windows.Media.Brushes.Black
+                Stroke = System.Windows.Media.Brushes.Black,
+                SnapsToDevicePixels = true
             };
 
             canvas.Children.Add(line1);

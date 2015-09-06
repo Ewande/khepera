@@ -12,7 +12,7 @@ void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::cons
 {
     Point rangeBeg(_robot->getCenter());
     float sensorAngle = _robot->getDirectionAngle() - _placingAngle;
-    rangeBeg.translate((_robot->getRadius() + 1) * cos(sensorAngle), (_robot->getRadius() + 1) * sin(sensorAngle));
+    rangeBeg.translate((_robot->getRadius()) * cos(sensorAngle), (_robot->getRadius()) * sin(sensorAngle));
     std::vector<Point> rangeEnds(_beams, Point(rangeBeg));
     for (int i = 0; i < _beams; i++)
         rangeEnds[i].translate(_range * cos(sensorAngle + _rangeAngle / 2 - i * _rangeAngle / (_beams - 1)), 

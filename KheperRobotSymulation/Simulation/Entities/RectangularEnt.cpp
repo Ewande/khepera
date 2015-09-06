@@ -81,7 +81,7 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 		max_coll = max(max_coll, check_and_divide(other, center, width, height, level)); // upper right
 		bottLeft.setCoords(copy);
 
-		return min(max_coll, radiuses_sum - centres_diff) + 1;
+		return min(max_coll, radiuses_sum - centres_diff);
 	}
 }
 

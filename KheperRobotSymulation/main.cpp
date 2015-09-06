@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 	simulation->setCommunicationManager(commMan);
 
 	simulation->addEntity(c);
-	//simulation->addEntity(r);
+	simulation->addEntity(r);
 	simulation->addEntity(c2);
 	simulation->addEntity(robot);
 	//simulation->addEntity(rotatedRect);

@@ -131,30 +131,18 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 	int snd_shape = snd.getShapeID();
 	if (fst_shape != SimEnt::LINE && snd_shape != SimEnt::LINE)
 	{
-		Point* center_fst;
+        Point* center_fst;
 		Point* center_snd;
 		
 		if (fst_shape == SimEnt::RECTANGLE)
-		{
-			RectangularEnt& conv_fst = *dynamic_cast<RectangularEnt*>(&fst);
-			center_fst = &conv_fst.getCenter();
-		}
-		else
-		{
-			CircularEnt& conv_fst = *dynamic_cast<CircularEnt*>(&fst);
-			center_fst = &conv_fst.getCenter();
-		}
+            center_fst = &dynamic_cast<RectangularEnt*>(&fst)->getCenter();
+		else // if it is Circular Entity or Robot
+            center_fst = &dynamic_cast<CircularEnt*>(&fst)->getCenter();
 
-		if (snd_shape == SimEnt::RECTANGLE)
-		{
-			RectangularEnt& conv_snd = *dynamic_cast<RectangularEnt*>(&snd);
-			center_snd = &conv_snd.getCenter();
-		}
-		else
-		{
-			CircularEnt& conv_snd = *dynamic_cast<CircularEnt*>(&snd);
-			center_snd = &conv_snd.getCenter();
-		}
+        if (snd_shape == SimEnt::RECTANGLE)
+            center_snd = &dynamic_cast<RectangularEnt*>(&snd)->getCenter();
+        else // if it is Circular Entity or Robot
+            center_snd = &dynamic_cast<CircularEnt*>(&snd)->getCenter();
 
 		double weights_sum = fst.getWeight() + snd.getWeight();
 		double fst_coeff = snd.getWeight() / weights_sum;
@@ -170,34 +158,23 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 		double snd_x_trans = (-1) * x_diff / centers_diff * collisionLen * snd_coeff;
 		double snd_y_trans = (-1) * y_diff / centers_diff * collisionLen * snd_coeff;
 
-		/*if (fst_coeff > snd_coeff)
-		{
-			fst_x_trans += x_diff_sgn;
-			fst_y_trans += y_diff_sgn;
-		}
-		else if (fst_coeff < snd_coeff)
-		{
-			snd_x_trans -= x_diff_sgn;
-			snd_y_trans -= y_diff_sgn;
-		}*/
-
 		fst.translate(fst_x_trans, fst_y_trans);
 		snd.translate(snd_x_trans, snd_y_trans);
 	}
 
 	else if ((snd_shape == SimEnt::CIRCLE || snd_shape == SimEnt::KHEPERA_ROBOT) && fst_shape == SimEnt::LINE)
 	{
-		CircularEnt &conv_snd = *dynamic_cast<CircularEnt*>(&snd);
+		Point& center = dynamic_cast<CircularEnt*>(&snd)->getCenter();
 
-		double proj_diff = conv_snd.getCenter().getDistance(proj);
-		double x_diff = conv_snd.getCenter().getXDiff(proj);
-		double y_diff = conv_snd.getCenter().getYDiff(proj);
+        double proj_diff = center.getDistance(proj);
+        double x_diff = center.getXDiff(proj);
+        double y_diff = center.getYDiff(proj);
 
 
 		double x_trans = x_diff / proj_diff * collisionLen;
 		double y_trans = y_diff / proj_diff * collisionLen;
 
-		std::cout << collisionLen << "| " << proj_diff << "| " << x_diff << " " << y_diff << "| " << x_trans << " " << y_trans << "\n";
+		//std::cout << collisionLen << "| " << proj_diff << "| " << x_diff << " " << y_diff << "| " << x_trans << " " << y_trans << "\n";
 
 		snd.translate(x_trans, y_trans);
 
@@ -239,7 +216,7 @@ SimEnt* Simulation::getEntity(uint16_t id)
 	+-------------------+--------------------------------------+-------------------+
 	|                                      |                                       |
 	|          NUMBER_OF_ENTITIES          |              ENTITIES_DATA            |
-	|               16 bit s               |              variable length          |
+	|               16 bits                |              variable length          |
 	+--------------------------------------+---------------------------------------+
 
 */
@@ -251,13 +228,8 @@ void Simulation::serialize(Buffer& buffer) const
 	buffer.pack(_time);
 	buffer.pack(htons(static_cast<uint16_t>(_entities.size())));
 
-	std::map<uint16_t, SimEnt*>::const_iterator it = _entities.begin();
-
-	while (it != _entities.end())
-	{
-		it->second->serialize(buffer);
-		it++;
-	}
+    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
+        it->second->serialize(buffer);
 }
 
 void Simulation::serialize(std::ofstream& file) const
@@ -269,11 +241,6 @@ void Simulation::serialize(std::ofstream& file) const
 	uint16_t size = _entities.size();
 	file.write(reinterpret_cast<const char*>(&size), sizeof(size));
 
-	std::map<uint16_t, SimEnt*>::const_iterator it = _entities.begin();
-
-	while (it != _entities.end())
-	{
-		it->second->serialize(file);
-		it++;
-	}
+    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
+        it->second->serialize(file);
 }

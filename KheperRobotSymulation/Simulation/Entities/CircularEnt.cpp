@@ -55,7 +55,7 @@ double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 			if (belongs)
 			{
 				proj.setCoords(orth_proj);
-				return _radius - ovr_dist + 1;
+                return _radius - ovr_dist;
 			}
 
 			double dist_to_beg = conv.getBeg().getDistance(*_center), dist_to_end = conv.getEnd().getDistance(*_center);
@@ -63,7 +63,7 @@ double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 			if (dist_to_vertex <= _radius)
 			{
 				proj.setCoords(dist_to_beg == dist_to_vertex ? conv.getBeg() : conv.getEnd());
-				return _radius - dist_to_vertex + 1;
+                return _radius - dist_to_vertex;
 			}
 		}
 	}
@@ -77,7 +77,7 @@ double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 		double radiuses_sum = _radius + converted.getRadius();
 		double centres_diff = _center->getDistance(converted.getCenter());
 
-		return radiuses_sum - centres_diff + 1;
+        return radiuses_sum - centres_diff;
 	}
 
 	return NO_COLLISION;

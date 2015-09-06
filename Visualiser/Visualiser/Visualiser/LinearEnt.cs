@@ -32,7 +32,8 @@ namespace Visualiser
                 Y1 = VertFunc(_beg.Y),
                 X2 = HorFunc(_end.X),
                 Y2 = VertFunc(_end.Y),
-                Stroke = System.Windows.Media.Brushes.Black
+                Stroke = System.Windows.Media.Brushes.Black,
+                SnapsToDevicePixels = true
             };
             canvas.Children.Add(line);
         }
