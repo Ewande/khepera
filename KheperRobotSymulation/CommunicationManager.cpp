@@ -1,7 +1,7 @@
 #include "CommunicationManager.h"
 
 const int CommunicationManager::NUMBER_OF_CONTROLLER_COMMANDS = 
-	ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID + 1;
+	ClientCommand::MOTORS_SPEED_CHANGE_COMMAND_ID + 1;
 
 CommunicationManager::CommunicationManager(DistrSimulation* sim) : _isStopped(false), _simulation(sim)
 {
@@ -9,8 +9,10 @@ CommunicationManager::CommunicationManager(DistrSimulation* sim) : _isStopped(fa
 
 	// initialize arrays with clients commands
     _validControllerCommands = new ClientCommand*[NUMBER_OF_CONTROLLER_COMMANDS];
-    _validControllerCommands[ClientCommand::ROBOT_MOTOR_SPEED_CHANGE_COMMAND_ID] =
-		new RobotMotorSpeedChangeCommand();
+    _validControllerCommands[ClientCommand::SINGLE_MOTOR_SPEED_CHANGE_COMMAND_ID] =
+		new SingleMotorSpeedChangeCommand();
+    _validControllerCommands[ClientCommand::MOTORS_SPEED_CHANGE_COMMAND_ID] =
+        new MotorsSpeedChangeCommand();
 }
 
 CommunicationManager::~CommunicationManager()
@@ -23,7 +25,7 @@ CommunicationManager::~CommunicationManager()
 	}
 
 	// close robot controlers sockets
-	for (std::map<int, SOCKET>::iterator it = _robotsControllers.begin(); it != _robotsControllers.end(); it++)
+    for (std::map<int, SOCKET>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
 	{
 		shutdown(it->second, SD_SEND);
 		closesocket(it->second);
@@ -83,8 +85,6 @@ bool CommunicationManager::init()
 		return false;
 	}
 
-	//accept_new_client();
-
 	return true;
 }
 
@@ -96,7 +96,7 @@ void CommunicationManager::runServerLoop()
 		FD_ZERO(&receivingSockets);
 
 		// add controllers to observed sockets set
-		for (std::map<int, SOCKET>::iterator it = _robotsControllers.begin(); it != _robotsControllers.end(); it++)
+        for (std::map<int, SOCKET>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
 			FD_SET(it->second, &receivingSockets);
 
 		// add visualisers
@@ -111,19 +111,19 @@ void CommunicationManager::runServerLoop()
 		if (FD_ISSET(_listenSocket, &receivingSockets))
 			accept_new_client();
 
-		receive_robot_controlers_messages(&receivingSockets);
+		receive_controllers_messages(&receivingSockets);
 		receive_visualisers_messages(&receivingSockets);
 	}
 }
 
 void CommunicationManager::sendWorldDescriptionToVisualisers()
 {
-	Buffer b;
-	_simulation->serialize(b);
+	Buffer buffer;
+    _simulation->serialize(buffer);
 
 	EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
 	for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
-		send(*it, reinterpret_cast<const char*>(b.getBuffer()), b.getLength(), 0);
+        send(*it, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
 	LeaveCriticalSection(&_clientsMutex);
 }
 
@@ -131,15 +131,11 @@ void CommunicationManager::sendRobotsStatesToControllers()
 {
     EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
 
-    for (std::map<int, SOCKET>::iterator it = _robotsControllers.begin(); it != _robotsControllers.end(); it++)
+    for (std::map<int, SOCKET>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
     {
-        Buffer b;
-        SimEnt* robot = _simulation->getEntity(it->first);
-        // -- TO DO: sending sensors readings instead of simulation step number
-        uint32_t step = (uint32_t)(_simulation->_time / DEFAULT_SIMULATION_STEP);
-        b.pack(htonl(step));
-        //robot->serialize(b);
-        send(it->second, reinterpret_cast<const char*>(b.getBuffer()), b.getLength(), 0);
+        Buffer buffer;
+        dynamic_cast<KheperaRobot*>(_simulation->getEntity(it->first))->serializeForController(buffer);
+        send(it->second, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
     }
 
     LeaveCriticalSection(&_clientsMutex);
@@ -178,11 +174,11 @@ bool CommunicationManager::accept_new_client()
         controlledRobotId = ntohs(controlledRobotId);
         SimEnt* robot = _simulation->getEntity(controlledRobotId);
         if (robot != NULL && robot->getShapeID() == SimEnt::KHEPERA_ROBOT 
-            && _robotsControllers.find(controlledRobotId) == _robotsControllers.end())
+            && _controllers.find(controlledRobotId) == _controllers.end())
         {
             std::cout << "CONTROLLER FOR ROBOT WITH ID = " << controlledRobotId << " SUCCESSFULLY CONNECTED\n";
             EnterCriticalSection(&_clientsMutex);
-                _robotsControllers.insert(std::pair<int, SOCKET>(controlledRobotId, ClientSocket));
+                _controllers.insert(std::pair<int, SOCKET>(controlledRobotId, ClientSocket));
             LeaveCriticalSection(&_clientsMutex);
         }
         else
@@ -195,24 +191,25 @@ bool CommunicationManager::accept_new_client()
 	return true;
 }
 
-void CommunicationManager::receive_robot_controlers_messages(fd_set* sockets)
+void CommunicationManager::receive_controllers_messages(fd_set* sockets)
 {
 	// find who sent us a message
-	std::map<int, SOCKET>::iterator it = _robotsControllers.begin();
-	while (it != _robotsControllers.end())
+	std::map<int, SOCKET>::iterator it = _controllers.begin();
+	while (it != _controllers.end())
 	{
 		if (FD_ISSET(it->second, sockets))
 		{
 			uint8_t commandID;
 			int dataLength = recv(it->second, reinterpret_cast<char*>(&commandID), 1, 0);
 			if (dataLength < 1)
-				_robotsControllers.erase(it++);
+                _controllers.erase(it++);
 			else
 			{
 				std::cout << "Received command id: " << commandID << std::endl;
 				if (commandID < NUMBER_OF_CONTROLLER_COMMANDS)
 					// TODO: Send back error code in case of errors
-                    _validControllerCommands[commandID]->execute(_simulation, it->second);
+                    _validControllerCommands[commandID]->
+                        execute(*_simulation->getEntity(it->first), *_simulation, it->second);
 				it++;
 			}
 		}

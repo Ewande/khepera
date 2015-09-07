@@ -10,7 +10,7 @@
 #include "DistrSimulation.h"
 
 #include "ClientCommands/ClientCommand.h"
-#include "ClientCommands/RobotMotorSpeedChangeCommand.h"
+#include "ClientCommands/RobotSpeedChangeCommands.h"
 
 class DistrSimulation;
 class ClientCommand;
@@ -46,7 +46,7 @@ class CommunicationManager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 
 		// connected clients
-		std::map<int, SOCKET>      _robotsControllers;
+		std::map<int, SOCKET>      _controllers;
 		std::set<SOCKET>           _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
 
 		ClientCommand**            _validControllerCommands;
@@ -55,7 +55,7 @@ class CommunicationManager
 
 		// receives and executes messages sent by robot controllers
 		// sockets -> sockets, that have message to receive, get from select function
-		void receive_robot_controlers_messages(fd_set* sockets);
+		void receive_controllers_messages(fd_set* sockets);
 
 		// the same method for visualisers messages
 		void receive_visualisers_messages(fd_set* sockets);

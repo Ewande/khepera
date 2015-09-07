@@ -39,6 +39,7 @@ class KheperaRobot : public CircularEnt
 		virtual void serialize(Buffer& buffer);
 		virtual void serialize(std::ofstream& file);
 
+        void serializeForController(Buffer& buffer);
 
 	protected:
 		uint16_t    _wheelRadius;

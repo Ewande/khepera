@@ -129,3 +129,11 @@ void KheperaRobot::serialize(std::ofstream& file)
 
 	/* TODO: Serialize information about motors(probably about their type) */
 }
+
+void KheperaRobot::serializeForController(Buffer& buffer)
+{
+    uint16_t sensorCount = _sensors.size();
+    buffer.pack(htons(sensorCount));
+    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+        buffer.pack((*it)->_state);
+}

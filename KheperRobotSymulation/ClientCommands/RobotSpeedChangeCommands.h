@@ -1,5 +1,5 @@
-#ifndef ROBOT_ENGINE_SPEED_CHANGE_COMMAND
-#define ROBOT_ENGINE_SPEED_CHANGE_COMMAND
+#ifndef ROBOT_SPEED_CHANGE_COMMANDS_H
+#define ROBOT_SPEED_CHANGE_COMMANDS_H
 
 #include "ClientCommand.h"
 #include "../Simulation/Entities/KheperaRobot.h"
@@ -15,24 +15,30 @@
 			 |                                                                                |
 			 |                                                                                |
 			 |                             NEW_SPEED_VALUE                                    | 
-			 |                                64 bytes                                        |
+			 |                                64 bites                                        |
 			 |                                                                                |
 			 |                                                                                |
 			 +--------------------------------------------------------------------------------+
 */
 
-class RobotMotorSpeedChangeCommand : public ClientCommand
+class SingleMotorSpeedChangeCommand : public ClientCommand
 {
 	public:
-		static const int LEFT_MOTOR_ID = 0;
-		static const int RIGHT_MOTOR_ID = 1;
+        SingleMotorSpeedChangeCommand() : ClientCommand(ClientCommand::SINGLE_MOTOR_SPEED_CHANGE_COMMAND_ID) {}
 
-		RobotMotorSpeedChangeCommand();
-		virtual ~RobotMotorSpeedChangeCommand();
+        uint16_t execute(SimEnt& entity, DistrSimulation& sim, SOCKET sock);
 
-		virtual uint16_t execute(DistrSimulation* sim, SOCKET sock);
 	private:
+        static const int LEFT_MOTOR_ID = 0;
+        static const int RIGHT_MOTOR_ID = 1;
+};
 
+class MotorsSpeedChangeCommand : public ClientCommand
+{
+    public:
+        MotorsSpeedChangeCommand() : ClientCommand(ClientCommand::MOTORS_SPEED_CHANGE_COMMAND_ID) {}
+
+        uint16_t execute(SimEnt& entity, DistrSimulation& sim, SOCKET sock);
 };
 
 #endif

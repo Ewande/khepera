@@ -86,7 +86,7 @@
     <ClInclude Include="DistrSimulation.h" />
     <ClInclude Include="Simulation\Entities\CircularEnt.h" />
     <ClInclude Include="ClientCommands\ClientCommand.h" />
-    <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h" />
+    <ClInclude Include="ClientCommands\RobotSpeedChangeCommands.h" />
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="Simulation\Entities\KheperaRobot.h" />
     <ClInclude Include="Simulation\Entities\LinearEnt.h" />
@@ -101,7 +101,7 @@
     <ClCompile Include="Simulation\Buffer.cpp" />
     <ClCompile Include="DistrSimulation.cpp" />
     <ClCompile Include="Simulation\Entities\CircularEnt.cpp" />
-    <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp" />
+    <ClCompile Include="ClientCommands\RobotSpeedChangeCommands.cpp" />
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="Simulation\Entities\KheperaRobot.cpp" />
     <ClCompile Include="Simulation\Entities\LinearEnt.cpp" />

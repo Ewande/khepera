@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="CommunicationManager.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ClientCommands\RobotMotorSpeedChangeCommand.cpp">
-      <Filter>ClientCommands</Filter>
-    </ClCompile>
     <ClCompile Include="DistrSimulation.cpp" />
     <ClCompile Include="Simulation\Math\MathLib.cpp">
       <Filter>Simulation\Math</Filter>
@@ -37,13 +34,13 @@
     <ClCompile Include="Simulation\Sensor.cpp">
       <Filter>Simulation</Filter>
     </ClCompile>
+    <ClCompile Include="ClientCommands\RobotSpeedChangeCommands.cpp">
+      <Filter>ClientCommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommunicationManager.h" />
     <ClInclude Include="ClientCommands\ClientCommand.h">
-      <Filter>ClientCommands</Filter>
-    </ClInclude>
-    <ClInclude Include="ClientCommands\RobotMotorSpeedChangeCommand.h">
       <Filter>ClientCommands</Filter>
     </ClInclude>
     <ClInclude Include="DistrSimulation.h" />
@@ -79,6 +76,9 @@
     </ClInclude>
     <ClInclude Include="Simulation\Constants.h">
       <Filter>Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientCommands\RobotSpeedChangeCommands.h">
+      <Filter>ClientCommands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
