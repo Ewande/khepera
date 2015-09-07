@@ -1,23 +1,16 @@
-#include "Sensor.h"
-#include <iostream>
+#include "ProximitySensor.h"
+//#include <iostream>
 
-Sensor::Sensor(double range, float rangeAngle, float placingAngle)
-    : _range(range), _rangeAngle(rangeAngle), _placingAngle(placingAngle)
-{
-    _state = 0;
-    _beams = 2 + 6 * (int) (_rangeAngle / M_PI);
-}
-
-void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity)
+void ProximitySensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity)
 {
     Point rangeBeg(_robot->getCenter());
     float sensorAngle = _robot->getDirectionAngle() - _placingAngle;
     rangeBeg.translate((_robot->getRadius()) * cos(sensorAngle), (_robot->getRadius()) * sin(sensorAngle));
     std::vector<Point> rangeEnds(_beams, Point(rangeBeg));
     for (int i = 0; i < _beams; i++)
-        rangeEnds[i].translate(_range * cos(sensorAngle + _rangeAngle / 2 - i * _rangeAngle / (_beams - 1)), 
-            _range * sin(sensorAngle + _rangeAngle / 2 - i * _rangeAngle / (_beams - 1)));
-    
+        rangeEnds[i].translate(_range * cos(sensorAngle + _rangeAngle / 2 - i * _rangeAngle / (_beams - 1)),
+        _range * sin(sensorAngle + _rangeAngle / 2 - i * _rangeAngle / (_beams - 1)));
+
     double minDetection = _range; // no detection
     for (SimEntMap::const_iterator it = firstEntity; it != lastEntity; it++)
     {
@@ -42,16 +35,16 @@ void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::cons
                     else if (dist_from_line < radius)
                     {
                         double k = radius / dist_from_line;
-                        float touchAngle = (float) acos(dist_from_line / radius);
+                        float touchAngle = (float)acos(dist_from_line / radius);
                         Point projOnCircle(center.getX() + orth_proj.getXDiff(center) * k,
                             center.getY() + orth_proj.getYDiff(center) * k);
-                        float directionAngle = (float) acos(projOnCircle.getXDiff(center) / radius)
+                        float directionAngle = (float)acos(projOnCircle.getXDiff(center) / radius)
                             * sign(projOnCircle.getYDiff(center));
                         Point left(center);
-                        left.translate(radius * cos(directionAngle + touchAngle), 
+                        left.translate(radius * cos(directionAngle + touchAngle),
                             radius * sin(directionAngle + touchAngle));
                         Point right(center);
-                        right.translate(radius * cos(directionAngle - touchAngle), 
+                        right.translate(radius * cos(directionAngle - touchAngle),
                             radius * sin(directionAngle - touchAngle));
                         if (left.isBetween(rangeBeg, rangeEnds[i]))
                             minDetection = min(minDetection, rangeBeg.getDistance(left));
@@ -79,6 +72,6 @@ void Sensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::cons
             }
         }
     }
-    _state = (float) (1 - minDetection / _range);
+    _state = (float)(1 - minDetection / _range);
     //std::cout << "minDet: " << minDetection << ", sensor state: " << _state << std::endl;
 }

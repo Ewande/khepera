@@ -80,8 +80,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Simulation\Sensors\ProximitySensor.h" />
     <ClInclude Include="Simulation\Constants.h" />
-    <ClInclude Include="Simulation\Sensor.h" />
+    <ClInclude Include="Simulation\Sensors\Sensor.h" />
     <ClInclude Include="Simulation\Buffer.h" />
     <ClInclude Include="DistrSimulation.h" />
     <ClInclude Include="Simulation\Entities\CircularEnt.h" />
@@ -97,7 +98,8 @@
     <ClInclude Include="Simulation\Simulation.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Simulation\Sensor.cpp" />
+    <ClCompile Include="Simulation\Sensors\ProximitySensor.cpp" />
+    <ClCompile Include="Simulation\Sensors\Sensor.cpp" />
     <ClCompile Include="Simulation\Buffer.cpp" />
     <ClCompile Include="DistrSimulation.cpp" />
     <ClCompile Include="Simulation\Entities\CircularEnt.cpp" />

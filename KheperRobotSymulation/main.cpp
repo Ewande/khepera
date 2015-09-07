@@ -1,5 +1,6 @@
 #include "CommunicationManager.h"
 #include "DistrSimulation.h"
+#include "Simulation/Sensors/ProximitySensor.h"
 #include <iostream>
 #include <fstream>
 
@@ -27,14 +28,14 @@ int main(int argc, char** argv)
     uint16_t robotId = 2;
 	KheperaRobot* robot = new KheperaRobot(robotId, 10, 250, 150, 15, 2, 10, M_PI / 4);
     //Sensor* front = new Sensor(30, M_PI / 4, 0);
-    Sensor* frontRight = new Sensor(30, M_PI / 4, M_PI / 12);
-    Sensor* frontLeft = new Sensor(30, M_PI / 4, 23 * M_PI / 12);
-    Sensor* middleLeft = new Sensor(30, M_PI / 4, 20 * M_PI / 12);
-    Sensor* middleRight = new Sensor(30, M_PI / 4, 4 * M_PI / 12);
-    Sensor* left = new Sensor(30, M_PI / 4, 18 * M_PI / 12);
-    Sensor* right = new Sensor(30, M_PI / 4, 6 * M_PI / 12);
-    Sensor* bottomLeft = new Sensor(30, M_PI / 4, 11 * M_PI / 12);
-    Sensor* bottomRight = new Sensor(30, M_PI / 4, 13 * M_PI / 12);
+    Sensor* frontRight = new ProximitySensor(30, M_PI / 4, M_PI / 12);
+    Sensor* frontLeft = new ProximitySensor(30, M_PI / 4, 23 * M_PI / 12);
+    Sensor* middleLeft = new ProximitySensor(30, M_PI / 4, 20 * M_PI / 12);
+    Sensor* middleRight = new ProximitySensor(30, M_PI / 4, 4 * M_PI / 12);
+    Sensor* left = new ProximitySensor(30, M_PI / 4, 18 * M_PI / 12);
+    Sensor* right = new ProximitySensor(30, M_PI / 4, 6 * M_PI / 12);
+    Sensor* bottomLeft = new ProximitySensor(30, M_PI / 4, 11 * M_PI / 12);
+    Sensor* bottomRight = new ProximitySensor(30, M_PI / 4, 13 * M_PI / 12);
     //----
 
 	simulation->setCommunicationManager(commMan);

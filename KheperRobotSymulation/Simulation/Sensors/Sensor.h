@@ -1,10 +1,10 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "Entities/KheperaRobot.h"
-#include "Entities/LinearEnt.h"
-#include "Constants.h"
-#include "Math/MathLib.h"
+#include "../Entities/KheperaRobot.h"
+#include "../Entities/LinearEnt.h"
+#include "../Constants.h"
+#include "../Math/MathLib.h"
 
 class KheperaRobot;
 
@@ -15,9 +15,9 @@ class Sensor
     public:
         Sensor(double range, float rangeAngle, float placingAngle);
         void placeOnRobot(KheperaRobot* robot) { _robot = robot; }
-        void updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity);
+        virtual void updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity) = 0;
 
-    private:
+    protected:
         double _range;
         float _rangeAngle;
         KheperaRobot* _robot;

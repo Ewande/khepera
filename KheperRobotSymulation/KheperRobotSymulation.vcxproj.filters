@@ -31,11 +31,14 @@
     <ClCompile Include="Simulation\Buffer.cpp">
       <Filter>Simulation</Filter>
     </ClCompile>
-    <ClCompile Include="Simulation\Sensor.cpp">
-      <Filter>Simulation</Filter>
-    </ClCompile>
     <ClCompile Include="ClientCommands\RobotSpeedChangeCommands.cpp">
       <Filter>ClientCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulation\Sensors\Sensor.cpp">
+      <Filter>Simulation\Sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="Simulation\Sensors\ProximitySensor.cpp">
+      <Filter>Simulation\Sensors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -71,14 +74,17 @@
     <ClInclude Include="Simulation\Buffer.h">
       <Filter>Simulation</Filter>
     </ClInclude>
-    <ClInclude Include="Simulation\Sensor.h">
-      <Filter>Simulation</Filter>
-    </ClInclude>
     <ClInclude Include="Simulation\Constants.h">
       <Filter>Simulation</Filter>
     </ClInclude>
     <ClInclude Include="ClientCommands\RobotSpeedChangeCommands.h">
       <Filter>ClientCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulation\Sensors\Sensor.h">
+      <Filter>Simulation\Sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="Simulation\Sensors\ProximitySensor.h">
+      <Filter>Simulation\Sensors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +99,9 @@
     </Filter>
     <Filter Include="Simulation\Entities">
       <UniqueIdentifier>{395f3696-c15b-4189-84df-ee36903d991c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Simulation\Sensors">
+      <UniqueIdentifier>{8289a03b-1d7f-4499-8567-660db202ea86}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

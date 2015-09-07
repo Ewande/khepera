@@ -2,7 +2,7 @@
 #define ROBOT_H
 
 #include "CircularEnt.h"
-#include "../Sensor.h"
+#include "../Sensors/Sensor.h"
 #include <stdint.h>
 #include <list>
 
