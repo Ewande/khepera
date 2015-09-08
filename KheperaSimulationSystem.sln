@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KheperRobotSymulation", "KheperRobotSymulation\KheperRobotSymulation.vcxproj", "{5A20B49B-1980-4E76-9477-1A552163D927}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimulationServer", "SimulationServer\SimulationServer.vcxproj", "{5A20B49B-1980-4E76-9477-1A552163D927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualiser", "Visualiser\Visualiser\Visualiser\Visualiser.csproj", "{E9DC078B-3B77-4783-B26E-25F93507C4A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Visualiser", "Visualiser\Visualiser.csproj", "{E9DC078B-3B77-4783-B26E-25F93507C4A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditor\MapEditor\MapEditor.csproj", "{718047A9-4DAE-42AF-8D53-0A7E72FB3E03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditor\MapEditor.csproj", "{718047A9-4DAE-42AF-8D53-0A7E72FB3E03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Controller.csproj", "{8CAA19AF-D405-46F5-B1CA-00DF89B57666}"
 EndProject
