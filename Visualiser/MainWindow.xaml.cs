@@ -43,27 +43,43 @@ namespace Visualiser
             _connMan.Disconnect();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void ChangeConnection(object sender, RoutedEventArgs e)
         {
             if (!_connected)
             {
-                if (_connMan.Connect(host.Text))
+                ConnectionResult result = ConnectionResult.IncorrectParameters;
+                if(!String.IsNullOrWhiteSpace(Host.Text))
+                    result = _connMan.Connect(Host.Text, 1000);
+                switch(result)
                 {
-                    _connected = true;
-                    button.Content = "DISCONNECT";
-                    host.IsEnabled = false;
-                    // receive world descriptions on separate thread and don't block GUI thread, so that app remains responsive
-                    _worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
-                    _worldReceiverThread.Start();
+                    case ConnectionResult.Connected:
+                        _connected = true;
+                        ConnectButton.Content = "DISCONNECT";
+                        ConnectionStatus.Text = "Connected";
+                        ConnectionStatus.Foreground = Brushes.Green;
+                        Host.IsEnabled = false;
+
+                        _worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
+                        _worldReceiverThread.Start();
+                        break;
+                    case ConnectionResult.ServerUnavailable:
+                        ConnectionStatus.Text = "Error: server unavailable";
+                        break;
+                    case ConnectionResult.IncorrectParameters:
+                        ConnectionStatus.Text = "Error: invalid parameters";
+                        break;
+                    default:
+                        ConnectionStatus.Text = "Unknown error";
+                        break;
                 }
-                else
-                    MessageBox.Show("Could not connect to the server.");
             }
             else
             {
                 _connected = false;
-                button.Content = "CONNECT";
-                host.IsEnabled = true;
+                ConnectButton.Content = "CONNECT";
+                ConnectionStatus.Text = "Not connected";
+                ConnectionStatus.Foreground = Brushes.Red;
+                Host.IsEnabled = true;
             }
 
 

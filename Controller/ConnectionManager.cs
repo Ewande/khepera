@@ -49,7 +49,7 @@ namespace Controller
             {
                 _tcpClient.ConnectAsync(hostname, SERVER_PORT_NUMBER).Wait(miliSecTimeout);
             }
-            catch(Exception)
+            catch(SocketException)
             {
                 result = ConnectionResult.ServerUnavailable;
             }

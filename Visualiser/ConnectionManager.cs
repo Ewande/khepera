@@ -10,6 +10,13 @@ using System.Windows;
 
 namespace Visualiser
 {
+    enum ConnectionResult
+    {
+        IncorrectParameters,
+        ServerUnavailable,
+        Connected
+    }
+
     class ConnectionManager
     {
         private const int SERVER_PORT_NUMBER = 6020;
@@ -22,29 +29,32 @@ namespace Visualiser
             _tcpClient = new TcpClient();
         }
 
-        public bool Connect(string hostname)
+        public ConnectionResult Connect(string hostname, int miliSecTimeout)
         {
+            ConnectionResult result = ConnectionResult.ServerUnavailable;
             try
             {
-                _tcpClient.Connect(hostname, SERVER_PORT_NUMBER); /* TODO: Catch exception, when connecting fails */
+                _tcpClient.ConnectAsync(hostname, SERVER_PORT_NUMBER).Wait(miliSecTimeout);
             }
-            catch(Exception e)
+            catch(SocketException)
             {
-                Console.WriteLine(e);
+                result = ConnectionResult.ServerUnavailable;
             }
             if (_tcpClient.Connected)
+            {
                 _tcpClient.GetStream().WriteByte(TYPE_ID_VISUALISER);
+                result = ConnectionResult.Connected;
+            }
+            if (result != ConnectionResult.Connected)
+                Disconnect();
 
-            return _tcpClient.Connected;
+            return result;
         }
 
         public void Disconnect()
         {
-            if (_tcpClient.Connected)
-            {
-                _tcpClient.Close();
-                _tcpClient = new TcpClient();
-            }
+            _tcpClient.Close();
+            _tcpClient = new TcpClient();
         }
 
         public SimulationWorld ReciveWorldDesc() // retrives world description from server
