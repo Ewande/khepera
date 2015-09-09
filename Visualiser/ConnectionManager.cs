@@ -13,6 +13,7 @@ namespace Visualiser
     class ConnectionManager
     {
         private const int SERVER_PORT_NUMBER = 6020;
+        private const int TYPE_ID_VISUALISER = 1;
 
         private TcpClient _tcpClient;
 
@@ -32,7 +33,7 @@ namespace Visualiser
                 Console.WriteLine(e);
             }
             if (_tcpClient.Connected)
-                _tcpClient.GetStream().WriteByte(1); // identify as visualiser
+                _tcpClient.GetStream().WriteByte(TYPE_ID_VISUALISER);
 
             return _tcpClient.Connected;
         }

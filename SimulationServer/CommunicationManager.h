@@ -18,8 +18,8 @@ class ClientCommand;
 class CommunicationManager
 {
 	public:
-        static const uint8_t CONTROLLER = 0;
-        static const uint8_t VISUALIZER = 1;
+        static const uint8_t TYPE_ID_CONTROLLER = 0;
+        static const uint8_t TYPE_ID_VISUALISER = 1;
 
 		const int LISTEN_PORT = 6020;
 		const char* LISTEN_PORT_STR = "6020";

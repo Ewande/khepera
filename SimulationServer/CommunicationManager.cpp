@@ -160,13 +160,13 @@ bool CommunicationManager::accept_new_client()
 
     unsigned long mode = 1;
     //ioctlsocket(ClientSocket, FIONBIO, &mode);
-	if (newClientType == 1)
+	if (newClientType == TYPE_ID_VISUALISER)
 	{
 		EnterCriticalSection(&_clientsMutex);
 		    _visualisers.insert(ClientSocket);
 		LeaveCriticalSection(&_clientsMutex);
 	}
-    else
+    else if (newClientType == TYPE_ID_CONTROLLER)
     {
         
         uint16_t controlledRobotId;
@@ -183,6 +183,7 @@ bool CommunicationManager::accept_new_client()
         }
         else
         {
+            shutdown(ClientSocket, SD_RECEIVE);
             closesocket(ClientSocket);
             std::cout << "NO ROBOT WITH ID = " << controlledRobotId << " TO CONTROL.\n";
         }
