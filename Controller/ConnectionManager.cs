@@ -77,5 +77,24 @@ namespace Controller
             _tcpClient.Close();
             _tcpClient = new TcpClient();
         }
+
+        public List<Sensor> ReadSensorsState()
+        {
+            BinaryReader reader = new BinaryReader(_tcpClient.GetStream());
+            int sensorCount = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            List<Sensor> sensors = new List<Sensor>();
+            for (int i = 0; i < sensorCount; i++)
+                sensors.Add(new Sensor { State = reader.ReadSingle()});
+            return sensors;
+        }
+
+        public void SendMotorsSpeedCommand(double leftMotorSpeed, double rightMotorSpeed)
+        {
+            BinaryWriter writer = new BinaryWriter(_tcpClient.GetStream());
+            byte commandId = 1;
+            writer.Write(commandId);
+            writer.Write(leftMotorSpeed);
+            writer.Write(rightMotorSpeed);
+        }
     }
 }

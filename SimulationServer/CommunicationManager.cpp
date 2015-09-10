@@ -202,8 +202,14 @@ void CommunicationManager::receive_controllers_messages(fd_set* sockets)
 		{
 			uint8_t commandID;
 			int dataLength = recv(it->second, reinterpret_cast<char*>(&commandID), 1, 0);
-			if (dataLength < 1)
-                _controllers.erase(it++);
+            if (dataLength < 1)
+            {
+                std::cout << "REMOVING CONTROLLER" << std::endl;
+                EnterCriticalSection(&_clientsMutex);
+                    closesocket(it->second);
+                    _controllers.erase(it++);
+                LeaveCriticalSection(&_clientsMutex);
+            }
 			else
 			{
 				std::cout << "Received command id: " << commandID << std::endl;
@@ -231,7 +237,7 @@ void CommunicationManager::receive_visualisers_messages(fd_set* sockets)
 			int dataLength = recv(*it, reinterpret_cast<char*>(&message), 1, 0);
             if (dataLength < 1)
             {
-                std::cout << "REMOVING CLIENT" << std::endl;
+                std::cout << "REMOVING VISUALISER" << std::endl;
                 EnterCriticalSection(&_clientsMutex);
                     closesocket(*it);
                     _visualisers.erase(it++);

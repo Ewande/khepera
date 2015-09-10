@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,33 +23,70 @@ namespace Controller
     {
         private enum SteeringType { Manual, Script };
 
+        SteeringType _steeringType;
+        private KeyEventHandler _keyHandler;
+
+        private Thread _communicationThread;
         private ConnectionManager _connMan;
         private bool _connected;
-        SteeringType steeringType;
+
+        private Robot _robot;
+        private object _lockRobot = new object();
 
         public MainWindow()
         {
             InitializeComponent();
             _connMan = new ConnectionManager();
-            steeringType = SteeringType.Manual;
+            _steeringType = SteeringType.Manual;
             _connected = false;
+            _robot = new Robot();
+            _keyHandler = new KeyEventHandler(OnButtonKeyDown);
+            
         }
 
-        private void SelectScript(object sender, RoutedEventArgs e)
+        private void CommunicationRoutine()
         {
-            if (steeringType == SteeringType.Manual)
+            while (_connected)
             {
-                ManualControls.Visibility = Visibility.Hidden;
-                steeringType = SteeringType.Script;
+                _robot.Sensors = _connMan.ReadSensorsState();
+                if (_robot.SpeedChanged)
+                {
+                    _connMan.SendMotorsSpeedCommand(_robot.LeftMotorSpeed, _robot.RightMotorSpeed);
+                    _robot.SpeedChanged = false;
+                }
             }
+            _connMan.Disconnect();
         }
 
-        private void SelectManual(object sender, RoutedEventArgs e)
+        private void OnButtonKeyDown(object sender, KeyEventArgs e)
         {
-            if (steeringType == SteeringType.Script)
+            lock (_lockRobot)
             {
-                ManualControls.Visibility = Visibility.Visible;
-                steeringType = SteeringType.Manual;
+                switch (e.Key)
+                {
+                    case Key.Up:
+                        _robot.LeftMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.RightMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.SpeedChanged = true;
+                        break;
+                    case Key.Down:
+                        _robot.LeftMotorSpeed = 0;
+                        _robot.RightMotorSpeed = 0;
+                        _robot.SpeedChanged = true;
+                        break;
+                    case Key.Left:
+                        _robot.LeftMotorSpeed = 0;
+                        _robot.RightMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.SpeedChanged = true;
+                        break;
+                    case Key.Right:
+                        _robot.LeftMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.RightMotorSpeed = 0;
+                        _robot.SpeedChanged = true;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -57,7 +95,6 @@ namespace Controller
             if (_connected)
             {
                 _connected = false;
-                _connMan.Disconnect();
                 ConnectionStatus.Text = "Not connected";
                 ConnectButton.Content = "CONNECT";
                 ConnectionStatus.Foreground = Brushes.Red;
@@ -84,6 +121,11 @@ namespace Controller
                         EntityID.IsEnabled = false;
                         AccessCode.IsEnabled = false;
                         Host.IsEnabled = false;
+
+                        if (_steeringType == SteeringType.Manual)
+                            this.KeyDown += _keyHandler;
+                        _communicationThread = new Thread(new ThreadStart(CommunicationRoutine));
+                        _communicationThread.Start();
                         break;
                     case ConnectionResult.ServerUnavailable:
                         ConnectionStatus.Text = "Error: server unavailable";
@@ -102,6 +144,28 @@ namespace Controller
                         break;
                 }
                     
+            }
+        }
+
+        private void SelectScript(object sender, RoutedEventArgs e)
+        {
+            if (_steeringType == SteeringType.Manual)
+            {
+                ManualControls.Visibility = Visibility.Hidden;
+                _steeringType = SteeringType.Script;
+                if (_connected)
+                    this.KeyDown -= _keyHandler;
+            }
+        }
+
+        private void SelectManual(object sender, RoutedEventArgs e)
+        {
+            if (_steeringType == SteeringType.Script)
+            {
+                ManualControls.Visibility = Visibility.Visible;
+                _steeringType = SteeringType.Manual;
+                if (_connected)
+                    this.KeyDown += _keyHandler;
             }
         }
     }

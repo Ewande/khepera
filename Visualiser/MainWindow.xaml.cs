@@ -60,6 +60,7 @@ namespace Visualiser
                         ConnectButton.Content = "DISCONNECT";
                         ConnectionStatus.Text = "Connected";
                         ConnectionStatus.Foreground = Brushes.Green;
+                        ConnectionStatus.FontWeight = FontWeights.Bold;
                         Host.IsEnabled = false;
                         ShowSensRange.IsEnabled = true;
                         ShowId.IsEnabled = true;
@@ -84,6 +85,7 @@ namespace Visualiser
                 ConnectButton.Content = "CONNECT";
                 ConnectionStatus.Text = "Not connected";
                 ConnectionStatus.Foreground = Brushes.Red;
+                ConnectionStatus.FontWeight = FontWeights.Normal;
                 Host.IsEnabled = true;
                 ShowSensRange.IsEnabled = false;
                 ShowId.IsEnabled = false;

@@ -67,15 +67,15 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock  Grid.Row="0" Grid.Column="0" Text="Entity ID:" Margin="10"/>
+                <TextBlock  Grid.Row="0" Grid.Column="0" Text="Entity ID:" Margin="10,5,10,10" VerticalAlignment="Center"/>
                 <TextBox    Grid.Row="0" Grid.Column="1" x:Name="EntityID" FontFamily="Courier New" 
-                            FontSize="15" Margin="5"/>
-                <TextBlock  Grid.Row="0" Grid.Column="2" Text="Access code:" Margin="10"/>
+                            FontSize="15" Margin="0,5,10,10"/>
+                <TextBlock  Grid.Row="0" Grid.Column="2" Text="Access code:" Margin="10,5,10,10" VerticalAlignment="Center"/>
                 <TextBox    Grid.Row="0" Grid.Column="3" x:Name="AccessCode" FontFamily="Courier New" 
-                            FontSize="15" Margin="5,5,10,5"/>
-                <TextBlock  Grid.Row="1" Grid.Column="0" Text="Server address:" Margin="10"/>
+                            FontSize="15" Margin="0,5,10,10"/>
+                <TextBlock  Grid.Row="1" Grid.Column="0" Text="Server address:" Margin="10,5,10,10" VerticalAlignment="Center"/>
                 <TextBox    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" x:Name="Host" FontFamily="Courier New"
-                            FontSize="15" Margin="5,5,10,5"/>
+                            FontSize="15" Margin="0,5,10,10"/>
                 <Button     x:Name="ConnectButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Content="CONNECT" 
                             VerticalAlignment="Center" Margin="10,20,10,10" FontSize="15" Click="ChangeConnection"/>
                 <TextBlock  Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" HorizontalAlignment="Left"
