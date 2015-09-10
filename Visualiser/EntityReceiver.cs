@@ -13,6 +13,7 @@ namespace Visualiser
     // some kind of SymEnt factory
     class EntityReceiver
     {
+
         public static SimEnt ReadNext(BinaryReader reader)
         {
             SimEnt result = null;
@@ -25,43 +26,51 @@ namespace Visualiser
 
             switch (shapeID)
             {
-                case SimEnt.CIRCLE_ID: result = ReadCircle(reader, entityID, movable, weight); break;
-                case SimEnt.RECTANGLE_ID: result = ReadRectangle(reader, entityID, movable, weight); break;
-                case SimEnt.KHEPERA_ROBOT_ID: result = ReadKheperaRobot(reader, entityID, movable, weight); break;
-                case SimEnt.LINE_ID: result = ReadLinearEnt(reader, entityID); break;
-                default: System.Windows.MessageBox.Show("Unknown ShapeID"); break;
+                case SimEnt.CIRCLE_ID:
+                    result = ReadCircle(reader, entityID, movable, weight);
+                    break;
+                case SimEnt.RECTANGLE_ID:
+                    result = ReadRectangle(reader, entityID, movable, weight);
+                    break;
+                case SimEnt.KHEPERA_ROBOT_ID:
+                    result = ReadKheperaRobot(reader, entityID, movable, weight);
+                    break;
+                case SimEnt.LINE_ID: 
+                    result = ReadLinearEnt(reader, entityID); 
+                    break;
+                default: 
+                    System.Windows.MessageBox.Show("Unknown shape ID"); 
+                    break;
             }
 
             return result;
         }
 
-        private static CircularEnt ReadCircle(BinaryReader reader, UInt16 entityID,
-            bool movable, UInt32 weight)
+        private static Point ReadPoint(BinaryReader reader)
         {
             double x = reader.ReadDouble();
             double y = reader.ReadDouble();
+            return new Point(x, y);
+        }
+
+        private static CircularEnt ReadCircle(BinaryReader reader, UInt16 entityID,
+            bool movable, UInt32 weight)
+        {
+            Point center = ReadPoint(reader);
             double radius = reader.ReadDouble();
 
-            return new CircularEnt(entityID, weight, movable, x, y, radius);
+            return new CircularEnt(entityID, weight, movable, center, radius);
         }
 
         private static RectangularEnt ReadRectangle(BinaryReader reader, UInt16 entityID,
             bool movable, UInt32 weight)
         {
-            double x1 = reader.ReadDouble();
-            double y1 = reader.ReadDouble();
+            Point p1 = ReadPoint(reader);
+            Point p2 = ReadPoint(reader);
+            Point p3 = ReadPoint(reader);
+            Point p4 = ReadPoint(reader);
 
-            double x2 = reader.ReadDouble();
-            double y2 = reader.ReadDouble();
-
-            double x3 = reader.ReadDouble();
-            double y3 = reader.ReadDouble();
-
-            double x4 = reader.ReadDouble();
-            double y4 = reader.ReadDouble();
-
-            return new RectangularEnt(entityID, weight, movable, x1, y1, x2, y2,
-                x3, y3, x4, y4);
+            return new RectangularEnt(entityID, weight, movable, p1, p2, p3 , p4);
         }
 
         private static KheperaRobot ReadKheperaRobot(BinaryReader reader, UInt16 entityID, bool movable, UInt32 weight)
@@ -69,13 +78,13 @@ namespace Visualiser
             // KheperaRobot contains all fields, that CircularEnt contains, so to not repeat code, we use this:
             CircularEnt circularRobotPart = ReadCircle(reader, entityID, movable, weight);
 
-            UInt16 wheelRadius = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
-            UInt16 wheelDistance = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            UInt16 wheelRadius = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            UInt16 wheelDistance = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
             float directionAngle = reader.ReadSingle();
 
-            KheperaRobot robot =  new KheperaRobot(entityID, weight, movable, circularRobotPart.X, circularRobotPart.Y,
+            KheperaRobot robot =  new KheperaRobot(entityID, weight, movable, circularRobotPart.Center,
                 circularRobotPart.Radius, wheelRadius, wheelDistance, directionAngle);
-            UInt16 sensorsCount = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            UInt16 sensorsCount = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
             for (int i = 0; i < sensorsCount; i++)
             {
                 Sensor sensor = new Sensor();
@@ -91,13 +100,10 @@ namespace Visualiser
 
         private static LinearEnt ReadLinearEnt(BinaryReader reader, UInt16 entityID)
         {
-            double begX = reader.ReadDouble();
-            double begY = reader.ReadDouble();
+            Point beg = ReadPoint(reader);
+            Point end = ReadPoint(reader);
 
-            double endX = reader.ReadDouble();
-            double endY = reader.ReadDouble();
-
-            return new LinearEnt(entityID, begX, begY, endX, endY);
+            return new LinearEnt(entityID, beg, end);
         }
     }
 }

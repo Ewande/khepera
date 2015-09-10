@@ -57,18 +57,17 @@ namespace Visualiser
             _tcpClient = new TcpClient();
         }
 
-        public SimulationWorld ReciveWorldDesc() // retrives world description from server
+        public SimulationWorld ReciveWorldDesc()
         {
             SimulationWorld result = new SimulationWorld();
 
-            NetworkStream stream = _tcpClient.GetStream();
-            BinaryReader reader = new BinaryReader(stream);
+            BinaryReader reader = new BinaryReader(_tcpClient.GetStream());
 
             result.WorldWidth = (UInt32) IPAddress.NetworkToHostOrder(reader.ReadInt32());
-            result.WorldHeight = (UInt32)IPAddress.NetworkToHostOrder(reader.ReadInt32());
+            result.WorldHeight = (UInt32) IPAddress.NetworkToHostOrder(reader.ReadInt32());
             result.Time = reader.ReadDouble();
 
-            int numberOfEntites = (UInt16)IPAddress.NetworkToHostOrder(reader.ReadInt16());
+            int numberOfEntites = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
             for (int i = 0; i < numberOfEntites; i++)
             {

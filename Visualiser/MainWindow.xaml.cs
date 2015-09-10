@@ -21,6 +21,8 @@ namespace Visualiser
     /// </summary>
     public partial class MainWindow : Window
     {
+        public DisplayConfig DisplayConfig { get { return DisplayConfig.Instance; } }
+
         private Thread _worldReceiverThread;
         private ConnectionManager _connMan;
         private bool _connected;
@@ -29,6 +31,7 @@ namespace Visualiser
         {
             InitializeComponent();
             _connMan = new ConnectionManager();
+            this.DataContext = this;
         }
 
         private delegate void UpdateWorldCallback(SimulationWorld world);
@@ -58,6 +61,8 @@ namespace Visualiser
                         ConnectionStatus.Text = "Connected";
                         ConnectionStatus.Foreground = Brushes.Green;
                         Host.IsEnabled = false;
+                        ShowSensRange.IsEnabled = true;
+                        ShowId.IsEnabled = true;
 
                         _worldReceiverThread = new Thread(new ThreadStart(WorldReceiverThread));
                         _worldReceiverThread.Start();
@@ -80,6 +85,8 @@ namespace Visualiser
                 ConnectionStatus.Text = "Not connected";
                 ConnectionStatus.Foreground = Brushes.Red;
                 Host.IsEnabled = true;
+                ShowSensRange.IsEnabled = false;
+                ShowId.IsEnabled = false;
             }
 
 
@@ -91,6 +98,8 @@ namespace Visualiser
              * so that we can paint whole world in smaller window */
 
             worldCanvas.Children.Clear();
+            WorldDim.Text = String.Format("{0} x {1}", simulationWorld.WorldWidth, simulationWorld.WorldHeight);
+            SimTime.Text = String.Format("{0:0.00} s", simulationWorld.Time);
 
             foreach (SimEnt entity in simulationWorld.Entities.Values)
             {

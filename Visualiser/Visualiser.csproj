@@ -54,6 +54,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CircularEnt.cs" />
+    <Compile Include="DisplayConfig.cs" />
     <Compile Include="EntityReceiver.cs" />
     <Compile Include="KheperaRobot.cs" />
     <Compile Include="LinearEnt.cs" />

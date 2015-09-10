@@ -10,12 +10,8 @@ namespace Visualiser
 {
     class LinearEnt : SimEnt
     {
-        private Point _beg, _end;
-
-        public LinearEnt(UInt16 id, double begX, double begY, double endX, double endY)
-            : this(id, new Point(begX, begY), new Point(endX, endY))
-        {
-        }
+        private Point _beg;
+        private Point _end;
 
         public LinearEnt(UInt16 id, Point beg, Point end) :
             base(id, SimEnt.CIRCLE_ID, SimulationWorld.INFINITY, false)

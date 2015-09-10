@@ -12,15 +12,7 @@ namespace Visualiser
     {
         private Point[]   _vertices;
 
-        public RectangularEnt(UInt16 id, UInt32 weight, bool movable, double x1,
-            double y1, double x2, double y2, double x3, double y3, double x4, 
-            double y4) : this(id, weight, movable, new Point(x1, y1), new Point(x2, y2),
-            new Point(x3, y3), new Point(x4, y4))
-        {
-        }
-
-        public RectangularEnt(UInt16 id, UInt32 weight, bool movable, 
-            Point p1, Point p2, Point p3, Point p4) :
+        public RectangularEnt(UInt16 id, UInt32 weight, bool movable,  Point p1, Point p2, Point p3, Point p4) :
             base(id, SimEnt.RECTANGLE_ID, weight, movable)
         {
             _vertices = new Point[4];
@@ -33,7 +25,8 @@ namespace Visualiser
 
         public override void AddToCanvas(Canvas canvas)
         {
-            Line line1 = new Line() { 
+            Line line1 = new Line()
+            { 
                 X1 = HorFunc(_vertices[0].X),
                 Y1 = VertFunc(_vertices[0].Y),
                 X2 = HorFunc(_vertices[1].X),
@@ -52,7 +45,8 @@ namespace Visualiser
                 SnapsToDevicePixels = true
             };
 
-            Line line3 = new Line() {
+            Line line3 = new Line()
+            {
                 X1 = HorFunc(_vertices[2].X),
                 Y1 = VertFunc(_vertices[2].Y),
                 X2 = HorFunc(_vertices[3].X),
@@ -61,7 +55,8 @@ namespace Visualiser
                 SnapsToDevicePixels = true
             };
 
-            Line line4 = new Line() {
+            Line line4 = new Line()
+            {
                 X1 = HorFunc(_vertices[3].X),
                 Y1 = VertFunc(_vertices[3].Y),
                 X2 = HorFunc(_vertices[0].X),
