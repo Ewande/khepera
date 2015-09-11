@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace Controller
 {
@@ -151,10 +153,30 @@ namespace Controller
         {
             if (_steeringType == SteeringType.Manual)
             {
-                ManualControls.Visibility = Visibility.Hidden;
-                _steeringType = SteeringType.Script;
-                if (_connected)
-                    this.KeyDown -= _keyHandler;
+                ManualButton.IsChecked = true;
+
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+
+                openFileDialog.Filter = "Robot Controller Scripts|*.rcs";
+
+                bool? fileChosen = openFileDialog.ShowDialog();
+
+                if (fileChosen == true)
+                {
+                    Stream fileStream = openFileDialog.OpenFile();
+
+                    using (StreamReader reader = new StreamReader(fileStream))
+                    {
+                        // parsing script from the file
+                        // if parsing done with no errors:
+                            ScriptButton.IsChecked = true;
+                            ManualControls.Visibility = Visibility.Hidden;
+                            _steeringType = SteeringType.Script;
+                            if (_connected)
+                                this.KeyDown -= _keyHandler;
+                    }
+                    fileStream.Close();
+                }
             }
         }
 

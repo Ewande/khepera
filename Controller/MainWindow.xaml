@@ -15,10 +15,10 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="Steering" 
+                <RadioButton x:Name="ManualButton" Style="{StaticResource {x:Type ToggleButton}}" GroupName="Steering" 
                              Grid.Column="0" Content="MANUAL" FontSize="15" Margin="10" Click="SelectManual"
                              IsChecked="True"/>
-                <RadioButton Style="{StaticResource {x:Type ToggleButton}}" GroupName="Steering"
+                <RadioButton x:Name="ScriptButton" Style="{StaticResource {x:Type ToggleButton}}" GroupName="Steering"
                              Grid.Column="1" Content="SCRIPT" FontSize="15" Margin="10" Click="SelectScript"/>
             </Grid>
             <Separator Background="Black" Margin="10"/>
@@ -67,7 +67,7 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                <TextBlock  Grid.Row="0" Grid.Column="0" Text="Entity ID:" Margin="10,5,10,10" VerticalAlignment="Center"/>
+                <TextBlock  Grid.Row="0" Grid.Column="0" Text="Robot ID:" Margin="10,5,10,10" VerticalAlignment="Center"/>
                 <TextBox    Grid.Row="0" Grid.Column="1" x:Name="EntityID" FontFamily="Courier New" 
                             FontSize="15" Margin="0,5,10,10"/>
                 <TextBlock  Grid.Row="0" Grid.Column="2" Text="Access code:" Margin="10,5,10,10" VerticalAlignment="Center"/>
