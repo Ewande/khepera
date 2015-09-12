@@ -5,45 +5,125 @@ Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool a
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false), _simulationStep(simulationStep),
 	_simulationDelay(simulationDelay)
 {
-    if (addBounds)
-    {
-        LinearEnt* bottom_line = new LinearEnt(RESERVED_ID_LEVEL + 1, 0, 0, worldWidth, 0);
-        LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, worldHeight, worldWidth, worldHeight);
-        LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, worldHeight);
-        LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, worldWidth, 0, worldWidth, worldHeight);
-        _entities[RESERVED_ID_LEVEL + 1] = bottom_line;
-        _entities[RESERVED_ID_LEVEL + 2] = top_line;
-        _entities[RESERVED_ID_LEVEL + 3] = left_line;
-        _entities[RESERVED_ID_LEVEL + 4] = right_line;
-    }
+    if (_hasBounds = addBounds)
+        this->addBounds();
 }
 
-Simulation::Simulation(std::ifstream& file, double simulationStep, int simulationDelay)
+Simulation::Simulation(std::ifstream& file, bool readBinary, double simulationStep, int simulationDelay)
     : _isRunning(false), _simulationStep(simulationStep), _simulationDelay(simulationDelay)
 {
 	uint16_t numberOfEntities;
 
-	file.read(reinterpret_cast<char*>(&_worldWidth), sizeof(_worldWidth));
-	file.read(reinterpret_cast<char*>(&_worldHeight), sizeof(_worldHeight));
-	file.read(reinterpret_cast<char*>(&_time), sizeof(_time));
-	file.read(reinterpret_cast<char*>(&numberOfEntities), sizeof(numberOfEntities));
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&_worldWidth), sizeof(_worldWidth));
+        file.read(reinterpret_cast<char*>(&_worldHeight), sizeof(_worldHeight));
+        file.read(reinterpret_cast<char*>(&_time), sizeof(_time));
+        file.read(reinterpret_cast<char*>(&_hasBounds), sizeof(_hasBounds));
+        file.read(reinterpret_cast<char*>(&numberOfEntities), sizeof(numberOfEntities));
+    }
+    else
+        file >> _worldWidth >> _worldHeight >> _time >>  _hasBounds >> numberOfEntities;
+
+    if (_hasBounds)
+        this->addBounds();
 
 	for (uint16_t i = 0; i < numberOfEntities; i++)
 	{
-		uint8_t shapeID;
-		file.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
-		SimEnt* newEntity;
-
-		switch (shapeID)
-		{
-			case SimEnt::CIRCLE: newEntity = new CircularEnt(file); break;
-			case SimEnt::RECTANGLE: newEntity = new RectangularEnt(file); break;
-			case SimEnt::KHEPERA_ROBOT: newEntity = new KheperaRobot(file); break;
-
-			default: newEntity = NULL; /* TODO: Exception handling */
-		}
-		addEntity(newEntity);
+        SimEnt* newEntity = readEntity(file, readBinary);
+        if (newEntity != NULL)
+        {
+            addEntity(newEntity);
+            if (newEntity->getShapeID() == SimEnt::KHEPERA_ROBOT)
+            {
+                uint16_t numberOfSensors;
+                if (readBinary)
+                    file.read(reinterpret_cast<char*>(&numberOfSensors), sizeof(numberOfSensors));
+                else
+                    file >> numberOfSensors;
+                for (uint16_t i = 0; i < numberOfSensors; i++)
+                {
+                    Sensor* sensor = readSensor(file, readBinary);
+                    if (sensor != NULL)
+                        addSensor(sensor, newEntity->getID());
+                    else
+                        ;// handle exception
+                }
+            }
+        }
+        else
+            ;// handle exception
 	}
+
+}
+
+void Simulation::addBounds()
+{
+    LinearEnt* bottom_line = new LinearEnt(RESERVED_ID_LEVEL + 1, 0, 0, _worldWidth, 0);
+    LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, _worldHeight, _worldWidth, _worldHeight);
+    LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, _worldHeight);
+    LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, _worldWidth, 0, _worldWidth, _worldHeight);
+    _entities[RESERVED_ID_LEVEL + 1] = bottom_line;
+    _entities[RESERVED_ID_LEVEL + 2] = top_line;
+    _entities[RESERVED_ID_LEVEL + 3] = left_line;
+    _entities[RESERVED_ID_LEVEL + 4] = right_line;
+}
+
+SimEnt* Simulation::readEntity(std::ifstream& file, bool readBinary)
+{
+    uint8_t shapeID;
+    if (readBinary)
+        file.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
+    else
+    {
+        uint16_t shapeID16;
+        file >> shapeID16;
+        shapeID = (uint8_t) shapeID16;
+    }
+    SimEnt* newEntity;
+
+    switch (shapeID)
+    {
+        case SimEnt::CIRCLE:
+            newEntity = new CircularEnt(file, readBinary);
+            break;
+        case SimEnt::RECTANGLE:
+            newEntity = new RectangularEnt(file, readBinary);
+            break;
+        case SimEnt::KHEPERA_ROBOT:
+            newEntity = new KheperaRobot(file, readBinary);
+            break;
+        default:
+            newEntity = NULL; /* TODO: Exception handling */
+            break;
+    }
+
+    return newEntity;
+}
+
+Sensor* Simulation::readSensor(std::ifstream& file, bool readBinary)
+{
+    uint8_t type;
+    if (readBinary)
+        file.read(reinterpret_cast<char*>(&type), sizeof(type));
+    else
+    {
+        uint16_t type16;
+        file >> type16;
+        type = (uint8_t) type16;
+    }
+    Sensor* newSensor;
+
+    switch (type)
+    {
+        case Sensor::PROXIMITY:
+            newSensor = new ProximitySensor(file, readBinary);
+            break;
+        default:
+            newSensor = NULL;
+            break;
+    }
+    return newSensor;
 }
 
 Simulation::~Simulation()
@@ -226,6 +306,7 @@ void Simulation::serialize(Buffer& buffer) const
 	buffer.pack(htonl(_worldWidth));
 	buffer.pack(htonl(_worldHeight));
 	buffer.pack(_time);
+    buffer.pack(_hasBounds);
 	buffer.pack(htons(static_cast<uint16_t>(_entities.size())));
 
     for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
@@ -237,7 +318,7 @@ void Simulation::serialize(std::ofstream& file) const
 	file.write(reinterpret_cast<const char*>(&_worldWidth), sizeof(_worldWidth));
 	file.write(reinterpret_cast<const char*>(&_worldHeight), sizeof(_worldHeight));
 	file.write(reinterpret_cast<const char*>(&_time), sizeof(_time)); // do we have to save time to file?
-	
+    file.write(reinterpret_cast<const char*>(&_hasBounds), sizeof(_hasBounds));
 	uint16_t size = _entities.size();
 	file.write(reinterpret_cast<const char*>(&size), sizeof(size));
 

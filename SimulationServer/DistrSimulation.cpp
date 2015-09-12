@@ -17,8 +17,8 @@ DistrSimulation::DistrSimulation(unsigned int worldWidth, unsigned int worldHeig
     InitializeCriticalSection(&_criticalSection);
 }
 
-DistrSimulation::DistrSimulation(std::ifstream& file, double simulationStep,
-    int simulationDelay) : Simulation(file, simulationStep, simulationDelay),
+DistrSimulation::DistrSimulation(std::ifstream& file, bool readBinary, double simulationStep,
+    int simulationDelay) : Simulation(file, readBinary, simulationStep, simulationDelay),
     _commMan(NULL), _simulationThreadHandle(INVALID_HANDLE_VALUE)
 {
     InitializeCriticalSection(&_criticalSection);

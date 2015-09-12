@@ -3,9 +3,30 @@
 LinearEnt::LinearEnt(uint16_t id, double begX, double begY,
 	double endX, double endY) : SimEnt(id, SimEnt::LINE, 0, false)
 {
-	_beg = new Point(begX, begY);
-	_end = new Point(endX, endY);
-	_length = _beg->getDistance(*_end);
+    initializeEntity(begX, begY, endX, endY);
+}
+
+LinearEnt::LinearEnt(std::ifstream& file, bool readBinary) : SimEnt(file, readBinary, SimEnt::LINE)
+{
+    double begX, begY, endX, endY;
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&begX), sizeof(begX));
+        file.read(reinterpret_cast<char*>(&begY), sizeof(begY));
+        file.read(reinterpret_cast<char*>(&endX), sizeof(endX));
+        file.read(reinterpret_cast<char*>(&endY), sizeof(endY));
+    }
+    else
+        file >> begX >> begY >> endX >> endY;
+
+    initializeEntity(begX, begY, endX, endY);
+}
+
+void LinearEnt::initializeEntity(double begX, double begY, double endX, double endY)
+{
+    _beg = new Point(begX, begY);
+    _end = new Point(endX, endY);
+    _length = _beg->getDistance(*_end);
 }
 
 LinearEnt::~LinearEnt()
@@ -33,12 +54,23 @@ void LinearEnt::translate(double x, double y)
 
 void LinearEnt::serialize(Buffer& buffer)
 {
-	buffer.pack(_shapeID);
-	buffer.pack(htons(_id));
-	buffer.pack(_movable);
-	buffer.pack(htonl(_weight));
+    SimEnt::serialize(buffer);
 	buffer.pack(_beg->getX());
 	buffer.pack(_beg->getY());
 	buffer.pack(_end->getX());
 	buffer.pack(_end->getY());
+}
+
+void LinearEnt::serialize(std::ofstream& file)
+{
+    SimEnt::serialize(file);
+
+    double begX = _beg->getX();
+    double begY = _beg->getY();
+    double endX = _end->getX();
+    double endY = _end->getY();
+    file.write(reinterpret_cast<const char*>(&begX), sizeof(begX));
+    file.write(reinterpret_cast<const char*>(&begY), sizeof(begY));
+    file.write(reinterpret_cast<const char*>(&endX), sizeof(endX));
+    file.write(reinterpret_cast<const char*>(&endY), sizeof(endY));
 }

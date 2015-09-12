@@ -66,7 +66,7 @@ namespace Visualiser
             result.WorldWidth = (UInt32) IPAddress.NetworkToHostOrder(reader.ReadInt32());
             result.WorldHeight = (UInt32) IPAddress.NetworkToHostOrder(reader.ReadInt32());
             result.Time = reader.ReadDouble();
-
+            bool hasBounds = reader.ReadBoolean(); // information not used in visualisation
             int numberOfEntites = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
 
             for (int i = 0; i < numberOfEntites; i++)

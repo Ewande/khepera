@@ -13,7 +13,7 @@ class RectangularEnt : public SimEnt
 		// x, y -> left-bottom corner coords, rotating clockwise
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double width, double height, float angle = 0);
-		RectangularEnt(std::ifstream& file);
+        RectangularEnt(std::ifstream& file, bool readBinary);
 
 		virtual ~RectangularEnt() { delete _bottLeft; delete _center; }
 
@@ -34,6 +34,9 @@ class RectangularEnt : public SimEnt
 		double _width;
 		double _height;
 		float _angle; // in radians, rotating clockwise
+
+    private:
+        void initializeEntity(double bottLeftX, double bottLeftY);
 };
 
 #endif

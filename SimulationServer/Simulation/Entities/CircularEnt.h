@@ -9,7 +9,7 @@ class CircularEnt : public SimEnt
 	public:
 		// x, y -> center coords
 		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y, double radius);
-		CircularEnt(std::ifstream& file);
+		CircularEnt(std::ifstream& file, bool readBinary);
 		virtual ~CircularEnt() { delete _center; }
 
 

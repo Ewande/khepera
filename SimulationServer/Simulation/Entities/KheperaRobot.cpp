@@ -10,13 +10,17 @@ KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
     setRightMotorSpeed(0);
 }
 
-KheperaRobot::KheperaRobot(std::ifstream& file) : CircularEnt(file)
+KheperaRobot::KheperaRobot(std::ifstream& file, bool readBinary) : CircularEnt(file, readBinary)
 {
 	_shapeID = SimEnt::KHEPERA_ROBOT;
-
-	file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
-	file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
-	file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&_wheelRadius), sizeof(_wheelRadius));
+        file.read(reinterpret_cast<char*>(&_wheelDistance), sizeof(_wheelDistance));
+        file.read(reinterpret_cast<char*>(&_directionAngle), sizeof(_directionAngle));
+    }
+    else
+        file >> _wheelRadius >> _wheelDistance >> _directionAngle;
 }
 
 KheperaRobot::~KheperaRobot()
@@ -90,14 +94,11 @@ void KheperaRobot::addSensor(Sensor* sensor)
 			|               16 bits                |                16 bits                |
 			+--------------------------------------+---------------------------------------+
 			|                                                                              |
-			|                                                                              |
 			|                                 DIRECTION_ANGLE                              |
 			|                                     32 bits                                  |
-			|                                                                              |
-			|                                                                              |
 			+--------------------------------------+---------------------------------------+
 
-DATA_LENGTH = 352 bits
+DATA_LENGTH = 320 bits
 
 */
 
@@ -108,15 +109,9 @@ void KheperaRobot::serialize(Buffer& buffer)
 	buffer.pack(htons(_wheelRadius));
 	buffer.pack(htons(_wheelDistance));
 	buffer.pack(_directionAngle);
-    uint16_t sensorCount = _sensors.size();
-    buffer.pack(htons(sensorCount));
+    buffer.pack(htons(static_cast<uint16_t>(_sensors.size())));
     for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
-    {
-        buffer.pack((*it)->_placingAngle);
-        buffer.pack((*it)->_rangeAngle);
-        buffer.pack((*it)->_range);
-        buffer.pack((*it)->_state);
-    }
+        (*it)->serialize(buffer);
 }
 
 void KheperaRobot::serialize(std::ofstream& file)
@@ -126,14 +121,17 @@ void KheperaRobot::serialize(std::ofstream& file)
 	file.write(reinterpret_cast<const char*>(&_wheelRadius), sizeof(_wheelRadius));
 	file.write(reinterpret_cast<const char*>(&_wheelDistance), sizeof(_wheelDistance));
 	file.write(reinterpret_cast<const char*>(&_directionAngle), sizeof(_directionAngle));
+    uint16_t numberOfSensors = _sensors.size();
+    file.write(reinterpret_cast<const char*>(&numberOfSensors), sizeof(numberOfSensors));
+    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+        (*it)->serialize(file);
 
 	/* TODO: Serialize information about motors(probably about their type) */
 }
 
 void KheperaRobot::serializeForController(Buffer& buffer)
 {
-    uint16_t sensorCount = _sensors.size();
-    buffer.pack(htons(sensorCount));
+    buffer.pack(htons(static_cast<uint16_t>(_sensors.size())));
     for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         buffer.pack((*it)->_state);
 }

@@ -4,25 +4,32 @@ RectangularEnt::RectangularEnt(uint16_t id, uint32_t weight, bool movable, doubl
 	double y, double width, double height, float angle) : SimEnt(id, SimEnt::RECTANGLE, weight, movable),
 	_width(width), _height(height), _angle(angle)
 {
-	_bottLeft = new Point(x, y);
-
-	double ang_cos = cos(_angle);
-	double ang_sin = sin(_angle);
-	_center = new Point(_bottLeft->getX() + _width / 2.0 * ang_cos + _height / 2.0 * ang_sin,
-		_bottLeft->getY() - _width / 2.0 * ang_sin + _height / 2.0 * ang_cos);
+    initializeEntity(x, y);
 }
 
-RectangularEnt::RectangularEnt(std::ifstream& file) : SimEnt(file, SimEnt::RECTANGLE)
+RectangularEnt::RectangularEnt(std::ifstream& file, bool readBinary) : SimEnt(file, readBinary, SimEnt::RECTANGLE)
 {
-/*	_vertices = new Point[4];
+    double x, y;
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&x), sizeof(x));
+        file.read(reinterpret_cast<char*>(&y), sizeof(y));
+        file.read(reinterpret_cast<char*>(&_width), sizeof(_width));
+        file.read(reinterpret_cast<char*>(&_height), sizeof(_height));
+        file.read(reinterpret_cast<char*>(&_angle), sizeof(_angle));
+    }
+    else
+        file >> x >> y >> _width >> _height >> _angle;
+    initializeEntity(x, y);
+}
 
-	for (int i = 0; i < 4; i++)
-	{
-		double x, y;
-		file.read(reinterpret_cast<char*>(&x), sizeof(x));
-		file.read(reinterpret_cast<char*>(&y), sizeof(y));
-		_vertices[i] = Point(x, y);
-	}*/
+void RectangularEnt::initializeEntity(double bottLeftX, double bottLeftY)
+{
+    _bottLeft = new Point(bottLeftX, bottLeftY);
+    double ang_cos = cos(_angle);
+    double ang_sin = sin(_angle);
+    _center = new Point(_bottLeft->getX() + _width / 2.0 * ang_cos + _height / 2.0 * ang_sin,
+        _bottLeft->getY() - _width / 2.0 * ang_sin + _height / 2.0 * ang_cos);
 }
 
 double RectangularEnt::collisionLength(SimEnt& other, Point& proj)
@@ -31,11 +38,8 @@ double RectangularEnt::collisionLength(SimEnt& other, Point& proj)
     if (other_shape == SimEnt::CIRCLE || other_shape == SimEnt::KHEPERA_ROBOT)
 	{
 		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
-		Point *clone = new Point(*_bottLeft);
-		double coll_len = check_and_divide(converted, *clone, _width, _height, 1);
-
-		delete clone;
-		return coll_len;
+		Point clone(*_bottLeft);
+		return check_and_divide(converted, clone, _width, _height, 1);
 	}
 	else
 		return NO_COLLISION;
@@ -179,14 +183,13 @@ void RectangularEnt::serialize(Buffer& buffer)
 
 void RectangularEnt::serialize(std::ofstream& file)
 {
-	SimEnt::serialize(file);
+    double x = _bottLeft->getX();
+    double y = _bottLeft->getY();
 
-/*	for (int i = 0; i < 4; i++)
-	{
-		double tmp = _vertices[i].GetX();
-		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
-
-		tmp = _vertices[i].GetY();
-		file.write(reinterpret_cast<const char*>(&tmp), sizeof(tmp));
-	}*/
+    SimEnt::serialize(file);
+    file.write(reinterpret_cast<const char*>(&x), sizeof(x));
+    file.write(reinterpret_cast<const char*>(&y), sizeof(y));
+    file.write(reinterpret_cast<const char*>(&_width), sizeof(_width));
+    file.write(reinterpret_cast<const char*>(&_height), sizeof(_height));
+    file.write(reinterpret_cast<const char*>(&_angle), sizeof(_angle));
 }

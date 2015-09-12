@@ -88,9 +88,10 @@ namespace Visualiser
             for (int i = 0; i < sensorsCount; i++)
             {
                 Sensor sensor = new Sensor();
-                sensor.PlacingAngle = reader.ReadSingle();
-                sensor.RangeAngle = reader.ReadSingle();
+                byte type = reader.ReadByte(); // not used for now, only one type of sensor exists
                 sensor.Range = reader.ReadDouble();
+                sensor.RangeAngle = reader.ReadSingle();
+                sensor.PlacingAngle = reader.ReadSingle();
                 sensor.State = reader.ReadSingle();
                 robot.AddSensor(sensor);
             }

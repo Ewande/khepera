@@ -7,25 +7,28 @@
 
 class LinearEnt : public SimEnt
 {
-public:
-	LinearEnt(uint16_t id, double begX, double begY, double endX, double endY);
-	~LinearEnt();
+    public:
+	    LinearEnt(uint16_t id, double begX, double begY, double endX, double endY);
+        LinearEnt(std::ifstream& file, bool readBinary);
+	    ~LinearEnt();
 
-	Point& getBeg() { return *_beg; }
-	Point& getEnd() { return *_end; }
-	double getLength() { return _length; }
+	    Point& getBeg() { return *_beg; }
+	    Point& getEnd() { return *_end; }
+	    double getLength() { return _length; }
 
-	double collisionLength(SimEnt& other, Point& proj);
+	    double collisionLength(SimEnt& other, Point& proj);
+	    void translate(double x, double y);
 
-	virtual void translate(double x, double y);
+	    void serialize(Buffer& buffer);
+        void serialize(std::ofstream& file);
 
-	virtual void serialize(Buffer& buffer);
-	virtual void serialize(std::ofstream& file) {}
+    private:
+        void initializeEntity(double begX, double begY, double endX, double endY);
 
-protected:
-	Point* _beg;
-	Point* _end;
-	double _length;
+	    Point* _beg;
+	    Point* _end;
+	    double _length;
+    
 };
 
 #endif

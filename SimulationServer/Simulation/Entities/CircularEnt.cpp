@@ -10,14 +10,18 @@ CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, d
 	_center = new Point(x, y);
 }
 
-CircularEnt::CircularEnt(std::ifstream& file) : SimEnt(file, SimEnt::CIRCLE)
+CircularEnt::CircularEnt(std::ifstream& file, bool readBinary) : SimEnt(file, readBinary, SimEnt::CIRCLE)
 {
 	double x, y;
-	file.read(reinterpret_cast<char*>(&x), sizeof(x));
-	file.read(reinterpret_cast<char*>(&y), sizeof(y));
-	_center = new Point(x, y);
-
-	file.read(reinterpret_cast<char*>(&_radius), sizeof(_radius));
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&x), sizeof(x));
+        file.read(reinterpret_cast<char*>(&y), sizeof(y));
+        file.read(reinterpret_cast<char*>(&_radius), sizeof(_radius));
+    }
+    else
+        file >> x >> y >> _radius;
+    _center = new Point(x, y);
 }
 
 

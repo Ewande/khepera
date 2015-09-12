@@ -19,12 +19,17 @@
 
 */
 
-SimEnt::SimEnt(std::ifstream& file, uint8_t shapeID)
+SimEnt::SimEnt(std::ifstream& file, bool readBinary, uint8_t shapeID)
 {
 	_shapeID = shapeID;
-	file.read(reinterpret_cast<char*>(&_id), sizeof(_id));
-	file.read(reinterpret_cast<char*>(&_movable), sizeof(_movable));
-	file.read(reinterpret_cast<char*>(&_weight), sizeof(_weight));
+    if (readBinary)
+    {
+        file.read(reinterpret_cast<char*>(&_id), sizeof(_id));
+        file.read(reinterpret_cast<char*>(&_movable), sizeof(_movable));
+        file.read(reinterpret_cast<char*>(&_weight), sizeof(_weight));
+    }
+    else
+        file >> _id >> _movable >> _weight;
 }
 
 void SimEnt::serialize(Buffer& buffer)

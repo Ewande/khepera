@@ -14,7 +14,7 @@ public:
 
     DistrSimulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds,
         double simulationStep = DEFAULT_SIMULATION_STEP, int simulationDelay = DEFAULT_SIMULATION_DELAY);
-    DistrSimulation(std::ifstream& file, double simulationStep = DEFAULT_SIMULATION_STEP,
+    DistrSimulation(std::ifstream& file, bool readBinary, double simulationStep = DEFAULT_SIMULATION_STEP,
         int simulationDelay = DEFAULT_SIMULATION_DELAY);
     ~DistrSimulation();
 

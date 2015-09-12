@@ -15,10 +15,11 @@ void TestRectangleSerialization();
 int main(int argc, char** argv)
 {
 	//TestRectangleSerialization();
-
-    DistrSimulation* simulation = new DistrSimulation(420, 300, true);
+    std::ifstream file("C:\\Users\\Michal\\Desktop\\sample.txt");
+    DistrSimulation* simulation = new DistrSimulation(file, false);//new DistrSimulation(420, 300, true);
     CommunicationManager* commMan = new CommunicationManager(simulation);
-
+    simulation->setCommunicationManager(commMan);
+    /*
     //-- STATIC ENTITIES
 	CircularEnt* c = new CircularEnt(0, 1024, true, 350, 250, 40);
 	RectangularEnt* r = new RectangularEnt(1, 12, false, 100, 40, 50, 50);
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
     simulation->addSensor(middleRight, robotId);
     simulation->addSensor(middleLeft, robotId);
     simulation->addSensor(bottomRight, robotId);
-    simulation->addSensor(bottomLeft, robotId);
+    simulation->addSensor(bottomLeft, robotId);*/
 
 	// WINSock
 	WSADATA wsaData;
@@ -103,7 +104,7 @@ void TestRectangleSerialization()
 	inputStream.open("testRectangleSerialized.bin", std::ios::in | std::ios::binary);
 	uint8_t shapeID; // this is normally read by symulation class, see Symulation.cpp:56
 	inputStream.read(reinterpret_cast<char*>(&shapeID), sizeof(shapeID));
-	RectangularEnt deserializedRect(inputStream);
+	RectangularEnt deserializedRect(inputStream, true);
 
 	AssertEquals(id, deserializedRect.getID(), "Blad: identyfikator ksztaltu nie zgadza sie");
 	AssertEquals(weight, deserializedRect.getWeight(), "BLAD: waga ksztaltu nie zgadza sie");
