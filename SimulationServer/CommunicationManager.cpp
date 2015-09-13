@@ -52,36 +52,36 @@ bool CommunicationManager::init()
 
 	// Resolve the local address and port to be used by the server
 	int iResult = getaddrinfo(NULL, LISTEN_PORT_STR, &hints, &result);
-	if (iResult != 0) {
-		printf("getaddrinfo failed: %d\n", iResult);
-		WSACleanup();
+	if (iResult != 0)
+    {
+        std::cout << "getaddrinfo failed. Error code: " << iResult << std::endl;
 		return false;
 	}
 
 	// create socket
 	_listenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-	if (_listenSocket == INVALID_SOCKET) {
-		printf("Error at socket(): %ld\n", WSAGetLastError());
+	if (_listenSocket == INVALID_SOCKET)
+    {
+		std::cout << "Error at socket(). Error code: " << WSAGetLastError() << std::endl;
 		freeaddrinfo(result);
-		WSACleanup();
 		return false;
 	}
 
 	// bind socket
 	iResult = bind(_listenSocket, result->ai_addr, (int) result->ai_addrlen);
 	freeaddrinfo(result);
-	if (iResult == SOCKET_ERROR) {
-		printf("bind failed with error: %d\n", WSAGetLastError());
+	if (iResult == SOCKET_ERROR)
+    {
+		std::cout << "bind failed. Error code: " << WSAGetLastError() << std::endl;
 		closesocket(_listenSocket);
-		WSACleanup();
 		return false;
 	}
 
 	// listen
-	if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR) {
-		printf("Listen failed with error: %ld\n", WSAGetLastError());
+	if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR)
+    {
+		std::cout << "Listen failed. Error code: " << WSAGetLastError() << std::endl;
 		closesocket(_listenSocket);
-		WSACleanup();
 		return false;
 	}
 
@@ -121,7 +121,7 @@ void CommunicationManager::sendWorldDescriptionToVisualisers()
 	Buffer buffer;
     _simulation->serialize(buffer);
 
-	EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
+	EnterCriticalSection(&_clientsMutex); // if server-thread adds new client, iterator would be broken
 	for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
         send(*it, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
 	LeaveCriticalSection(&_clientsMutex);
@@ -129,7 +129,7 @@ void CommunicationManager::sendWorldDescriptionToVisualisers()
 
 void CommunicationManager::sendRobotsStatesToControllers()
 {
-    EnterCriticalSection(&_clientsMutex); // if server-thread add new client, iterator would be broken
+    EnterCriticalSection(&_clientsMutex); // if server-thread adds new client, iterator would be broken
 
     for (std::map<int, SOCKET>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
     {

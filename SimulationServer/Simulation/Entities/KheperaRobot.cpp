@@ -23,15 +23,6 @@ KheperaRobot::KheperaRobot(std::ifstream& file, bool readBinary) : CircularEnt(f
         file >> _wheelRadius >> _wheelDistance >> _directionAngle;
 }
 
-KheperaRobot::~KheperaRobot()
-{
-    while (!_sensors.empty())
-    {
-        delete _sensors.back();
-        _sensors.pop_back();
-    }
-}
-
 void KheperaRobot::updatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
