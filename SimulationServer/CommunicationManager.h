@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "DistrSimulation.h"
-
+#include "Simulation/Buffer.h"
 #include "ClientCommands/ClientCommand.h"
 #include "ClientCommands/RobotSpeedChangeCommands.h"
 
@@ -40,16 +40,26 @@ class CommunicationManager
 
         void sendRobotsStatesToControllers();
 	private:
+        class SocketData
+        {
+            public:
+                SocketData() {}
+                SocketData(SOCKET _socket, uint16_t _port, in_addr _ip) : socket(_socket), port(_port), ip(_ip) {}
+                SOCKET socket;
+                uint16_t port;
+                in_addr ip;
+        };
+
 		SOCKET                     _listenSocket; 
 		DistrSimulation*           _simulation;
 		bool                       _isStopped; // if there was request to stop communication manager
 		CRITICAL_SECTION           _clientsMutex; // light mutex used to protect _visualisers to be read and written simultaneously
 
 		// connected clients
-		std::map<int, SOCKET>      _controllers;
-		std::set<SOCKET>           _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
+		std::map<uint16_t, SocketData>  _controllers;
+		std::set<SOCKET>                _visualisers; // we don't need to distinguish visualisers, each of them has equal rights
 
-		ClientCommand**            _validControllerCommands;
+		ClientCommand**                 _validControllerCommands;
 
 		bool accept_new_client(); // accepts client, that is trying to connect, and adds it to appropriate clients set
 
@@ -59,6 +69,8 @@ class CommunicationManager
 
 		// the same method for visualisers messages
 		void receive_visualisers_messages(fd_set* sockets);
+
+        void serializeControllersData(Buffer& buffer) const;
 };
 
 #endif

@@ -22,7 +22,6 @@ namespace Visualiser
     public partial class MainWindow : Window
     {
         public DisplayConfig DisplayConfig { get { return DisplayConfig.Instance; } }
-
         private Thread _worldReceiverThread;
         private ConnectionManager _connMan;
         private bool _connected;
@@ -102,11 +101,25 @@ namespace Visualiser
             worldCanvas.Children.Clear();
             WorldDim.Text = String.Format("{0} x {1}", simulationWorld.WorldWidth, simulationWorld.WorldHeight);
             SimTime.Text = String.Format("{0:0.00} s", simulationWorld.Time);
+            int robots = simulationWorld.Entities.Where(x => x.Value.ShapeID == SimEnt.KHEPERA_ROBOT_ID).Count();
+            NumOfRob.Text = robots.ToString();
+            if (robots != 0)
+            {
+                RobotsGrid.Visibility = System.Windows.Visibility.Visible;
+                RobotsGrid.ItemsSource = simulationWorld.Entities
+                    .Select(x => x.Value)
+                    .Where(x => x.ShapeID == SimEnt.KHEPERA_ROBOT_ID)
+                    .Select(x => new
+                    {
+                        ID = x.ID,
+                        IP = x.ControllerAddr ?? "Not connected"
+                    });
+            }
+            else
+                RobotsGrid.Visibility = System.Windows.Visibility.Hidden;
 
             foreach (SimEnt entity in simulationWorld.Entities.Values)
-            {
                 entity.AddToCanvas(worldCanvas);
-            }
         }
     }
 }

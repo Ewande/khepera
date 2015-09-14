@@ -76,6 +76,20 @@ namespace Visualiser
                 result.Entities.Add(entity.ID, entity);
             }
 
+            byte numberOfControllers = reader.ReadByte();
+            for (int i = 0; i < numberOfControllers; i++)
+            {
+                UInt16 robotId = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
+                String port = IPAddress.NetworkToHostOrder(reader.ReadInt16()).ToString();
+                String ip = reader.ReadByte().ToString() + '.';
+                ip += reader.ReadByte().ToString() + '.';
+                ip += reader.ReadByte().ToString() + '.';
+                ip += reader.ReadByte().ToString();
+                SimEnt entity = null;
+                if (result.Entities.TryGetValue(robotId, out entity))
+                    entity.ControllerAddr = String.Concat(ip, ':', port);
+            }
+
             return result;
         }
     }

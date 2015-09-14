@@ -20,6 +20,7 @@ namespace Visualiser
         public bool Movable { get; protected set; }
         public Func<double, double> HorFunc;
         public Func<double, double> VertFunc;
+        public String ControllerAddr { get; set; }
 
         public SimEnt(UInt16 id, byte shapeID, UInt32 weight, bool movable)
         {
