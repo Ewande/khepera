@@ -80,7 +80,7 @@ namespace Visualiser
             for (int i = 0; i < numberOfControllers; i++)
             {
                 UInt16 robotId = (UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16());
-                String port = IPAddress.NetworkToHostOrder(reader.ReadInt16()).ToString();
+                String port = ((UInt16) IPAddress.NetworkToHostOrder(reader.ReadInt16())).ToString();
                 String ip = reader.ReadByte().ToString() + '.';
                 ip += reader.ReadByte().ToString() + '.';
                 ip += reader.ReadByte().ToString() + '.';

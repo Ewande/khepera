@@ -113,7 +113,8 @@ namespace Visualiser
                     {
                         ID = x.ID,
                         IP = x.ControllerAddr ?? "Not connected"
-                    });
+                    })
+                    .OrderBy(x => x.ID);
             }
             else
                 RobotsGrid.Visibility = System.Windows.Visibility.Hidden;

@@ -85,7 +85,6 @@ namespace Visualiser
                 Y2 = rightWheelY + wheelVectorY,
                 Stroke = System.Windows.Media.Brushes.Black
             };
-            //canvas.Children.Add(wheelAxis);
             canvas.Children.Add(leftWheel);
             canvas.Children.Add(rightWheel);
 
@@ -158,26 +157,27 @@ namespace Visualiser
                     canvas.Children.Add(center);
                     canvas.Children.Add(connector);
                 }
-
-                if (DisplayConfig.Instance.ShowId)
-                {
-                    TextBlock idText = new TextBlock
-                    {
-                        Text = ID.ToString(),
-                        TextAlignment = System.Windows.TextAlignment.Center,
-                        Width = 2 * Radius,
-                        Height = 2 * Radius,
-                        FontFamily = new System.Windows.Media.FontFamily("Courier New"),
-                        FontWeight = System.Windows.FontWeights.Normal,
-                        FontSize = 15,
-                        SnapsToDevicePixels = true
-                    };
-                    Canvas.SetLeft(idText, HorFunc(Center.X - Radius));
-                    Canvas.SetTop(idText, VertFunc(Center.Y + Radius / 2));
-                    canvas.Children.Add(idText);
-
-                }
             }
+
+            if (DisplayConfig.Instance.ShowId)
+            {
+                TextBlock idText = new TextBlock
+                {
+                    Text = ID.ToString(),
+                    TextAlignment = System.Windows.TextAlignment.Center,
+                    Width = 2 * Radius,
+                    Height = 2 * Radius,
+                    FontFamily = new System.Windows.Media.FontFamily("Courier New"),
+                    FontWeight = System.Windows.FontWeights.Normal,
+                    FontSize = 15,
+                    SnapsToDevicePixels = true
+                };
+                Canvas.SetLeft(idText, HorFunc(Center.X - Radius));
+                Canvas.SetTop(idText, VertFunc(Center.Y + Radius / 2));
+                canvas.Children.Add(idText);
+            }
+            else
+                canvas.Children.Add(wheelAxis);
         }
     }
 }
