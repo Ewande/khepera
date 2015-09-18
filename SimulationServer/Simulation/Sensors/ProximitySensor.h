@@ -3,14 +3,13 @@
 
 #include "Sensor.h"
 
-class KheperaRobot;
-
 class ProximitySensor : public Sensor
 {
     public:
         ProximitySensor(double range, float rangeAngle, float placingAngle)
             : Sensor(Sensor::PROXIMITY, range, rangeAngle, placingAngle) {}
         ProximitySensor(std::ifstream& file, bool readBinary) : Sensor(file, readBinary, Sensor::PROXIMITY) {}
+        ProximitySensor(const ProximitySensor& other) : Sensor(other) {}
         void updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity);
 };
 

@@ -1,4 +1,5 @@
 #include "Sensor.h"
+#include "../Math/MathLib.h"
 
 Sensor::Sensor(uint8_t type, double range, float rangeAngle, float placingAngle)
     : _range(range), _rangeAngle(rangeAngle), _placingAngle(placingAngle)

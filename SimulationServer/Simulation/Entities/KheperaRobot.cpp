@@ -1,4 +1,5 @@
 #include "KheperaRobot.h"
+#include "../Sensors/ProximitySensor.h"
 
 KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
 	double y, double robotRadius, uint16_t wheelRadius, uint16_t wheelDistance,
@@ -21,6 +22,30 @@ KheperaRobot::KheperaRobot(std::ifstream& file, bool readBinary) : CircularEnt(f
     }
     else
         file >> _wheelRadius >> _wheelDistance >> _directionAngle;
+}
+
+KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
+{
+    _wheelRadius = other._wheelRadius;
+    _wheelDistance = other._wheelDistance;
+    _directionAngle = other._directionAngle;
+    _leftMotor = other._leftMotor;
+    _rightMotor = other._rightMotor;
+    for (std::list<Sensor*>::const_iterator it = other._sensors.begin(); it != other._sensors.end(); it++)
+    {
+        Sensor* sensor;
+        switch ((*it)->getType())
+        {
+            case Sensor::PROXIMITY:
+                sensor = new ProximitySensor(*dynamic_cast<ProximitySensor*>(*it));
+                break;
+            default:
+                sensor = NULL;
+                break;
+        }
+        if (sensor != NULL)
+            _sensors.push_back(sensor);
+    }
 }
 
 void KheperaRobot::updatePosition(double deltaTime)

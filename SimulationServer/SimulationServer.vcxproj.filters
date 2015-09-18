@@ -40,6 +40,7 @@
     <ClCompile Include="Simulation\Sensors\ProximitySensor.cpp">
       <Filter>Simulation\Sensors</Filter>
     </ClCompile>
+    <ClCompile Include="DllInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommunicationManager.h" />
@@ -86,6 +87,7 @@
     <ClInclude Include="Simulation\Sensors\ProximitySensor.h">
       <Filter>Simulation\Sensors</Filter>
     </ClInclude>
+    <ClInclude Include="DllInterface.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ClientCommands">

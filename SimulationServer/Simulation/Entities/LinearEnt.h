@@ -1,7 +1,6 @@
 #ifndef LINEAR_ENT_H
 #define LINEAR_ENT_H
 
-#include "../Constants.h"
 #include "SimEnt.h"
 #include "../Math/Point.h"
 
@@ -10,6 +9,7 @@ class LinearEnt : public SimEnt
     public:
 	    LinearEnt(uint16_t id, double begX, double begY, double endX, double endY);
         LinearEnt(std::ifstream& file, bool readBinary);
+        LinearEnt(const LinearEnt& other);
 	    ~LinearEnt();
 
 	    Point& getBeg() { return *_beg; }

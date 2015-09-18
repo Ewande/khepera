@@ -22,6 +22,13 @@ LinearEnt::LinearEnt(std::ifstream& file, bool readBinary) : SimEnt(file, readBi
     initializeEntity(begX, begY, endX, endY);
 }
 
+LinearEnt::LinearEnt(const LinearEnt& other) : SimEnt(other)
+{
+    _beg = new Point(*other._beg);
+    _end = new Point(*other._end);
+    _length = other._length;
+}
+
 void LinearEnt::initializeEntity(double begX, double begY, double endX, double endY)
 {
     _beg = new Point(begX, begY);

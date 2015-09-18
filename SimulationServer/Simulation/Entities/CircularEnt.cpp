@@ -1,7 +1,7 @@
 #include "CircularEnt.h"
 #include "RectangularEnt.h"
 #include "LinearEnt.h"
-
+#include "../Math/MathLib.h"
 #include <iostream>
 
 CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y,
@@ -24,6 +24,11 @@ CircularEnt::CircularEnt(std::ifstream& file, bool readBinary) : SimEnt(file, re
     _center = new Point(x, y);
 }
 
+CircularEnt::CircularEnt(const CircularEnt& other) : SimEnt(other)
+{
+    _center = new Point(*other._center);
+    _radius = other._radius;
+}
 
 double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 {

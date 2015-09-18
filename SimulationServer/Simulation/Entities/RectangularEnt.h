@@ -5,7 +5,6 @@
 #include "CircularEnt.h"
 #include "../Constants.h"
 #include "../Math/Point.h"
-#include "../Math/MathLib.h"
 
 class RectangularEnt : public SimEnt
 {
@@ -14,6 +13,7 @@ class RectangularEnt : public SimEnt
 		RectangularEnt(uint16_t id, uint32_t weight, bool movable, double x,
 			double y, double width, double height, float angle = 0);
         RectangularEnt(std::ifstream& file, bool readBinary);
+        RectangularEnt(const RectangularEnt& other);
 
 		virtual ~RectangularEnt() { delete _bottLeft; delete _center; }
 

@@ -1,4 +1,6 @@
 #include "ProximitySensor.h"
+#include "../Math/MathLib.h"
+#include "../Entities/LinearEnt.h"
 //#include <iostream>
 
 void ProximitySensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity)

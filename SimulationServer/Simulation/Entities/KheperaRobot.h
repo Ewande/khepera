@@ -3,10 +3,10 @@
 
 #include "CircularEnt.h"
 #include "../Sensors/Sensor.h"
-#include <stdint.h>
 #include <list>
 
 class Sensor;
+
 class Motor
 {
     public:
@@ -23,6 +23,7 @@ class KheperaRobot : public CircularEnt
 		KheperaRobot(uint16_t id, uint32_t weight, double x, double y, double robotRadius, uint16_t wheelRadius,
 			uint16_t wheelDistance, float directionAngle = 0);
         KheperaRobot(std::ifstream& file, bool readBinary);
+        KheperaRobot(const KheperaRobot& other);
 
 		void setRightMotorSpeed(double speed) { _rightMotor.setSpeed(speed); }
 		void setLeftMotorSpeed(double speed) { _leftMotor.setSpeed(speed); }

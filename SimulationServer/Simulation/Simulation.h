@@ -5,11 +5,7 @@
 #include <iostream>
 
 #include "Entities/SimEnt.h"
-#include "Entities/RectangularEnt.h"
-#include "Entities/CircularEnt.h"
-#include "Entities/KheperaRobot.h"
-#include "Entities/LinearEnt.h"
-#include "Sensors/ProximitySensor.h"
+#include "Sensors/Sensor.h"
 #include "Buffer.h"
 #include "Constants.h"
 
@@ -20,6 +16,7 @@ class Simulation
                 double simulationStep = DEFAULT_SIMULATION_STEP, int simulationDelay = DEFAULT_SIMULATION_DELAY);
         Simulation(std::ifstream& file, bool readBinary, double simulationStep = DEFAULT_SIMULATION_STEP,
 			int simulationDelay = DEFAULT_SIMULATION_DELAY);
+        Simulation(const Simulation& simulation);
         ~Simulation();
 
 		void addEntity(SimEnt* newEntity);

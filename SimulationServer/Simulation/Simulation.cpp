@@ -1,4 +1,9 @@
 #include "Simulation.h"
+#include "Entities/RectangularEnt.h"
+#include "Entities/CircularEnt.h"
+#include "Entities/KheperaRobot.h"
+#include "Entities/LinearEnt.h"
+#include "Sensors/ProximitySensor.h"
 
 Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds,
 	double simulationStep , int simulationDelay) :
@@ -67,6 +72,43 @@ void Simulation::addBounds()
     _entities[RESERVED_ID_LEVEL + 2] = top_line;
     _entities[RESERVED_ID_LEVEL + 3] = left_line;
     _entities[RESERVED_ID_LEVEL + 4] = right_line;
+}
+
+Simulation::Simulation(const Simulation& other)
+{
+    _worldWidth = other._worldWidth;
+    _worldHeight = other._worldHeight;
+    _time = other._time;
+    _simulationStep = other._simulationStep;
+    _simulationDelay = other._simulationDelay;
+    _hasBounds = other._hasBounds;
+    _isRunning = other._isRunning;
+
+    for (SimEntMap::const_iterator it = other._entities.begin(); it != other._entities.end(); it++)
+    {
+        SimEnt* entity;
+        switch (it->second->getShapeID())
+        {
+            case SimEnt::RECTANGLE:
+                entity = new RectangularEnt(*dynamic_cast<RectangularEnt*>(it->second));
+                break;
+            case SimEnt::CIRCLE:
+                entity = new CircularEnt(*dynamic_cast<CircularEnt*>(it->second));
+                break;
+            case SimEnt::KHEPERA_ROBOT:
+                entity = new KheperaRobot(*dynamic_cast<KheperaRobot*>(it->second));
+                // adding sensors to simulation _sensors
+                break;
+            case SimEnt::LINE:
+                entity = new LinearEnt(*dynamic_cast<LinearEnt*>(it->second));
+                break;
+            default:
+                entity = NULL;
+                break;
+        }
+        if (entity != NULL)
+            _entities[entity->getID()] = entity;
+    }
 }
 
 SimEnt* Simulation::readEntity(std::ifstream& file, bool readBinary)

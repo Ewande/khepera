@@ -23,6 +23,15 @@ RectangularEnt::RectangularEnt(std::ifstream& file, bool readBinary) : SimEnt(fi
     initializeEntity(x, y);
 }
 
+RectangularEnt::RectangularEnt(const RectangularEnt& other) : SimEnt(other)
+{
+    _bottLeft = new Point(*other._bottLeft);
+    _center = new Point(*other._center);
+    _width = other._width;
+    _height = other._height;
+    _angle = other._angle;
+}
+
 void RectangularEnt::initializeEntity(double bottLeftX, double bottLeftY)
 {
     _bottLeft = new Point(bottLeftX, bottLeftY);
