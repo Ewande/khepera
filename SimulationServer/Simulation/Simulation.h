@@ -34,7 +34,6 @@ class Simulation
         void updateSensorsState();
 
 		SimEntMap                     _entities;
-        std::list<Sensor*>            _sensors;
 		uint32_t                      _worldWidth;
 		uint32_t                      _worldHeight;
 		double                        _time;

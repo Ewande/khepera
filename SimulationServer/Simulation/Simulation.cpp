@@ -97,7 +97,6 @@ Simulation::Simulation(const Simulation& other)
                 break;
             case SimEnt::KHEPERA_ROBOT:
                 entity = new KheperaRobot(*dynamic_cast<KheperaRobot*>(it->second));
-                // adding sensors to simulation _sensors
                 break;
             case SimEnt::LINE:
                 entity = new LinearEnt(*dynamic_cast<LinearEnt*>(it->second));
@@ -179,13 +178,6 @@ Simulation::~Simulation()
 		delete it->second;
 		it++;
 	}
-
-    std::list<Sensor*>::iterator sensIt = _sensors.begin();
-    while (sensIt != _sensors.end())
-    {
-        delete *sensIt;
-        sensIt++;
-    }
 }
 
 void Simulation::addEntity(SimEnt* newEntity)
@@ -203,7 +195,6 @@ bool Simulation::addSensor(Sensor* sensor, uint16_t id)
         KheperaRobot* robot = dynamic_cast<KheperaRobot*>(entity);
         sensor->placeOnRobot(robot);
         robot->addSensor(sensor);
-        _sensors.push_back(sensor);
         return true;
     }
     return false;
@@ -307,8 +298,11 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 
 void Simulation::updateSensorsState()
 {
-    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
-        (*it)->updateState(_entities.begin(), _entities.end());
+    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
+    {
+        if (it->second->getShapeID() == SimEnt::KHEPERA_ROBOT)
+            dynamic_cast<KheperaRobot*>(it->second)->updateSensorsState(_entities.begin(), _entities.end());
+    }
 }
 
 SimEnt* Simulation::getEntity(uint16_t id)

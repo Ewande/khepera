@@ -20,6 +20,8 @@ Sensor::Sensor(std::ifstream& file, bool readBinary, uint8_t type) : _type(type)
     }
     else
         file >> _range >> _rangeAngle >> _placingAngle >> _state;
+
+    _beams = 2 + 6 * (int)(_rangeAngle / M_PI);
 }
 
 void Sensor::serialize(Buffer& buffer) const

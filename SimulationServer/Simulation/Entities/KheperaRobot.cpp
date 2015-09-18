@@ -48,6 +48,16 @@ KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
     }
 }
 
+KheperaRobot::~KheperaRobot()
+{
+    std::list<Sensor*>::iterator sensIt = _sensors.begin();
+    while (sensIt != _sensors.end())
+    {
+        delete *sensIt;
+        sensIt++;
+    }
+}
+
 void KheperaRobot::updatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
@@ -65,6 +75,13 @@ void KheperaRobot::updatePosition(double deltaTime)
 	double deltaY = (_wheelRadius / 2.0) * (leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
     translate(deltaX, deltaY);
+}
+
+void KheperaRobot::updateSensorsState(const SimEntMap::const_iterator& firstEntity, 
+    const SimEntMap::const_iterator& lastEntity)
+{
+    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+        (*it)->updateState(firstEntity, lastEntity);
 }
 
 void KheperaRobot::addSensor(Sensor* sensor)

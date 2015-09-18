@@ -3,7 +3,8 @@
 #include "../Entities/LinearEnt.h"
 //#include <iostream>
 
-void ProximitySensor::updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity)
+void ProximitySensor::updateState(const SimEntMap::const_iterator& firstEntity, 
+    const SimEntMap::const_iterator& lastEntity)
 {
     Point rangeBeg(_robot->getCenter());
     float sensorAngle = _robot->getDirectionAngle() - _placingAngle;

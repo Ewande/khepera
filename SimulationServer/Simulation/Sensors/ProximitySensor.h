@@ -10,7 +10,8 @@ class ProximitySensor : public Sensor
             : Sensor(Sensor::PROXIMITY, range, rangeAngle, placingAngle) {}
         ProximitySensor(std::ifstream& file, bool readBinary) : Sensor(file, readBinary, Sensor::PROXIMITY) {}
         ProximitySensor(const ProximitySensor& other) : Sensor(other) {}
-        void updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity);
+        void updateState(const SimEntMap::const_iterator& firstEntity, 
+            const SimEntMap::const_iterator& lastEntity);
 };
 
 #endif

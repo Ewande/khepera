@@ -24,6 +24,7 @@ class KheperaRobot : public CircularEnt
 			uint16_t wheelDistance, float directionAngle = 0);
         KheperaRobot(std::ifstream& file, bool readBinary);
         KheperaRobot(const KheperaRobot& other);
+        ~KheperaRobot();
 
 		void setRightMotorSpeed(double speed) { _rightMotor.setSpeed(speed); }
 		void setLeftMotorSpeed(double speed) { _leftMotor.setSpeed(speed); }
@@ -34,6 +35,8 @@ class KheperaRobot : public CircularEnt
 
 		// deltaTime in [ sec ]
 		void updatePosition(double deltaTime);
+        void updateSensorsState(const SimEntMap::const_iterator& firstEntity, 
+            const SimEntMap::const_iterator& lastEntity);
         void addSensor(Sensor* sensor);
 
 		virtual void serialize(Buffer& buffer);

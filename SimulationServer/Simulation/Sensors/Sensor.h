@@ -15,7 +15,8 @@ class Sensor
         Sensor(uint8_t type, double range, float rangeAngle, float placingAngle);
         Sensor(std::ifstream& file, bool readBinary, uint8_t type);
         void placeOnRobot(KheperaRobot* robot) { _robot = robot; }
-        virtual void updateState(SimEntMap::const_iterator& firstEntity, SimEntMap::const_iterator& lastEntity) = 0;
+        virtual void updateState(const SimEntMap::const_iterator& firstEntity, 
+            const SimEntMap::const_iterator& lastEntity) = 0;
         uint8_t getType() { return _type; }
 
         virtual void serialize(Buffer& buffer) const;
