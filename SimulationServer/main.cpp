@@ -54,8 +54,6 @@ int main(int argc, char** argv)
 	}
 	if (commMan.init())
 	{
-		std::cout << "SIMULATION STARTED!" << std::endl;
-
 		simulation.start();
 		commMan.runServerLoop();
 	}

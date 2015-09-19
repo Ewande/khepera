@@ -22,13 +22,14 @@ class Simulation
 		void addEntity(SimEnt* newEntity);
         bool addSensor(Sensor* sensor, uint16_t id);
 		void start();
-		void update(double deltaTime); // deltaTime in [ s ]
+        void update(unsigned int steps = 1);
 		SimEnt* getEntity(uint16_t id);
 
 		void serialize(Buffer& buffer) const;
 		void serialize(std::ofstream& file) const;
 
 	protected:
+        void update(double deltaTime); // deltaTime in [ s ]
         void checkCollisions();
         void removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj);
         void updateSensorsState();

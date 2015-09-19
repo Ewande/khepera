@@ -204,6 +204,7 @@ void Simulation::start()
 {
 	_time = 0;
 	_isRunning = true;
+    updateSensorsState();
 }
 
 void Simulation::update(double deltaTime)
@@ -213,6 +214,12 @@ void Simulation::update(double deltaTime)
 		it->second->updatePosition(deltaTime);
 	checkCollisions();
     updateSensorsState();
+}
+
+void Simulation::update(unsigned int steps)
+{
+    for (unsigned int i = 0; i < steps; i++)
+        update(_simulationStep);
 }
 
 void Simulation::checkCollisions()

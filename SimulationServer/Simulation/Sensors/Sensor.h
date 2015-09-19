@@ -18,6 +18,7 @@ class Sensor
         virtual void updateState(const SimEntMap::const_iterator& firstEntity, 
             const SimEntMap::const_iterator& lastEntity) = 0;
         uint8_t getType() { return _type; }
+        float getState() { return _state; }
 
         virtual void serialize(Buffer& buffer) const;
         virtual void serialize(std::ofstream& file) const;

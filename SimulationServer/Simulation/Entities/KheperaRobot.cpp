@@ -31,7 +31,7 @@ KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
     _directionAngle = other._directionAngle;
     _leftMotor = other._leftMotor;
     _rightMotor = other._rightMotor;
-    for (std::list<Sensor*>::const_iterator it = other._sensors.begin(); it != other._sensors.end(); it++)
+    for (std::vector<Sensor*>::const_iterator it = other._sensors.begin(); it != other._sensors.end(); it++)
     {
         Sensor* sensor;
         switch ((*it)->getType())
@@ -50,12 +50,16 @@ KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
 
 KheperaRobot::~KheperaRobot()
 {
-    std::list<Sensor*>::iterator sensIt = _sensors.begin();
-    while (sensIt != _sensors.end())
-    {
+    for (std::vector<Sensor*>::iterator sensIt = _sensors.begin(); sensIt != _sensors.end(); sensIt++)
         delete *sensIt;
-        sensIt++;
-    }
+}
+
+bool KheperaRobot::getSensorState(unsigned int sensorNumber, float& state) const
+{
+    bool isIndexValid = sensorNumber < _sensors.size();
+    if(isIndexValid)
+        state = _sensors[sensorNumber]->getState();
+    return isIndexValid;
 }
 
 void KheperaRobot::updatePosition(double deltaTime)
@@ -80,7 +84,7 @@ void KheperaRobot::updatePosition(double deltaTime)
 void KheperaRobot::updateSensorsState(const SimEntMap::const_iterator& firstEntity, 
     const SimEntMap::const_iterator& lastEntity)
 {
-    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+    for (std::vector<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         (*it)->updateState(firstEntity, lastEntity);
 }
 
@@ -143,7 +147,7 @@ void KheperaRobot::serialize(Buffer& buffer)
 	buffer.pack(htons(_wheelDistance));
 	buffer.pack(_directionAngle);
     buffer.pack(htons(static_cast<uint16_t>(_sensors.size())));
-    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+    for (std::vector<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         (*it)->serialize(buffer);
 }
 
@@ -156,7 +160,7 @@ void KheperaRobot::serialize(std::ofstream& file)
 	file.write(reinterpret_cast<const char*>(&_directionAngle), sizeof(_directionAngle));
     uint16_t numberOfSensors = _sensors.size();
     file.write(reinterpret_cast<const char*>(&numberOfSensors), sizeof(numberOfSensors));
-    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+    for (std::vector<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         (*it)->serialize(file);
 
 	/* TODO: Serialize information about motors(probably about their type) */
@@ -165,6 +169,6 @@ void KheperaRobot::serialize(std::ofstream& file)
 void KheperaRobot::serializeForController(Buffer& buffer)
 {
     buffer.pack(htons(static_cast<uint16_t>(_sensors.size())));
-    for (std::list<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
+    for (std::vector<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         buffer.pack((*it)->_state);
 }

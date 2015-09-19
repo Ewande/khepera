@@ -38,6 +38,7 @@ void DistrSimulation::start()
 
 void DistrSimulation::run()
 {
+    std::cout << "SIMULATION STARTED!\n";;
     int i = 0;
     while (_isRunning)
     {
@@ -45,12 +46,12 @@ void DistrSimulation::run()
 
         _commMan->sendWorldDescriptionToVisualisers();
         _commMan->sendRobotsStatesToControllers();
-        update(_simulationStep);
-        std::cout << "RUNNING: " << i++ << std::endl;
+        update();
+        std::cout << "STEP: " << i++ << "\n";
 
         unlock();
         Sleep(_simulationDelay);
     }
 
-    std::cout << "THREAD END" << std::endl;
+    std::cout << "SIMULATION ENDED!\n";
 }

@@ -3,7 +3,7 @@
 
 #include "CircularEnt.h"
 #include "../Sensors/Sensor.h"
-#include <list>
+#include <vector>
 
 class Sensor;
 
@@ -32,6 +32,8 @@ class KheperaRobot : public CircularEnt
 		double getRightMotorSpeed() const { return _rightMotor.getSpeed(); }
 		double getLeftMotorSpeed() const { return _leftMotor.getSpeed(); }
         float getDirectionAngle() const { return _directionAngle; }
+        int getSensorCount() const { return _sensors.size(); }
+        bool getSensorState(unsigned int sensorNumber, float& state) const;
 
 		// deltaTime in [ sec ]
 		void updatePosition(double deltaTime);
@@ -53,7 +55,7 @@ class KheperaRobot : public CircularEnt
 		Motor       _leftMotor;
 		Motor       _rightMotor;
 
-        std::list<Sensor*> _sensors;
+        std::vector<Sensor*> _sensors;
 };
 
 #endif
