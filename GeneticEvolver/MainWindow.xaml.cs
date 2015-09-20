@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using System.Runtime.InteropServices;
-using System.IO;
-
 namespace GeneticEvolver
 {
     /// <summary>
@@ -28,21 +26,20 @@ namespace GeneticEvolver
             InitializeComponent();
         }
 
-        [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet=CharSet.Ansi)]
-        public static extern IntPtr createSimulation(string fileName, bool readBinary);
-
-        [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void removeSimulation(IntPtr simulation);
-
-        [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl)]
-        public static extern IntPtr cloneSimulation(IntPtr simulation);
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void LoadSimulation(object sender, RoutedEventArgs e)
         {
-            IntPtr sim = createSimulation("sample.txt", false);
-            IntPtr simClone = cloneSimulation(sim);
-            removeSimulation(sim);
-            removeSimulation(simClone);
+            Simulation simulation = new Simulation("sample.txt", false);
+        }
+
+        private void SelectFile(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "World Description Files|*.wd";
+
+            bool? fileChosen = openFileDialog.ShowDialog();
+
+            if (fileChosen == true)
+                SimFile.Text = openFileDialog.FileName;
         }
     }
 }
