@@ -33,33 +33,75 @@ namespace GeneticEvolver
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern void setRobotSpeed(IntPtr robot, double leftMotor, double rightMotor);
 
+        private static Simulation _defaultState;
 
         private IntPtr  _simulation;
         private IntPtr  _robot;
         private int    _robotId;
+        public List<float> SensorStates { get; private set; }
 
-        public Simulation(string descriptionFileName, bool readBinary)
+        private Simulation(string descriptionFileName, bool readBinary)
         {
             _simulation = createSimulation(descriptionFileName, readBinary);
         }
 
-        public Simulation(Simulation other)
+        private Simulation(Simulation other)
         {
             _simulation = cloneSimulation(other._simulation);
             if (other._robot != IntPtr.Zero)
                 _robot = getRobot(_simulation, _robotId);
         }
 
-        ~Simulation()
+        private ~Simulation()
         {
             removeSimulation(_simulation);
         }
 
-        bool setControlledRobot(int robotId)
+        public static bool LoadDefaultState(string descriptionFileName, bool readBinary)
         {
-            _robot = getRobot(_simulation, robotId);
-            _robotId = robotId;
-            return _robot != IntPtr.Zero;
+            _defaultState = new Simulation(descriptionFileName, readBinary);
+            
+            return true; // to do: implement error passing
+        }
+
+        public static Simulation CloneDefault()
+        {
+            return _defaultState == null ? null : new Simulation(_defaultState);
+        }
+
+        public static bool SetControlledRobot(int robotId)
+        {
+            if (_defaultState == null)
+                return false;
+            _defaultState._robot = getRobot(_defaultState._simulation, robotId);
+            if(_defaultState._robot == IntPtr.Zero)
+                return false;
+            _defaultState._robotId = robotId;
+            _defaultState.SensorStates = new List<float>();
+            for(int i = 0; i < getSensorCount(_defaultState._robot); i++)
+                _defaultState.SensorStates.Add(getSensorState(_defaultState._robot, i));
+            return true;
+        }
+
+        public bool SetRobotSpeed(double leftMotor, double rightMotor)
+        {
+            if (_robot == IntPtr.Zero)
+                return false;
+            setRobotSpeed(_robot, leftMotor, rightMotor);
+            return true;
+        }
+
+        public void Update(uint steps)
+        {
+            updateSimulation(_simulation, steps);
+            UpdateSensorList();
+        }
+
+        private void UpdateSensorList()
+        {
+            if (_robot != IntPtr.Zero)
+                for (int i = 0; i < SensorStates.Count; i++)
+                    SensorStates[i] = getSensorState(_robot, i);
         }
     }
 }

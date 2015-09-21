@@ -28,7 +28,8 @@ namespace GeneticEvolver
 
         private void LoadSimulation(object sender, RoutedEventArgs e)
         {
-            Simulation simulation = new Simulation("sample.txt", false);
+            Simulation.LoadDefaultState(SimFile.Text, false);
+            
         }
 
         private void SelectFile(object sender, RoutedEventArgs e)
