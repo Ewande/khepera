@@ -28,8 +28,23 @@ namespace GeneticEvolver
 
         private void LoadSimulation(object sender, RoutedEventArgs e)
         {
-            Simulation.LoadDefaultState(SimFile.Text, false);
-            
+            if (!String.IsNullOrWhiteSpace(SimFile.Text))
+            {
+                Simulation.LoadDefaultState(SimFile.Text, false);
+                List<int> ids = Simulation.GetRobotsIds();
+                if (ids.Count > 0)
+                {
+                    FilePickGrid.IsEnabled = false;
+                    RobotPickGrid.IsEnabled = true;
+                    RobotId.ItemsSource = ids;
+                    RobotId.SelectedIndex = 0;
+                    SimParseResult.Text = "File loaded";
+                    SimParseResult.Foreground = Brushes.Green;
+                    SimParseResult.FontWeight = FontWeights.Bold;
+                }
+                else
+                    SimParseResult.Text = "No robot to control";
+            }
         }
 
         private void SelectFile(object sender, RoutedEventArgs e)
@@ -41,6 +56,12 @@ namespace GeneticEvolver
 
             if (fileChosen == true)
                 SimFile.Text = openFileDialog.FileName;
+        }
+
+        private void PickRobot(object sender, RoutedEventArgs e)
+        {
+            Simulation.SetControlledRobot(int.Parse(RobotId.Text));
+            RobotPickGrid.IsEnabled = false;
         }
     }
 }

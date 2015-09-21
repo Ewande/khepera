@@ -322,6 +322,17 @@ SimEnt* Simulation::getEntity(uint16_t id)
 		return NULL;
 }
 
+std::vector<int> Simulation::getIdsByShape(uint8_t shapeId)
+{
+    std::vector<int> ids;
+    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
+    {
+        if (it->second->getShapeID() == shapeId)
+            ids.push_back(it->second->getID());
+    }
+    return ids;
+}
+
 /*
 		Serialization format (all numbers except for time in network byte order - time is in host-byte order)
 	+-------------------+--------------------------------------+-------------------+

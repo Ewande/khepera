@@ -24,6 +24,7 @@ class Simulation
 		void start();
         void update(unsigned int steps = 1);
 		SimEnt* getEntity(uint16_t id);
+        std::vector<int> getIdsByShape(uint8_t shapeId);
 
 		void serialize(Buffer& buffer) const;
 		void serialize(std::ofstream& file) const;

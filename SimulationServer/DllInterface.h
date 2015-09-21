@@ -5,6 +5,8 @@ extern "C" __declspec(dllexport) Simulation* createSimulation(char* fileName, bo
 extern "C" __declspec(dllexport) void removeSimulation(Simulation* simulation);
 extern "C" __declspec(dllexport) Simulation* cloneSimulation(Simulation* simulation);
 extern "C" __declspec(dllexport) void updateSimulation(Simulation* simulation, unsigned int steps);
+extern "C" __declspec(dllexport) int getRobotCount(Simulation* simulation);
+extern "C" __declspec(dllexport) bool fillRobotsIdArray(Simulation* simulation, int* idArray, int arrLength);
 
 // Robot object management
 extern "C" __declspec(dllexport) KheperaRobot* getRobot(Simulation* simulation, int robotId);

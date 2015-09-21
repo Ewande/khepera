@@ -22,6 +22,12 @@ namespace GeneticEvolver
         private static extern void updateSimulation(IntPtr simulation, uint steps);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern int getRobotCount(IntPtr simulation);
+
+        [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
+        private static extern bool fillRobotsIdArray(IntPtr simulation, int[] idArray, int arrLength);
+
+        [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern IntPtr getRobot(IntPtr simulation, int robotId);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
@@ -52,7 +58,7 @@ namespace GeneticEvolver
                 _robot = getRobot(_simulation, _robotId);
         }
 
-        private ~Simulation()
+        ~Simulation()
         {
             removeSimulation(_simulation);
         }
@@ -67,6 +73,14 @@ namespace GeneticEvolver
         public static Simulation CloneDefault()
         {
             return _defaultState == null ? null : new Simulation(_defaultState);
+        }
+
+        public static List<int> GetRobotsIds()
+        {
+            int robotCount = getRobotCount(_defaultState._simulation);
+            int[] ids = new int[robotCount];
+            fillRobotsIdArray(_defaultState._simulation, ids, robotCount);
+            return new List<int>(ids);
         }
 
         public static bool SetControlledRobot(int robotId)
