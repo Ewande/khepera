@@ -8,15 +8,16 @@ namespace GeneticEvolver
 {
     class Controller
     {
+        public double Fitness { get; set; }
+
         public Controller(/* some config */)
         {
 
         }
 
-        void CalculateRobotSpeed(List<float> sensorStates, out double leftMotor, out double rightMotor)
+        public void MoveRobot(Simulation simulation)
         {
-            leftMotor = 0;
-            rightMotor = 0;
+            simulation.SetRobotSpeed(0, 0); // to do
         }
 
     }

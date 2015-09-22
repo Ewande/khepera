@@ -63,5 +63,19 @@ namespace GeneticEvolver
             Simulation.SetControlledRobot(int.Parse(RobotId.Text));
             RobotPickGrid.IsEnabled = false;
         }
+
+        private void Evolve()
+        {
+            // this is only a scheme of algorithm, will be upgraded
+            Population pop = new Population(100);
+            pop.Evaluate(null, -1);
+            for(int i = 0; i < 200; i++)
+            {
+                pop = pop.Select(5);
+                pop.Crossover(0.5);
+                pop.Mutate(0.5);
+                pop.Evaluate(null, -1);
+            }
+        }
     }
 }

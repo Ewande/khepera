@@ -44,7 +44,10 @@ namespace GeneticEvolver
         private IntPtr  _simulation;
         private IntPtr  _robot;
         private int    _robotId;
+
         public List<float> SensorStates { get; private set; }
+        public double LeftMotorSpeed { get; private set; }
+        public double RightMotorSpeed { get; private set; }
 
         private Simulation(string descriptionFileName, bool readBinary)
         {
@@ -102,10 +105,13 @@ namespace GeneticEvolver
             if (_robot == IntPtr.Zero)
                 return false;
             setRobotSpeed(_robot, leftMotor, rightMotor);
+            LeftMotorSpeed = leftMotor;
+            RightMotorSpeed = rightMotor;
+
             return true;
         }
 
-        public void Update(uint steps)
+        public void Update(uint steps = 1)
         {
             updateSimulation(_simulation, steps);
             UpdateSensorList();
