@@ -21,6 +21,12 @@ namespace GeneticEvolver
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly Dictionary<string, Func<Simulation, double>> _behaviors =
+            new Dictionary<string,Func<Simulation,double>>
+        {
+            {"wall avoidance", Evaluator.AvoidWalls}
+        };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -62,20 +68,26 @@ namespace GeneticEvolver
         {
             Simulation.SetControlledRobot(int.Parse(RobotId.Text));
             RobotPickGrid.IsEnabled = false;
+            ConfigurationGrid.IsEnabled = true;
+            BehaviorType.ItemsSource = _behaviors.Keys;
+            if (_behaviors.Keys.Count > 0)
+                BehaviorType.SelectedIndex = 0;
         }
 
-        private void Evolve()
+        private void Evolve(object sender, RoutedEventArgs e)
         {
             // this is only a scheme of algorithm, will be upgraded
+            Func<Simulation, double> evaluator = _behaviors[BehaviorType.Text];
+
             Population pop = new Population(100);
-            pop.Evaluate(null, -1);
+            /*pop.Evaluate(evaluator, -1);
             for(int i = 0; i < 200; i++)
             {
                 pop = pop.Select(5);
                 pop.Crossover(0.5);
                 pop.Mutate(0.5);
-                pop.Evaluate(null, -1);
-            }
+                pop.Evaluate(evaluator, -1);
+            }*/
         }
     }
 }

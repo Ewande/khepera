@@ -53,6 +53,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Evaluator.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Population.cs" />
     <Compile Include="Simulation.cs" />

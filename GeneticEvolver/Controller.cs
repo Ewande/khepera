@@ -8,6 +8,8 @@ namespace GeneticEvolver
 {
     class Controller
     {
+        public static double MAX_ABS_SPEED = 5;
+
         public double Fitness { get; set; }
 
         public Controller(/* some config */)
