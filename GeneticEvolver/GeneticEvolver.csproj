@@ -58,6 +58,7 @@
     <Compile Include="Layer.cs" />
     <Compile Include="NetworkUnit.cs" />
     <Compile Include="NeuralNetwork.cs" />
+    <Compile Include="NNFactory.cs" />
     <Compile Include="Population.cs" />
     <Compile Include="Simulation.cs" />
     <Page Include="MainWindow.xaml">
