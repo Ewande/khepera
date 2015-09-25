@@ -9,7 +9,7 @@ namespace GeneticEvolver
     class NNFactory
     {
         public static NeuralNetwork CreateElmanNN(int inputCount, int outputCount,
-            Func<NetworkUnit, Layer, double> actFunc)
+            Func<double, double> actFunc)
         {
             NeuralNetwork network = new NeuralNetwork(actFunc);
             Layer input = new Layer();

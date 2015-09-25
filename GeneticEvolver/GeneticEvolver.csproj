@@ -53,7 +53,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Evaluator.cs" />
+    <Compile Include="Functions.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="NetworkUnit.cs" />

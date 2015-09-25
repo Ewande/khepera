@@ -11,10 +11,11 @@ namespace GeneticEvolver
         public static double MAX_ABS_SPEED = 5;
 
         public double Fitness { get; set; }
+        public NeuralNetwork NeuralNetwork { get; set; }
 
-        public Controller(/* some config */)
+        public Controller(NeuralNetwork network)
         {
-
+            NeuralNetwork = network;
         }
 
         public void MoveRobot(Simulation simulation)

@@ -24,7 +24,7 @@ namespace GeneticEvolver
         private static readonly Dictionary<string, Func<Simulation, double>> _behaviors =
             new Dictionary<string,Func<Simulation,double>>
         {
-            {"wall avoidance", Evaluator.AvoidWalls}
+            {"wall avoidance", Functions.AvoidWalls}
         };
 
         public MainWindow()

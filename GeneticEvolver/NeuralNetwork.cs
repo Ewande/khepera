@@ -9,7 +9,7 @@ namespace GeneticEvolver
     class NeuralNetwork
     {
         private List<Layer> _layers;
-        private Func<NetworkUnit, Layer, double> _actFunc;
+        private Func<double, double> _actFunc;
 
         public Layer InLayer
         {
@@ -26,7 +26,7 @@ namespace GeneticEvolver
             }
         }
 
-        public NeuralNetwork(Func<NetworkUnit, Layer, double> actFunc)
+        public NeuralNetwork(Func<double, double> actFunc)
         {
             _layers = new List<Layer>();
             _actFunc = actFunc;
@@ -49,7 +49,13 @@ namespace GeneticEvolver
             for (int i = 1; i < _layers.Count; i++)
             {
                 foreach (NetworkUnit unit in _layers[i])
-                    unit.Output = _actFunc(unit, _layers[i - 1]);
+                {
+                    double input = 0;
+                    foreach (var conn in unit.Connections)
+                        input += conn.Key.Input * conn.Value;
+                    
+                    unit.Output = _actFunc(input);
+                }
             }
         }
 
@@ -58,8 +64,33 @@ namespace GeneticEvolver
             Random random = new Random();
             foreach (Layer layer in _layers)
                 foreach (NetworkUnit unit in layer)
-                    foreach (NetworkUnit key in unit.Connections.Keys.ToList())
+                    foreach (NetworkUnit key in unit.Connections.Keys)
                         unit.Connections[key] = min + random.NextDouble() * (max - min);
+        }
+
+        public List<double> GetAllWeights()
+        {
+            List<double> weights = new List<double>();
+            foreach (Layer layer in _layers)
+                foreach (NetworkUnit unit in layer)
+                    foreach (double weight in unit.Connections.Values)
+                        weights.Add(weight);
+
+            return weights;
+        }
+
+        public bool SetAllWeights(List<double> weights)
+        {
+            Queue<double> copy = new Queue<double>(weights);
+            foreach (Layer layer in _layers)
+                foreach (NetworkUnit unit in layer)
+                    foreach (NetworkUnit key in unit.Connections.Keys)
+                    {
+                        if (copy.Count == 0)
+                            return false;
+                        unit.Connections[key] = copy.Dequeue();
+                    }
+            return true;
         }
 
         public void TestPrint()

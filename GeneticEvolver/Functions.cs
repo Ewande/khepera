@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeneticEvolver
 {
-    static class Evaluator
+    static class Functions
     {
         public static double AvoidWalls(Simulation simulation)
         {
@@ -18,6 +18,11 @@ namespace GeneticEvolver
             double movementFactor = 1 - Math.Sqrt(Math.Abs(left - right) / (2 * max));
             double proximityFactor = 1 - simulation.SensorStates.Max();
             return speedFactor * movementFactor * proximityFactor;
+        }
+
+        public static double Sigmoid(double x)
+        {
+            return 1 / (1 + Math.Exp(-x));
         }
     }
 }
