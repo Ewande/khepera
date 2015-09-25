@@ -15,14 +15,14 @@ namespace GeneticEvolver
         {
             get
             {
-                return _layers != null ? _layers.First() : null;
+                return _layers.Count > 0 ? _layers.First() : null;
             }
         }
         public Layer OutLayer
         {
             get
             {
-                return _layers != null ? _layers.Last() : null;
+                return _layers.Count > 0 ? _layers.Last() : null;
             }
         }
 
@@ -34,6 +34,13 @@ namespace GeneticEvolver
 
         public void AddLayer(Layer layer)
         {
+            Layer prevLayer = OutLayer;
+            if (prevLayer != null)
+            {
+                foreach (NetworkUnit unit in layer)
+                    foreach (NetworkUnit prevUnit in prevLayer)
+                        unit.Connections[prevUnit] = 0;
+            }
             _layers.Add(layer);
         }
 
@@ -44,6 +51,32 @@ namespace GeneticEvolver
                 foreach (NetworkUnit unit in _layers[i])
                     unit.Output = _actFunc(unit, _layers[i - 1]);
             }
+        }
+
+        public void RandomizeWeights(double min, double max)
+        {
+            Random random = new Random();
+            foreach (Layer layer in _layers)
+                foreach (NetworkUnit unit in layer)
+                    foreach (NetworkUnit key in unit.Connections.Keys.ToList())
+                        unit.Connections[key] = min + random.NextDouble() * (max - min);
+        }
+
+        public void TestPrint()
+        {
+            int i = 0;
+            foreach (Layer layer in _layers)
+            {
+                Console.WriteLine("Layer " + i++);
+                foreach (NetworkUnit unit in layer)
+                {
+                    Console.Write("\tUnit id = " + unit.UnitId + ": [");
+                    foreach (NetworkUnit key in unit.Connections.Keys)
+                        Console.Write("(" + key.UnitId + (key._isBias ? "B" : "") + ", " 
+                            + unit.Connections[key] + ") ; ");
+                    Console.WriteLine("]");
+                }
+            }        
         }
     }
 }
