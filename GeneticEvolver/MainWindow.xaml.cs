@@ -87,7 +87,7 @@ namespace GeneticEvolver
             pop.Evaluate(evaluator, 20, 7);
             for(int i = 0; i < generations; i++)
             {
-                ProgressInfo.Text = i * 100 / generations + "%";
+                ProgressInfo.Text = (i + 1) * 100 / generations + "%";
                 pop = pop.Select(5);
                 pop.Crossover(0.5);
                 pop.Mutate(0.5);

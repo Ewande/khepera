@@ -35,6 +35,8 @@ namespace GeneticEvolver
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
                 {
+                    contr.NeuralNetwork.InLayer.SetInputs(simulation.SensorStates);
+                    contr.NeuralNetwork.Evaluate();
                     contr.MoveRobot(simulation);
                     simulation.Update(stepsPerComm);
                     contr.Fitness += evaluator(simulation);

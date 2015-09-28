@@ -24,5 +24,11 @@ namespace GeneticEvolver
         {
             return _units.GetEnumerator();
         }
+
+        public void SetInputs(List<float> inputs)
+        {
+            for (int i = 0; i < Math.Min(inputs.Count, _units.Count); i++)
+                _units[i].Input = inputs[i];
+        }
     }
 }
