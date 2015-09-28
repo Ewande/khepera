@@ -64,7 +64,7 @@ namespace GeneticEvolver
             Random random = new Random();
             foreach (Layer layer in _layers)
                 foreach (NetworkUnit unit in layer)
-                    foreach (NetworkUnit key in unit.Connections.Keys)
+                    foreach (NetworkUnit key in unit.Connections.Keys.ToList())
                         unit.Connections[key] = min + random.NextDouble() * (max - min);
         }
 
@@ -73,7 +73,7 @@ namespace GeneticEvolver
             List<double> weights = new List<double>();
             foreach (Layer layer in _layers)
                 foreach (NetworkUnit unit in layer)
-                    foreach (double weight in unit.Connections.Values)
+                    foreach (double weight in unit.Connections.Values.ToList())
                         weights.Add(weight);
 
             return weights;
@@ -84,7 +84,7 @@ namespace GeneticEvolver
             Queue<double> copy = new Queue<double>(weights);
             foreach (Layer layer in _layers)
                 foreach (NetworkUnit unit in layer)
-                    foreach (NetworkUnit key in unit.Connections.Keys)
+                    foreach (NetworkUnit key in unit.Connections.Keys.ToList())
                     {
                         if (copy.Count == 0)
                             return false;

@@ -76,18 +76,24 @@ namespace GeneticEvolver
 
         private void Evolve(object sender, RoutedEventArgs e)
         {
+            EvolveButton.IsEnabled = false;
+            ProgressInfo.Foreground = Brushes.Red;
+            ProgressInfo.Text = "0%";
             // this is only a scheme of algorithm, will be upgraded
             Func<Simulation, double> evaluator = _behaviors[BehaviorType.Text];
-
-            Population pop = new Population(100);
-            /*pop.Evaluate(evaluator, -1);
-            for(int i = 0; i < 200; i++)
+            int generations = 3;
+            int popSize = 20;
+            Population pop = new Population(popSize);
+            pop.Evaluate(evaluator, 20, 7);
+            for(int i = 0; i < generations; i++)
             {
+                ProgressInfo.Text = i * 100 / generations + "%";
                 pop = pop.Select(5);
                 pop.Crossover(0.5);
                 pop.Mutate(0.5);
-                pop.Evaluate(evaluator, -1);
-            }*/
+                pop.Evaluate(evaluator, 20, 7);
+            }
+            ProgressInfo.Foreground = Brushes.Green;
         }
     }
 }

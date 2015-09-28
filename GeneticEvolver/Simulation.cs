@@ -59,6 +59,7 @@ namespace GeneticEvolver
             _simulation = cloneSimulation(other._simulation);
             if (other._robot != IntPtr.Zero)
                 _robot = getRobot(_simulation, _robotId);
+            SensorStates = new List<float>(_defaultState.SensorStates);
         }
 
         ~Simulation()
@@ -109,6 +110,14 @@ namespace GeneticEvolver
             RightMotorSpeed = rightMotor;
 
             return true;
+        }
+
+        public void ShuffleRobot(uint steps)
+        {
+            Random random = new Random();
+            SetRobotSpeed(-Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2,
+                -Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2);
+            Update(steps);
         }
 
         public void Update(uint steps = 1)

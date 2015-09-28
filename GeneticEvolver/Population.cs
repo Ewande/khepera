@@ -13,8 +13,13 @@ namespace GeneticEvolver
         public Population(int popSize)
         {
             _controllers = new List<Controller>(popSize);
+            int inputCount = Simulation.CloneDefault().SensorStates.Count;
             for (int i = 0; i < popSize; i++)
-                _controllers.Add(null/*.generate())*/);
+            {
+                NeuralNetwork network = NNFactory.CreateElmanNN(inputCount, 2, Functions.Sigmoid);
+                network.RandomizeWeights(-0.5, 0.5);
+                _controllers.Add(new Controller(network));
+            }
         }
 
         public Population(List<Controller> controllers)
@@ -22,19 +27,20 @@ namespace GeneticEvolver
             _controllers = controllers;
         }
 
-        public void Evaluate(Func<Simulation, double> evaluator, int steps)
+        public void Evaluate(Func<Simulation, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
+            Simulation simulation = Simulation.CloneDefault();
             foreach (Controller contr in _controllers)
             {
-                Simulation simulation = Simulation.CloneDefault();
                 contr.Fitness = 0;
-                for (int i = 0; i < steps; i++)
+                for (int i = 0; i < stepsPerContr; i++)
                 {
-                    simulation.Update();
-                    contr.Fitness += evaluator(simulation);
                     contr.MoveRobot(simulation);
+                    simulation.Update(stepsPerComm);
+                    contr.Fitness += evaluator(simulation);
                 }
-                contr.Fitness /= steps;
+                contr.Fitness /= stepsPerContr;
+                simulation.ShuffleRobot(stepsPerComm * 10);
             }
 	    }
 
@@ -55,13 +61,57 @@ namespace GeneticEvolver
 
         public void Crossover(double p)
         {
-            // to do
+            _controllers.Shuffle();
+            Random random = new Random();
+            for(int i = 0; i < _controllers.Count / 2; i++)
+                if (random.NextDouble() <= p)
+                {
+                    List<double> weightsA = _controllers[2 * i].NeuralNetwork.GetAllWeights();
+                    List<double> weightsB = _controllers[2 * i + 1].NeuralNetwork.GetAllWeights();
+                    int flipPoint = random.Next(weightsA.Count);
+                    for (int j = 0; j < weightsA.Count; j++)
+                    {
+                        double temp = weightsA[j];
+                        weightsA[j] = weightsB[j];
+                        weightsB[j] = temp;
+                    }
+                    _controllers[2 * i].NeuralNetwork.SetAllWeights(weightsA);
+                    _controllers[2 * i + 1].NeuralNetwork.SetAllWeights(weightsB);
+                }
         }
 
         public void Mutate(double p)
 	    {
-		    foreach(Controller contr in _controllers)
-                ;//to do;;; contr.mutate(p);
+            Random random = new Random();
+            double maxMut = 0.5;
+            foreach (Controller contr in _controllers)
+            {
+                List<double> weights = contr.NeuralNetwork.GetAllWeights();
+                for(int i = 0; i < weights.Count; i++)
+                {
+                    if (random.NextDouble() <= p)
+                        weights[i] += -maxMut + random.NextDouble() * maxMut * 2;
+                }
+                contr.NeuralNetwork.SetAllWeights(weights);
+
+            }
 	    }
+    }
+
+    static class MyExtensions
+    {
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            Random random = new Random();
+            int n = list.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = random.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
+        }
     }
 }
