@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
 
 namespace GeneticEvolver
 {
@@ -21,15 +22,23 @@ namespace GeneticEvolver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Dictionary<string, Func<Simulation, double>> _behaviors =
-            new Dictionary<string,Func<Simulation,double>>
+        private static readonly Dictionary<string, Func<Simulation, double>> _BEHAVIORS =
+            new Dictionary<string, Func<Simulation, double>>
         {
-            {"wall avoidance", Functions.AvoidWalls}
+            {"collision avoidance", Functions.AvoidCollisions}
         };
+
+        private Func<Simulation, double> _chosenEvaluator;
+        private BackgroundWorker _bWorker;
 
         public MainWindow()
         {
             InitializeComponent();
+            _bWorker = new BackgroundWorker();
+            _bWorker.WorkerReportsProgress = true;
+            _bWorker.DoWork += RunGeneticAlgorithm;
+            _bWorker.ProgressChanged += ChangeProgress;
+            _bWorker.RunWorkerCompleted += SignalCompletion;
         }
 
         private void LoadSimulation(object sender, RoutedEventArgs e)
@@ -69,31 +78,44 @@ namespace GeneticEvolver
             Simulation.SetControlledRobot(int.Parse(RobotId.Text));
             RobotPickGrid.IsEnabled = false;
             ConfigurationGrid.IsEnabled = true;
-            BehaviorType.ItemsSource = _behaviors.Keys;
-            if (_behaviors.Keys.Count > 0)
+            BehaviorType.ItemsSource = _BEHAVIORS.Keys;
+            if (_BEHAVIORS.Keys.Count > 0)
                 BehaviorType.SelectedIndex = 0;
         }
 
         private void Evolve(object sender, RoutedEventArgs e)
         {
             EvolveButton.IsEnabled = false;
-            ProgressInfo.Foreground = Brushes.Red;
-            ProgressInfo.Text = "0%";
-            // this is only a scheme of algorithm, will be upgraded
-            Func<Simulation, double> evaluator = _behaviors[BehaviorType.Text];
+            _chosenEvaluator = _BEHAVIORS[BehaviorType.Text];
+            _bWorker.RunWorkerAsync();
+        }
+
+        private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
+        {
+            
             int generations = 3;
             int popSize = 20;
             Population pop = new Population(popSize);
-            pop.Evaluate(evaluator, 20, 7);
-            for(int i = 0; i < generations; i++)
+            for (int i = 0; i < generations; i++)
             {
-                ProgressInfo.Text = (i + 1) * 100 / generations + "%";
+                pop.Evaluate(_chosenEvaluator, 20, 7);
+                _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 pop = pop.Select(5);
                 pop.Crossover(0.5);
                 pop.Mutate(0.5);
-                pop.Evaluate(evaluator, 20, 7);
             }
-            ProgressInfo.Foreground = Brushes.Green;
+            pop.Evaluate(_chosenEvaluator, 20, 7);
+            _bWorker.ReportProgress(100);
+        }
+
+        private void ChangeProgress(object sender, ProgressChangedEventArgs e)
+        {
+            ProgressInfo.Value = e.ProgressPercentage;
+        }
+
+        private void SignalCompletion(object sender, RunWorkerCompletedEventArgs e)
+        {
+            EvolveButton.IsEnabled = true;
         }
     }
 }

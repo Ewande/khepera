@@ -8,7 +8,7 @@ namespace GeneticEvolver
 {
     static class Functions
     {
-        public static double AvoidWalls(Simulation simulation)
+        public static double AvoidCollisions(Simulation simulation)
         {
             double left = simulation.LeftMotorSpeed;
             double right = simulation.RightMotorSpeed;
