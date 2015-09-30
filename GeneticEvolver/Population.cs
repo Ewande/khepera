@@ -9,6 +9,7 @@ namespace GeneticEvolver
     class Population
     {
         private List<Controller> _controllers;
+        public Controller Best { get { return _controllers.Max(); } }
 
         public Population(int popSize)
         {
@@ -35,8 +36,6 @@ namespace GeneticEvolver
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
                 {
-                    contr.NeuralNetwork.InLayer.SetInputs(simulation.SensorStates);
-                    contr.NeuralNetwork.Evaluate();
                     contr.MoveRobot(simulation);
                     simulation.Update(stepsPerComm);
                     contr.Fitness += evaluator(simulation);
@@ -55,7 +54,8 @@ namespace GeneticEvolver
                 List<Controller> challengeList = new List<Controller>(n);
                 for (int j = 0; j < n; j++)
                     challengeList.Add(_controllers[rand.Next(_controllers.Count)]);
-                newList.Add(challengeList.OrderBy(contr => contr.Fitness).Last());
+                challengeList.Sort();
+                newList.Add(challengeList.Last());
             }
 
             return new Population(newList);

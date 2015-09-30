@@ -62,7 +62,7 @@
             <ProgressBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" x:Name="ProgressInfo" Margin="10,0,10,0"/>
             <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" 
                        Text="{Binding ElementName=ProgressInfo, Path=Value, StringFormat={}{0:0}%}" 
-                        HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        HorizontalAlignment="Center" VerticalAlignment="Center" x:Name="ProgressStatus"/>
         </Grid>    
     </StackPanel>
 </Window>

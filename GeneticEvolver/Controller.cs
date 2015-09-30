@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeneticEvolver
 {
-    class Controller
+    class Controller :IComparable<Controller>
     {
         public static double MAX_ABS_SPEED = 5;
 
@@ -18,10 +18,25 @@ namespace GeneticEvolver
             NeuralNetwork = network;
         }
 
-        public void MoveRobot(Simulation simulation)
+        public bool MoveRobot(Simulation simulation)
         {
-            simulation.SetRobotSpeed(0, 0); // to do
+            NeuralNetwork.InLayer.SetInputs(simulation.SensorStates);
+            NeuralNetwork.Evaluate();
+            List<double> motorSpeeds = NeuralNetwork.OutLayer.GetOutputs();
+            if (motorSpeeds.Count != 2)
+                return false;
+            simulation.SetRobotSpeed(motorSpeeds[0], motorSpeeds[1]);
+            return true;
         }
 
+        public int CompareTo(Controller other)
+        {
+            return Fitness.CompareTo(other.Fitness);
+        }
+
+        public String ToString()
+        {
+            return "";//NeuralNetwork.
+        }
     }
 }

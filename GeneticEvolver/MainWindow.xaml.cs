@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
+using System.IO;
 
 namespace GeneticEvolver
 {
@@ -28,7 +29,6 @@ namespace GeneticEvolver
             {"collision avoidance", Functions.AvoidCollisions}
         };
 
-        private Func<Simulation, double> _chosenEvaluator;
         private BackgroundWorker _bWorker;
 
         public MainWindow()
@@ -86,26 +86,26 @@ namespace GeneticEvolver
         private void Evolve(object sender, RoutedEventArgs e)
         {
             EvolveButton.IsEnabled = false;
-            _chosenEvaluator = _BEHAVIORS[BehaviorType.Text];
-            _bWorker.RunWorkerAsync();
+            _bWorker.RunWorkerAsync(_BEHAVIORS[BehaviorType.Text]);
         }
 
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
-            
+            Func<Simulation, double> evaluator = e.Argument as Func<Simulation, double>;
             int generations = 3;
             int popSize = 20;
             Population pop = new Population(popSize);
             for (int i = 0; i < generations; i++)
             {
-                pop.Evaluate(_chosenEvaluator, 20, 7);
+                pop.Evaluate(evaluator, 20, 7);
                 _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 pop = pop.Select(5);
                 pop.Crossover(0.5);
                 pop.Mutate(0.5);
             }
-            pop.Evaluate(_chosenEvaluator, 20, 7);
+            pop.Evaluate(evaluator, 20, 7);
             _bWorker.ReportProgress(100);
+            e.Result = pop.Best;
         }
 
         private void ChangeProgress(object sender, ProgressChangedEventArgs e)
@@ -115,7 +115,25 @@ namespace GeneticEvolver
 
         private void SignalCompletion(object sender, RunWorkerCompletedEventArgs e)
         {
+            SaveToFile(e.Result as Controller);
             EvolveButton.IsEnabled = true;
+            ProgressInfo.Value = 0;
+        }
+
+        private void SaveToFile(Controller bestController)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExt = ".rcs";
+            saveFileDialog.Filter = "Robot Controller Scripts|*.rcs";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string filename = saveFileDialog.FileName;
+                FileStream fileStream = File.Create(filename);
+                using (BinaryWriter writer = new BinaryWriter(fileStream))
+                {
+                    writer.Write(bestController.ToString());
+                }
+            }
         }
     }
 }

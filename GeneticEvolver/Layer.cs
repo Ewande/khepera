@@ -30,5 +30,13 @@ namespace GeneticEvolver
             for (int i = 0; i < Math.Min(inputs.Count, _units.Count); i++)
                 _units[i].Input = inputs[i];
         }
+
+        public List<double> GetOutputs()
+        {
+            List<double> outputs = new List<double>(_units.Count);
+            foreach (NetworkUnit unit in _units)
+                outputs.Add(unit.Output);
+            return outputs;
+        }
     }
 }
