@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeneticEvolver
+namespace NNModule
 {
-    class NeuralNetwork
+    public class NeuralNetwork
     {
         private List<Layer> _layers;
         private Func<double, double> _actFunc;

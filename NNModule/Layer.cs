@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeneticEvolver
+namespace NNModule
 {
-    class Layer
+    public class Layer
     {
         public int UnitCount { get { return _units.Count; } }
 

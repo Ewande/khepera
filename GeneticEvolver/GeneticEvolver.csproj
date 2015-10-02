@@ -55,9 +55,6 @@
     </ApplicationDefinition>
     <Compile Include="Functions.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="Layer.cs" />
-    <Compile Include="NetworkUnit.cs" />
-    <Compile Include="NeuralNetwork.cs" />
     <Compile Include="NNFactory.cs" />
     <Compile Include="Population.cs" />
     <Compile Include="Simulation.cs" />
@@ -100,6 +97,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NNModule\NNModule.csproj">
+      <Project>{7d4c2d68-026c-4f40-bfe3-f13318e00f6a}</Project>
+      <Name>NNModule</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

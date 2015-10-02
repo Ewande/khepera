@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controller", "Controller\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticEvolver", "GeneticEvolver\GeneticEvolver.csproj", "{6D9B1C18-87A7-427B-8A08-5A43ABD322D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NNModule", "NNModule\NNModule.csproj", "{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,16 @@ Global
 		{6D9B1C18-87A7-427B-8A08-5A43ABD322D5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6D9B1C18-87A7-427B-8A08-5A43ABD322D5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6D9B1C18-87A7-427B-8A08-5A43ABD322D5}.Release|Win32.ActiveCfg = Release|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7D4C2D68-026C-4F40-BFE3-F13318E00F6A}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

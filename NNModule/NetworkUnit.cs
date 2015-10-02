@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GeneticEvolver
+namespace NNModule
 {
-
-    class NetworkUnit
+    public class NetworkUnit
     {
         private static int ID_COUNTER = 0;
 
