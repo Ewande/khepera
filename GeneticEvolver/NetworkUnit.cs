@@ -11,7 +11,7 @@ namespace GeneticEvolver
     {
         private static int ID_COUNTER = 0;
 
-        public bool _isBias;
+        private bool _isBias;
         private double _input;
         private double _output;
 
@@ -38,12 +38,22 @@ namespace GeneticEvolver
         }
 
         public NetworkUnit MemoryUnit { get; set; }
+        public NetworkUnit BiasUnit { get; private set; }
 
         public NetworkUnit()
         {
             UnitId = ID_COUNTER;
             ID_COUNTER++;
             Connections = new Dictionary<NetworkUnit, double>();
+        }
+
+        public NetworkUnit(NetworkUnit biasUnit)
+        {
+            UnitId = ID_COUNTER;
+            ID_COUNTER++;
+            Connections = new Dictionary<NetworkUnit, double>();
+            BiasUnit = biasUnit;
+            Connections[BiasUnit] = 0;
         }
 
         public static NetworkUnit CreateBias()

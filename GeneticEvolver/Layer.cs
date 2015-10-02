@@ -8,6 +8,8 @@ namespace GeneticEvolver
 {
     class Layer
     {
+        public int UnitCount { get { return _units.Count; } }
+
         private List<NetworkUnit> _units;
 
         public Layer()

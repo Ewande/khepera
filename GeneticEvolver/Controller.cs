@@ -34,9 +34,9 @@ namespace GeneticEvolver
             return Fitness.CompareTo(other.Fitness);
         }
 
-        public String ToString()
+        public override string ToString()
         {
-            return "";//NeuralNetwork.
+            return NeuralNetwork.ToString();
         }
     }
 }

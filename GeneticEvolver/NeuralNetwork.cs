@@ -93,21 +93,24 @@ namespace GeneticEvolver
             return true;
         }
 
-        public void TestPrint()
+        public override string ToString()
         {
-            int i = 0;
+            StringBuilder result = new StringBuilder();
+            result.Append(_layers.Count).AppendLine();
             foreach (Layer layer in _layers)
             {
-                Console.WriteLine("Layer " + i++);
+                result.Append(layer.UnitCount).AppendLine();
                 foreach (NetworkUnit unit in layer)
                 {
-                    Console.Write("\tUnit id = " + unit.UnitId + ": [");
-                    foreach (NetworkUnit key in unit.Connections.Keys)
-                        Console.Write("(" + key.UnitId + (key._isBias ? "B" : "") + ", " 
-                            + unit.Connections[key] + ") ; ");
-                    Console.WriteLine("]");
+                    result.Append(unit.UnitId).Append(" ");
+                    result.Append(unit.BiasUnit == null ? -1 : unit.BiasUnit.UnitId).Append(" ");
+                    result.Append(unit.MemoryUnit == null ? -1 : unit.MemoryUnit.UnitId).AppendLine();
+                    result.Append(unit.Connections.Count).AppendLine();
+                    foreach (NetworkUnit connUnit in unit.Connections.Keys.ToList())
+                        result.Append(connUnit.UnitId).Append(" ").Append(unit.Connections[connUnit]).AppendLine();
                 }
-            }        
+            }
+            return result.ToString();
         }
     }
 }

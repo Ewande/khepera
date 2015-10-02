@@ -20,8 +20,7 @@ namespace GeneticEvolver
             {
                 NetworkUnit memoryUnit = new NetworkUnit();
                 NetworkUnit biasUnit = NetworkUnit.CreateBias();
-                NetworkUnit outUnit = new NetworkUnit() { MemoryUnit = memoryUnit };
-                outUnit.Connections[biasUnit] = 0;
+                NetworkUnit outUnit = new NetworkUnit(biasUnit) { MemoryUnit = memoryUnit };
                 input.AddUnit(memoryUnit);
                 output.AddUnit(outUnit);
             }

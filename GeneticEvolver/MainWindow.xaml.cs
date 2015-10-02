@@ -92,7 +92,7 @@ namespace GeneticEvolver
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
             Func<Simulation, double> evaluator = e.Argument as Func<Simulation, double>;
-            int generations = 3;
+            int generations = 1;
             int popSize = 20;
             Population pop = new Population(popSize);
             for (int i = 0; i < generations; i++)
@@ -100,8 +100,8 @@ namespace GeneticEvolver
                 pop.Evaluate(evaluator, 20, 7);
                 _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 pop = pop.Select(5);
-                pop.Crossover(0.5);
-                pop.Mutate(0.5);
+                pop.Crossover(0.1);
+                pop.Mutate(0.2);
             }
             pop.Evaluate(evaluator, 20, 7);
             _bWorker.ReportProgress(100);
@@ -129,7 +129,7 @@ namespace GeneticEvolver
             {
                 string filename = saveFileDialog.FileName;
                 FileStream fileStream = File.Create(filename);
-                using (BinaryWriter writer = new BinaryWriter(fileStream))
+                using (StreamWriter writer = new StreamWriter(fileStream))
                 {
                     writer.Write(bestController.ToString());
                 }
