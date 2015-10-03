@@ -46,13 +46,18 @@ namespace NNModule
             Connections = new Dictionary<NetworkUnit, double>();
         }
 
-        public NetworkUnit(NetworkUnit biasUnit)
+        public NetworkUnit(NetworkUnit biasUnit) : this()
         {
-            UnitId = ID_COUNTER;
-            ID_COUNTER++;
-            Connections = new Dictionary<NetworkUnit, double>();
             BiasUnit = biasUnit;
             Connections[BiasUnit] = 0;
+        }
+
+        public NetworkUnit(int unitId, NetworkUnit biasUnit = null)
+        {
+            UnitId = unitId;
+            ID_COUNTER = Math.Max(unitId, ID_COUNTER) + 1;
+            Connections = new Dictionary<NetworkUnit, double>();
+            BiasUnit = biasUnit;
         }
 
         public static NetworkUnit CreateBias()

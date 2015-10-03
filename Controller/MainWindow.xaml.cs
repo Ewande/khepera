@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using NNModule;
 
 namespace Controller
 {
@@ -25,8 +26,9 @@ namespace Controller
     {
         private enum SteeringType { Manual, Script };
 
-        SteeringType _steeringType;
+        private SteeringType _steeringType;
         private KeyEventHandler _keyHandler;
+        private NeuralNetwork _neuralNetwork;
 
         private Thread _communicationThread;
         private ConnectionManager _connMan;
@@ -48,14 +50,25 @@ namespace Controller
 
         private void CommunicationRoutine()
         {
+            int i = 0;
             while (_connected)
             {
                 _robot.Sensors = _connMan.ReadSensorsState();
+                if (_steeringType == SteeringType.Script && i % 7 == 0)
+                {
+                    _neuralNetwork.InLayer.SetInputs(_robot.Sensors.Select(x => x.State).ToList());
+                    _neuralNetwork.Evaluate();
+                    List<double> speeds = _neuralNetwork.OutLayer.GetOutputs();
+                    _robot.LeftMotorSpeed = speeds[0];
+                    _robot.RightMotorSpeed = speeds[1];
+                    _robot.SpeedChanged = true;
+                }
                 if (_robot.SpeedChanged)
                 {
                     _connMan.SendMotorsSpeedCommand(_robot.LeftMotorSpeed, _robot.RightMotorSpeed);
                     _robot.SpeedChanged = false;
                 }
+                i++;
             }
             _connMan.Disconnect();
         }
@@ -167,13 +180,14 @@ namespace Controller
 
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        // parsing script from the file
-                        // if parsing done with no errors:
+                        if ((_neuralNetwork = NNManager.CreateNN(reader)) != null)
+                        {
                             ScriptButton.IsChecked = true;
                             ManualControls.Visibility = Visibility.Hidden;
                             _steeringType = SteeringType.Script;
                             if (_connected)
                                 this.KeyDown -= _keyHandler;
+                        }
                     }
                     fileStream.Close();
                 }
@@ -184,6 +198,7 @@ namespace Controller
         {
             if (_steeringType == SteeringType.Script)
             {
+                _neuralNetwork = null;
                 ManualControls.Visibility = Visibility.Visible;
                 _steeringType = SteeringType.Manual;
                 if (_connected)
