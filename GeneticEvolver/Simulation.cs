@@ -58,7 +58,10 @@ namespace GeneticEvolver
         {
             _simulation = cloneSimulation(other._simulation);
             if (other._robot != IntPtr.Zero)
+            {
+                _robotId = other._robotId;
                 _robot = getRobot(_simulation, _robotId);
+            }
             SensorStates = new List<float>(_defaultState.SensorStates);
         }
 
