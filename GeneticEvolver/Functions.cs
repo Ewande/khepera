@@ -14,7 +14,7 @@ namespace GeneticEvolver
             double right = simulation.RightMotorSpeed;
             double max = Controller.MAX_ABS_SPEED;
 
-            double speedFactor = (Math.Abs(left) + Math.Abs(right)) / max;
+            double speedFactor = (Math.Abs(left) + Math.Abs(right)) / (2 * max);
             double movementFactor = 1 - Math.Sqrt(Math.Abs(left - right) / (2 * max));
             double proximityFactor = 1 - simulation.SensorStates.Max();
             return speedFactor * movementFactor * proximityFactor;

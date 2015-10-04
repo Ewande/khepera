@@ -92,7 +92,7 @@ namespace GeneticEvolver
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
             Func<Simulation, double> evaluator = e.Argument as Func<Simulation, double>;
-            int generations = 10;
+            int generations = 25;
             int popSize = 80;
             Population pop = new Population(popSize);
             for (int i = 0; i < generations; i++)
@@ -101,7 +101,7 @@ namespace GeneticEvolver
                 Console.WriteLine(pop.Best.Fitness);
                 _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 pop = pop.Select(5);
-                pop.Crossover(0.1);
+                pop.Crossover(0.2);
                 pop.Mutate(0.2);
             }
             pop.Evaluate(evaluator, 20, 7);

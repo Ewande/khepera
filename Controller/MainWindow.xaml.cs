@@ -59,8 +59,8 @@ namespace Controller
                     _neuralNetwork.InLayer.SetInputs(_robot.Sensors.Select(x => x.State).ToList());
                     _neuralNetwork.Evaluate();
                     List<double> speeds = _neuralNetwork.OutLayer.GetOutputs();
-                    _robot.LeftMotorSpeed = speeds[0];
-                    _robot.RightMotorSpeed = speeds[1];
+                    _robot.LeftMotorSpeed = speeds[0] * Robot.DEFAULT_MAX_SPEED;
+                    _robot.RightMotorSpeed = speeds[1] * Robot.DEFAULT_MAX_SPEED;
                     _robot.SpeedChanged = true;
                 }
                 if (_robot.SpeedChanged)
@@ -80,8 +80,8 @@ namespace Controller
                 switch (e.Key)
                 {
                     case Key.Up:
-                        _robot.LeftMotorSpeed = Robot.DEFAULT_SPEED;
-                        _robot.RightMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.LeftMotorSpeed = Robot.DEFAULT_MAX_SPEED;
+                        _robot.RightMotorSpeed = Robot.DEFAULT_MAX_SPEED;
                         _robot.SpeedChanged = true;
                         break;
                     case Key.Down:
@@ -91,11 +91,11 @@ namespace Controller
                         break;
                     case Key.Left:
                         _robot.LeftMotorSpeed = 0;
-                        _robot.RightMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.RightMotorSpeed = Robot.DEFAULT_MAX_SPEED;
                         _robot.SpeedChanged = true;
                         break;
                     case Key.Right:
-                        _robot.LeftMotorSpeed = Robot.DEFAULT_SPEED;
+                        _robot.LeftMotorSpeed = Robot.DEFAULT_MAX_SPEED;
                         _robot.RightMotorSpeed = 0;
                         _robot.SpeedChanged = true;
                         break;

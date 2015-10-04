@@ -134,6 +134,9 @@ SimEnt* Simulation::readEntity(std::ifstream& file, bool readBinary)
         case SimEnt::KHEPERA_ROBOT:
             newEntity = new KheperaRobot(file, readBinary);
             break;
+        case SimEnt::LINE:
+            newEntity = new LinearEnt(file, readBinary);
+            break;
         default:
             newEntity = NULL; /* TODO: Exception handling */
             break;

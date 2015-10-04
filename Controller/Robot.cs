@@ -13,7 +13,7 @@ namespace Controller
 
     class Robot
     {
-        public static double DEFAULT_SPEED = 3;
+        public static double DEFAULT_MAX_SPEED = 5;
 
         public bool SpeedChanged { get; set; }
         public double LeftMotorSpeed { get; set; }

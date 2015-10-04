@@ -26,7 +26,8 @@ namespace GeneticEvolver
             List<double> motorSpeeds = NeuralNetwork.OutLayer.GetOutputs();
             if (motorSpeeds.Count != 2)
                 return false;
-            simulation.SetRobotSpeed(motorSpeeds[0], motorSpeeds[1]);
+            simulation.SetRobotSpeed(motorSpeeds[0] * Controller.MAX_ABS_SPEED, 
+                motorSpeeds[1] * Controller.MAX_ABS_SPEED);
             return true;
         }
 

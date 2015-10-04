@@ -10,12 +10,15 @@ namespace GeneticEvolver
     class Population
     {
         private List<Controller> _controllers;
+        private Simulation _simulation;
+        
         public Controller Best { get { return _controllers.Max(); } }
 
         public Population(int popSize)
         {
             _controllers = new List<Controller>(popSize);
-            int inputCount = Simulation.CloneDefault().SensorStates.Count;
+            _simulation = Simulation.CloneDefault();
+            int inputCount = _simulation.SensorStates.Count;
             for (int i = 0; i < popSize; i++)
             {
                 NeuralNetwork network = NNFactory.CreateElmanNN(inputCount, 2, Functions.Sigmoid);
@@ -31,18 +34,17 @@ namespace GeneticEvolver
 
         public void Evaluate(Func<Simulation, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
-            Simulation simulation = Simulation.CloneDefault();
             foreach (Controller contr in _controllers)
             {
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
                 {
-                    contr.MoveRobot(simulation);
-                    simulation.Update(stepsPerComm);
-                    contr.Fitness += evaluator(simulation);
+                    contr.MoveRobot(_simulation);
+                    _simulation.Update(stepsPerComm);
+                    contr.Fitness += evaluator(_simulation);
                 }
                 contr.Fitness /= stepsPerContr;
-                simulation.ShuffleRobot(stepsPerComm * 10);
+                _simulation.ShuffleRobot(stepsPerComm * 10);
             }
 	    }
 
@@ -59,7 +61,7 @@ namespace GeneticEvolver
                 newList.Add(challengeList.Last());
             }
 
-            return new Population(newList);
+            return new Population(newList) { _simulation = _simulation };
         }
 
         public void Crossover(double p)
