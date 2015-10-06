@@ -8,6 +8,8 @@ namespace NNModule
 {
     public class NeuralNetwork
     {
+        private static Random random = new Random();
+
         private List<Layer> _layers;
         private Func<double, double> _actFunc;
 
@@ -46,22 +48,23 @@ namespace NNModule
 
         public void Evaluate()
         {
+            foreach (NetworkUnit unit in InLayer)
+                unit.Output = unit.Input;
             for (int i = 1; i < _layers.Count; i++)
             {
                 foreach (NetworkUnit unit in _layers[i])
                 {
-                    double input = 0;
+                    unit.Input = 0;
                     foreach (var conn in unit.Connections)
-                        input += conn.Key.Input * conn.Value;
+                        unit.Input += conn.Key.Output * conn.Value;
                     
-                    unit.Output = _actFunc(input);
+                    unit.Output = _actFunc(unit.Input);
                 }
             }
         }
 
         public void RandomizeWeights(double min, double max)
         {
-            Random random = new Random();
             foreach (Layer layer in _layers)
                 foreach (NetworkUnit unit in layer)
                     foreach (NetworkUnit key in unit.Connections.Keys.ToList())

@@ -9,10 +9,13 @@ namespace GeneticEvolver
 {
     class Population
     {
+        private static Random random = new Random();
         private List<Controller> _controllers;
         private Simulation _simulation;
         
         public Controller Best { get { return _controllers.Max(); } }
+        public double BestFitness { get { return Best.Fitness; } }
+        public double AvgFitness { get { return _controllers.Average(contr => contr.Fitness); } }
 
         public Population(int popSize)
         {
@@ -53,10 +56,9 @@ namespace GeneticEvolver
             List<Controller> newList = new List<Controller>(_controllers.Count);
             for (int i = 0; i < _controllers.Count; i++)
             {
-                Random rand = new Random();
                 List<Controller> challengeList = new List<Controller>(n);
                 for (int j = 0; j < n; j++)
-                    challengeList.Add(_controllers[rand.Next(_controllers.Count)]);
+                    challengeList.Add(_controllers[random.Next(_controllers.Count)]);
                 challengeList.Sort();
                 newList.Add(challengeList.Last());
             }
@@ -64,10 +66,23 @@ namespace GeneticEvolver
             return new Population(newList) { _simulation = _simulation };
         }
 
+        public void RouletteWheelSelect()
+        {
+            List<Controller> result = new List<Controller>(_controllers.Count);
+            List<Controller> copy = new List<Controller>(_controllers);
+            copy.Sort();
+            List<double> shares = copy.Select(contr => contr.Fitness).ToList();
+            foreach (double d in shares)
+                Console.WriteLine(d);
+            double sum = shares.Sum();
+            shares.ForEach(share => share = share / sum);
+            foreach (double d in shares)
+                Console.WriteLine(d);
+        }
+
         public void Crossover(double p)
         {
             _controllers.Shuffle();
-            Random random = new Random();
             for(int i = 0; i < _controllers.Count / 2; i++)
                 if (random.NextDouble() <= p)
                 {
@@ -105,9 +120,10 @@ namespace GeneticEvolver
 
     static class MyExtensions
     {
+        private static Random random = new Random();
+
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random random = new Random();
             int n = list.Count;
             while (n > 1)
             {

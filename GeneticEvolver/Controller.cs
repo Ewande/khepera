@@ -7,7 +7,7 @@ using NNModule;
 
 namespace GeneticEvolver
 {
-    class Controller :IComparable<Controller>
+    class Controller : IComparable<Controller>
     {
         public static double MAX_ABS_SPEED = 5;
 
@@ -26,8 +26,8 @@ namespace GeneticEvolver
             List<double> motorSpeeds = NeuralNetwork.OutLayer.GetOutputs();
             if (motorSpeeds.Count != 2)
                 return false;
-            simulation.SetRobotSpeed(motorSpeeds[0] * Controller.MAX_ABS_SPEED, 
-                motorSpeeds[1] * Controller.MAX_ABS_SPEED);
+            simulation.SetRobotSpeed((motorSpeeds[0] - 0.5) * 2 * Controller.MAX_ABS_SPEED, 
+                (motorSpeeds[1] - 0.5) * 2 * Controller.MAX_ABS_SPEED);
             return true;
         }
 

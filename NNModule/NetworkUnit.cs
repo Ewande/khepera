@@ -32,7 +32,7 @@ namespace NNModule
             {
                 _output = value;
                 if (MemoryUnit != null)
-                    MemoryUnit.Output = value;
+                    MemoryUnit.Input = value;
             }
         }
 
@@ -62,7 +62,7 @@ namespace NNModule
 
         public static NetworkUnit CreateBias()
         {
-            return new NetworkUnit() { _input = 1, _isBias = true};
+            return new NetworkUnit() { _input = 1, _output = 1, _isBias = true};
         }
     }
 }
