@@ -53,7 +53,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Functions.cs" />
+    <Compile Include="FitnessFuncs.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="NNFactory.cs" />
     <Compile Include="Population.cs" />

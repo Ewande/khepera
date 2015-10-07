@@ -12,7 +12,7 @@ namespace Controller
     {
         public static NeuralNetwork CreateNN(StreamReader reader)
         {
-            NeuralNetwork network = new NeuralNetwork(x => (1 / (1 + Math.Exp(-x))));
+            NeuralNetwork network = new NeuralNetwork();
             Dictionary<int, NetworkUnit> netUnits = new Dictionary<int,NetworkUnit>();
             try
             {
@@ -23,10 +23,12 @@ namespace Controller
                     Layer layer = new Layer();
                     for (int j = 0; j < units; j++)
                     {
-                        int[] tokens = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
-                        NetworkUnit bias = tokens[1] > 0 ? netUnits.Get(tokens[1]) : null;
-                        NetworkUnit memory = tokens[2] > 0 ? netUnits.Get(tokens[2]) : null;
-                        NetworkUnit unit = netUnits.Get(tokens[0], bias);
+                        int[] unitInfo = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
+                        int[] extraUnits = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
+                        Func<double, double> actFunc = ActFuncs.GetFuncById(unitInfo[1]);
+                        NetworkUnit bias = extraUnits[0] > 0 ? netUnits.Get(extraUnits[0]) : null;
+                        NetworkUnit memory = extraUnits[1] > 0 ? netUnits.Get(extraUnits[1]) : null;
+                        NetworkUnit unit = netUnits.Get(unitInfo[0], actFunc, bias);
                         unit.MemoryUnit = memory;
                         int connections = int.Parse(reader.ReadLine());
                         for (int k = 0; k < connections; k++)
@@ -51,10 +53,11 @@ namespace Controller
 
     static class NNExtensions
     {
-        public static NetworkUnit Get(this Dictionary<int, NetworkUnit> dict, int key, NetworkUnit biasUnit = null)
+        public static NetworkUnit Get(this Dictionary<int, NetworkUnit> dict, int key, 
+            Func<double, double> actFunc = null, NetworkUnit biasUnit = null)
         {
             if(!dict.ContainsKey(key))
-                dict[key] = new NetworkUnit(key, biasUnit);
+                dict[key] = new NetworkUnit(actFunc, key, biasUnit);
             return dict[key];
         }
     }

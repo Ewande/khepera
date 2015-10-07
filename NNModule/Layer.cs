@@ -8,8 +8,6 @@ namespace NNModule
 {
     public class Layer
     {
-        public int UnitCount { get { return _units.Count; } }
-
         private List<NetworkUnit> _units;
 
         public Layer()
@@ -39,6 +37,15 @@ namespace NNModule
             foreach (NetworkUnit unit in _units)
                 outputs.Add(unit.Output);
             return outputs;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder result = new StringBuilder();
+            result.Append(_units.Count).AppendLine();
+            foreach (NetworkUnit unit in _units)
+                result.Append(unit.ToString());
+            return result.ToString();
         }
     }
 }

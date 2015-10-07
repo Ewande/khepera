@@ -26,7 +26,7 @@ namespace GeneticEvolver
         private static readonly Dictionary<string, Func<Simulation, double>> _BEHAVIORS =
             new Dictionary<string, Func<Simulation, double>>
         {
-            {"collision avoidance", Functions.AvoidCollisions}
+            {"collision avoidance", FitnessFuncs.AvoidCollisions}
         };
 
         private BackgroundWorker _bWorker;
@@ -92,8 +92,8 @@ namespace GeneticEvolver
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
             Func<Simulation, double> evaluator = e.Argument as Func<Simulation, double>;
-            int generations = 15;
-            int popSize = 80;
+            int generations = 1;
+            int popSize = 10;
             Population pop = new Population(popSize);
             for (int i = 0; i < generations; i++)
             {

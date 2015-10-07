@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GeneticEvolver
 {
-    static class Functions
+    static class FitnessFuncs
     {
         public static double AvoidCollisions(Simulation simulation)
         {
@@ -20,9 +20,6 @@ namespace GeneticEvolver
             return speedFactor * movementFactor * proximityFactor;
         }
 
-        public static double Sigmoid(double x)
-        {
-            return 1.0 / (1.0 + Math.Exp(-x));
-        }
+        
     }
 }

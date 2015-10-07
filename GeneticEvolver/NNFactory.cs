@@ -9,19 +9,18 @@ namespace GeneticEvolver
 {
     class NNFactory
     {
-        public static NeuralNetwork CreateElmanNN(int inputCount, int outputCount,
-            Func<double, double> actFunc)
+        public static NeuralNetwork CreateElmanNN(int inputCount, int outputCount)
         {
-            NeuralNetwork network = new NeuralNetwork(actFunc);
+            NeuralNetwork network = new NeuralNetwork();
             Layer input = new Layer();
             Layer output = new Layer();
             for (int i = 0; i < inputCount; i++)
-                input.AddUnit(new NetworkUnit());
+                input.AddUnit(new NetworkUnit(ActFuncs.Identity));
             for (int i = 0; i < outputCount; i++)
             {
-                NetworkUnit memoryUnit = new NetworkUnit();
+                NetworkUnit memoryUnit = new NetworkUnit(ActFuncs.Identity);
                 NetworkUnit biasUnit = NetworkUnit.CreateBias();
-                NetworkUnit outUnit = new NetworkUnit(biasUnit) { MemoryUnit = memoryUnit };
+                NetworkUnit outUnit = new NetworkUnit(ActFuncs.Sigmoid ,biasUnit) { MemoryUnit = memoryUnit };
                 input.AddUnit(memoryUnit);
                 output.AddUnit(outUnit);
             }

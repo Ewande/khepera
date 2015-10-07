@@ -11,7 +11,6 @@ namespace NNModule
         private static Random random = new Random();
 
         private List<Layer> _layers;
-        private Func<double, double> _actFunc;
 
         public Layer InLayer
         {
@@ -28,10 +27,9 @@ namespace NNModule
             }
         }
 
-        public NeuralNetwork(Func<double, double> actFunc)
+        public NeuralNetwork()
         {
             _layers = new List<Layer>();
-            _actFunc = actFunc;
         }
 
         public void AddLayer(Layer layer)
@@ -48,17 +46,15 @@ namespace NNModule
 
         public void Evaluate()
         {
-            foreach (NetworkUnit unit in InLayer)
-                unit.Output = unit.Input;
-            for (int i = 1; i < _layers.Count; i++)
+            foreach (Layer layer in _layers)
             {
-                foreach (NetworkUnit unit in _layers[i])
+                foreach (NetworkUnit unit in layer)
                 {
-                    unit.Input = 0;
                     foreach (var conn in unit.Connections)
                         unit.Input += conn.Key.Output * conn.Value;
-                    
-                    unit.Output = _actFunc(unit.Input);
+
+                    unit.Evaluate();
+                    unit.Input = 0;
                 }
             }
         }
@@ -101,18 +97,7 @@ namespace NNModule
             StringBuilder result = new StringBuilder();
             result.Append(_layers.Count).AppendLine();
             foreach (Layer layer in _layers)
-            {
-                result.Append(layer.UnitCount).AppendLine();
-                foreach (NetworkUnit unit in layer)
-                {
-                    result.Append(unit.UnitId).Append(" ");
-                    result.Append(unit.BiasUnit == null ? -1 : unit.BiasUnit.UnitId).Append(" ");
-                    result.Append(unit.MemoryUnit == null ? -1 : unit.MemoryUnit.UnitId).AppendLine();
-                    result.Append(unit.Connections.Count).AppendLine();
-                    foreach (NetworkUnit connUnit in unit.Connections.Keys.ToList())
-                        result.Append(connUnit.UnitId).Append(" ").Append(unit.Connections[connUnit]).AppendLine();
-                }
-            }
+                result.Append(layer.ToString());
             return result.ToString();
         }
     }

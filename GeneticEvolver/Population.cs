@@ -24,7 +24,7 @@ namespace GeneticEvolver
             int inputCount = _simulation.SensorStates.Count;
             for (int i = 0; i < popSize; i++)
             {
-                NeuralNetwork network = NNFactory.CreateElmanNN(inputCount, 2, Functions.Sigmoid);
+                NeuralNetwork network = NNFactory.CreateElmanNN(inputCount, 2);
                 network.RandomizeWeights(-0.5, 0.5);
                 _controllers.Add(new Controller(network));
             }
