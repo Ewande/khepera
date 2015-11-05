@@ -13,8 +13,8 @@ namespace NNModule
         private bool _isBias;
         private double _input;
         private double _output;
-        private Func<double, double> _actFunc;
 
+        public Func<double, double> ActFunc { get; set; }
         public int UnitId { get; private set; }
         public Dictionary<NetworkUnit, double> Connections;
         public double Input
@@ -36,7 +36,7 @@ namespace NNModule
                     MemoryUnit.Input = value;
             }
         }
-
+        public double Error;
         public NetworkUnit MemoryUnit { get; set; }
         public NetworkUnit BiasUnit { get; private set; }
 
@@ -45,7 +45,7 @@ namespace NNModule
             UnitId = ID_COUNTER;
             ID_COUNTER++;
             Connections = new Dictionary<NetworkUnit, double>();
-            _actFunc = actFunc;
+            ActFunc = actFunc;
             BiasUnit = biasUnit;
             if(BiasUnit != null)
                 Connections[BiasUnit] = 0;
@@ -57,19 +57,19 @@ namespace NNModule
             ID_COUNTER = Math.Max(unitId, ID_COUNTER) + 1;
             Connections = new Dictionary<NetworkUnit, double>();
             BiasUnit = biasUnit;
-            _actFunc = actFunc;
+            ActFunc = actFunc;
         }
 
         public void Evaluate()
         {
-            _output = _actFunc(_input);
+            _output = ActFunc(_input);
         }
 
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
             result.Append(UnitId).Append(" ");
-            result.Append(ActFuncs.GetIdOfFunc(_actFunc)).AppendLine();
+            result.Append(ActFuncs.GetIdOfFunc(ActFunc)).AppendLine();
             result.Append(BiasUnit == null ? -1 : BiasUnit.UnitId).Append(" ");
             result.Append(MemoryUnit == null ? -1 : MemoryUnit.UnitId).AppendLine();
             result.Append(Connections.Count).AppendLine();

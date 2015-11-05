@@ -10,6 +10,11 @@ namespace NNModule
     {
         private List<NetworkUnit> _units;
 
+        public int Count
+        {
+            get { return _units.Count; }
+        }
+
         public Layer()
         {
             _units = new List<NetworkUnit>();
@@ -33,10 +38,12 @@ namespace NNModule
 
         public List<double> GetOutputs()
         {
-            List<double> outputs = new List<double>(_units.Count);
-            foreach (NetworkUnit unit in _units)
-                outputs.Add(unit.Output);
-            return outputs;
+            return _units.Select(unit => unit.Output).ToList();
+        }
+
+        public List<double> GetErrors()
+        {
+            return _units.Select(unit => unit.Error).ToList();
         }
 
         public override string ToString()

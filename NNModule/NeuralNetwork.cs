@@ -92,6 +92,11 @@ namespace NNModule
             return true;
         }
 
+        public List<Layer>.Enumerator GetEnumerator()
+        {
+            return _layers.GetEnumerator();
+        }
+
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
