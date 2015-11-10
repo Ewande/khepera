@@ -86,6 +86,8 @@ namespace GeneticEvolver
         private void Evolve(object sender, RoutedEventArgs e)
         {
             EvolveButton.IsEnabled = false;
+            SettButton.IsEnabled = false;
+            BehaviorType.IsEnabled = false;
             _bWorker.RunWorkerAsync(_BEHAVIORS[BehaviorType.Text]);
         }
 

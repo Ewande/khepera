@@ -37,7 +37,7 @@ namespace GeneticEvolver
 
         public void Evaluate(Func<Simulation, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
-            Parallel.ForEach(_controllers, contr =>
+            foreach(Controller contr in _controllers) //Parallel.ForEach(_controllers, contr =>
             {
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
@@ -48,7 +48,7 @@ namespace GeneticEvolver
                 }
                 contr.Fitness /= stepsPerContr;
                 contr.Simulation.ShuffleRobot(stepsPerComm * 10);
-            });
+            }//);
 	    }
 
         public Population Select(int n)
@@ -89,7 +89,7 @@ namespace GeneticEvolver
                     List<double> weightsA = _controllers[2 * i].NeuralNetwork.GetAllWeights();
                     List<double> weightsB = _controllers[2 * i + 1].NeuralNetwork.GetAllWeights();
                     int flipPoint = random.Next(weightsA.Count);
-                    for (int j = 0; j < weightsA.Count; j++)
+                    for (int j = flipPoint; j < weightsA.Count; j++)
                     {
                         double temp = weightsA[j];
                         weightsA[j] = weightsB[j];
@@ -102,7 +102,6 @@ namespace GeneticEvolver
 
         public void Mutate(double p)
 	    {
-            Random random = new Random();
             double maxMut = 0.5;
             foreach (Controller contr in _controllers)
             {

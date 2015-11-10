@@ -102,7 +102,7 @@ namespace NNModule
             StringBuilder result = new StringBuilder();
             result.Append(_layers.Count).AppendLine();
             foreach (Layer layer in _layers)
-                result.Append(layer.ToString());
+                result.Append(layer);
             return result.ToString();
         }
     }
