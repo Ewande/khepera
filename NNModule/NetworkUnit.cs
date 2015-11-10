@@ -37,6 +37,7 @@ namespace NNModule
             }
         }
         public double Error;
+        public double LastChange;
         public NetworkUnit MemoryUnit { get; set; }
         public NetworkUnit BiasUnit { get; private set; }
 

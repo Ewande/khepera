@@ -11,7 +11,7 @@ namespace GeneticEvolver
     {
         private static Random random = new Random();
         private List<Controller> _controllers;
-        private Simulation _simulation;
+        //private Simulation _simulation;
         
         public Controller Best { get { return _controllers.Max(); } }
         public double BestFitness { get { return Best.Fitness; } }
@@ -20,8 +20,8 @@ namespace GeneticEvolver
         public Population(int popSize)
         {
             _controllers = new List<Controller>(popSize);
-            _simulation = Simulation.CloneDefault();
-            int inputCount = _simulation.SensorStates.Count;
+            //_simulation = Simulation.CloneDefault();
+            int inputCount = Simulation.CloneDefault().SensorStates.Count;
             for (int i = 0; i < popSize; i++)
             {
                 NeuralNetwork network = NNFactory.CreateElmanNN(inputCount, 2);
@@ -37,18 +37,18 @@ namespace GeneticEvolver
 
         public void Evaluate(Func<Simulation, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
-            foreach (Controller contr in _controllers)
+            Parallel.ForEach(_controllers, contr =>
             {
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
                 {
-                    contr.MoveRobot(_simulation);
-                    _simulation.Update(stepsPerComm);
-                    contr.Fitness += evaluator(_simulation);
+                    contr.MoveRobot();
+                    contr.Simulation.Update(stepsPerComm);
+                    contr.Fitness += evaluator(contr.Simulation);
                 }
                 contr.Fitness /= stepsPerContr;
-                _simulation.ShuffleRobot(stepsPerComm * 10);
-            }
+                contr.Simulation.ShuffleRobot(stepsPerComm * 10);
+            });
 	    }
 
         public Population Select(int n)
@@ -63,7 +63,7 @@ namespace GeneticEvolver
                 newList.Add(challengeList.Last());
             }
 
-            return new Population(newList) { _simulation = _simulation };
+            return new Population(newList);// { _simulation = _simulation };
         }
 
         public void RouletteWheelSelect()

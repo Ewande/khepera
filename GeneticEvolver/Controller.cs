@@ -14,19 +14,22 @@ namespace GeneticEvolver
         public double Fitness { get; set; }
         public NeuralNetwork NeuralNetwork { get; set; }
 
+        public Simulation Simulation;
+
         public Controller(NeuralNetwork network)
         {
             NeuralNetwork = network;
+            Simulation = Simulation.CloneDefault();
         }
 
-        public bool MoveRobot(Simulation simulation)
+        public bool MoveRobot(/*Simulation simulation*/)
         {
-            NeuralNetwork.InLayer.SetInputs(simulation.SensorStates);
+            NeuralNetwork.InLayer.SetInputs(Simulation.SensorStates);
             NeuralNetwork.Evaluate();
             List<double> motorSpeeds = NeuralNetwork.OutLayer.GetOutputs();
             if (motorSpeeds.Count != 2)
                 return false;
-            simulation.SetRobotSpeed((motorSpeeds[0] - 0.5) * 2 * Controller.MAX_ABS_SPEED, 
+            Simulation.SetRobotSpeed((motorSpeeds[0] - 0.5) * 2 * Controller.MAX_ABS_SPEED, 
                 (motorSpeeds[1] - 0.5) * 2 * Controller.MAX_ABS_SPEED);
             return true;
         }
