@@ -29,13 +29,12 @@ namespace GeneticEvolver
             {"collision avoidance", FitnessFuncs.AvoidCollisions}
         };
 
-        private BackgroundWorker _bWorker;
+        private readonly BackgroundWorker _bWorker;
 
         public MainWindow()
         {
             InitializeComponent();
-            _bWorker = new BackgroundWorker();
-            _bWorker.WorkerReportsProgress = true;
+            _bWorker = new BackgroundWorker {WorkerReportsProgress = true};
             _bWorker.DoWork += RunGeneticAlgorithm;
             _bWorker.ProgressChanged += ChangeProgress;
             _bWorker.RunWorkerCompleted += SignalCompletion;
@@ -64,9 +63,7 @@ namespace GeneticEvolver
 
         private void SelectFile(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "World Description Files|*.wd";
-
+            var openFileDialog = new OpenFileDialog {Filter = "World Description Files|*.wd"};
             bool? fileChosen = openFileDialog.ShowDialog();
 
             if (fileChosen == true)
@@ -93,7 +90,7 @@ namespace GeneticEvolver
 
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
-            Func<Simulation, double> evaluator = e.Argument as Func<Simulation, double>;
+            var evaluator = e.Argument as Func<Simulation, double>;
             int generations = 20;
             int popSize = 80;
             Population pop = new Population(popSize);
@@ -126,9 +123,11 @@ namespace GeneticEvolver
 
         private void SaveToFile(Controller bestController)
         {
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.DefaultExt = ".rcs";
-            saveFileDialog.Filter = "Robot Controller Scripts|*.rcs";
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                DefaultExt = ".rcs",
+                Filter = "Robot Controller Scripts|*.rcs"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
                 string filename = saveFileDialog.FileName;
@@ -138,6 +137,12 @@ namespace GeneticEvolver
                     writer.Write(bestController.ToString());
                 }
             }
+        }
+
+        private void OpenSettings(object sender, RoutedEventArgs e)
+        {
+            var settings = new SettingsWindow();
+            settings.Show();
         }
     }
 }
