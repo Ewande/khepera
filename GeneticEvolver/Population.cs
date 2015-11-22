@@ -11,7 +11,7 @@ namespace GeneticEvolver
     {
         private static Random random = new Random();
         private List<Controller> _controllers;
-        //private Simulation _simulation;
+        private Simulation _simulation;
         
         public Controller Best { get { return _controllers.Max(); } }
         public double BestFitness { get { return Best.Fitness; } }
@@ -20,7 +20,7 @@ namespace GeneticEvolver
         public Population(int popSize)
         {
             _controllers = new List<Controller>(popSize);
-            //_simulation = Simulation.CloneDefault();
+            _simulation = Simulation.CloneDefault();
             int inputCount = Simulation.CloneDefault().SensorStates.Count;
             for (int i = 0; i < popSize; i++)
             {
@@ -42,12 +42,12 @@ namespace GeneticEvolver
                 contr.Fitness = 0;
                 for (int i = 0; i < stepsPerContr; i++)
                 {
-                    contr.MoveRobot();
-                    contr.Simulation.Update(stepsPerComm);
-                    contr.Fitness += evaluator(contr.Simulation);
+                    contr.MoveRobot(_simulation);
+                    /*contr.S*/_simulation.Update(stepsPerComm);
+                    contr.Fitness += evaluator(/*contr.S*/_simulation);
                 }
                 contr.Fitness /= stepsPerContr;
-                contr.Simulation.ShuffleRobot(stepsPerComm * 10);
+                /*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
             }//);
 	    }
 
@@ -60,10 +60,13 @@ namespace GeneticEvolver
                 for (int j = 0; j < n; j++)
                     challengeList.Add(_controllers[random.Next(_controllers.Count)]);
                 challengeList.Sort();
-                newList.Add(challengeList.Last());
+                Controller best = challengeList.Last();
+                NeuralNetwork newNetwork = NNFactory.CreateElmanNN(/*best.S*/_simulation.SensorStates.Count, 2);
+                newNetwork.SetAllWeights(best.NeuralNetwork.GetAllWeights());
+                newList.Add(new Controller(newNetwork));
             }
 
-            return new Population(newList);// { _simulation = _simulation };
+            return new Population(newList) { _simulation = _simulation };
         }
 
         public void RouletteWheelSelect()
