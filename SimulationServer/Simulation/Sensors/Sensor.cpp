@@ -6,7 +6,7 @@ Sensor::Sensor(uint8_t type, double range, float rangeAngle, float placingAngle)
 {
     _type = type;
     _state = 0;
-    _beams = 2 + 6 * (int) (_rangeAngle / M_PI);
+    _beams = 2 + (int) (6 * _rangeAngle / M_PI);
 }
 
 Sensor::Sensor(std::ifstream& file, bool readBinary, uint8_t type) : _type(type)
@@ -21,7 +21,7 @@ Sensor::Sensor(std::ifstream& file, bool readBinary, uint8_t type) : _type(type)
     else
         file >> _range >> _rangeAngle >> _placingAngle >> _state;
 
-    _beams = 2 + 6 * (int)(_rangeAngle / M_PI);
+    _beams = 2 + (int) (6 * _rangeAngle / M_PI);
 }
 
 void Sensor::serialize(Buffer& buffer) const

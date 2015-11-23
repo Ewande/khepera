@@ -68,7 +68,7 @@ void ProximitySensor::updateState(const SimEntMap::const_iterator& firstEntity,
                         double beg2_cross = (rangeBeg - line->getBeg()).cross(line->getEnd() - line->getBeg());
                         double end2_cross = (rangeEnds[i] - line->getBeg()).cross(line->getEnd() - line->getBeg());
                         if (beg2_cross && end2_cross && sign(beg2_cross) != sign(end2_cross))
-                            minDetection = min(minDetection, _range * (end2_cross / (end2_cross - beg2_cross)));
+                            minDetection = min(minDetection, _range * (beg2_cross / (beg2_cross - end2_cross)));
 
                     }
                 }
