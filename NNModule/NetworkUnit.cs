@@ -63,7 +63,7 @@ namespace NNModule
 
         public void Evaluate()
         {
-            _output = ActFunc(_input);
+            Output = ActFunc(_input);
         }
 
         public override string ToString()
@@ -79,9 +79,12 @@ namespace NNModule
             return result.ToString();
         }
 
-        public static NetworkUnit CreateBias()
+        public static NetworkUnit CreateBias(int unitId = -1)
         {
-            return new NetworkUnit(ActFuncs.Identity) { _input = 1, _output = 1, _isBias = true};
+            if(unitId < 0)
+                return new NetworkUnit(ActFuncs.Identity) { _input = 1, _output = 1, _isBias = true };
+            else
+                return new NetworkUnit(ActFuncs.Identity, unitId) { _input = 1, _output = 1, _isBias = true};
         }
     }
 }

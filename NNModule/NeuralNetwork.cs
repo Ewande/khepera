@@ -32,10 +32,10 @@ namespace NNModule
             _layers = new List<Layer>();
         }
 
-        public void AddLayer(Layer layer)
+        public void AddLayer(Layer layer, bool addConnections = true)
         {
             Layer prevLayer = OutLayer;
-            if (prevLayer != null)
+            if (addConnections && prevLayer != null)
             {
                 foreach (NetworkUnit unit in layer)
                     foreach (NetworkUnit prevUnit in prevLayer)

@@ -59,9 +59,11 @@ namespace Controller
                     _neuralNetwork.InLayer.SetInputs(_robot.Sensors.Select(x => x.State).ToList());
                     _neuralNetwork.Evaluate();
                     List<double> speeds = _neuralNetwork.OutLayer.GetOutputs();
-                    _robot.LeftMotorSpeed = speeds[0] * Robot.DEFAULT_MAX_SPEED;
-                    _robot.RightMotorSpeed = speeds[1] * Robot.DEFAULT_MAX_SPEED;
+                    _robot.LeftMotorSpeed = (speeds[0] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
+                    _robot.RightMotorSpeed = (speeds[1] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
                     _robot.SpeedChanged = true;
+                    Console.WriteLine(String.Join(" ", _robot.Sensors.Select(x => String.Format("{0:0.000}", x.State))));
+                    Console.WriteLine(String.Format("{0:0.000} {1:0.000}", _robot.LeftMotorSpeed, _robot.RightMotorSpeed));
                 }
                 if (_robot.SpeedChanged)
                 {

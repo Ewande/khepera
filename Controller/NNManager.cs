@@ -26,7 +26,7 @@ namespace Controller
                         int[] unitInfo = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
                         int[] extraUnits = reader.ReadLine().Split().Select(x => int.Parse(x)).ToArray();
                         Func<double, double> actFunc = ActFuncs.GetFuncById(unitInfo[1]);
-                        NetworkUnit bias = extraUnits[0] > 0 ? netUnits.Get(extraUnits[0]) : null;
+                        NetworkUnit bias = extraUnits[0] > 0 ? netUnits.Get(extraUnits[0], isBias: true) : null;
                         NetworkUnit memory = extraUnits[1] > 0 ? netUnits.Get(extraUnits[1]) : null;
                         NetworkUnit unit = netUnits.Get(unitInfo[0], actFunc, bias);
                         unit.MemoryUnit = memory;
@@ -40,7 +40,7 @@ namespace Controller
                         }
                         layer.AddUnit(unit);
                     }
-                    network.AddLayer(layer);
+                    network.AddLayer(layer, false);
                 }
                 return network;
             }
@@ -54,10 +54,10 @@ namespace Controller
     static class NNExtensions
     {
         public static NetworkUnit Get(this Dictionary<int, NetworkUnit> dict, int key, 
-            Func<double, double> actFunc = null, NetworkUnit biasUnit = null)
+            Func<double, double> actFunc = null, NetworkUnit biasUnit = null, bool isBias = false)
         {
-            if(!dict.ContainsKey(key))
-                dict[key] = new NetworkUnit(actFunc, key, biasUnit);
+            if (!dict.ContainsKey(key))
+                dict[key] = isBias ? NetworkUnit.CreateBias(key) : new NetworkUnit(actFunc, key, biasUnit);
             return dict[key];
         }
     }
