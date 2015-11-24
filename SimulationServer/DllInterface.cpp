@@ -3,7 +3,9 @@
 Simulation* createSimulation(char* fileName, bool readBinary)
 {
     std::ifstream file(fileName);
-    return new Simulation(file, readBinary);
+    Simulation* simulation = new Simulation(file, readBinary);
+    simulation->start();
+    return simulation;
 }
 
 void removeSimulation(Simulation* simulation)

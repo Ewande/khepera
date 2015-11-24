@@ -39,6 +39,8 @@ namespace GeneticEvolver
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern void setRobotSpeed(IntPtr robot, double leftMotor, double rightMotor);
 
+
+        private static Random random = new Random();
         private static Simulation _defaultState;
 
         private IntPtr  _simulation;
@@ -117,7 +119,6 @@ namespace GeneticEvolver
 
         public void ShuffleRobot(uint steps)
         {
-            Random random = new Random();
             SetRobotSpeed(-Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2,
                 -Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2);
             Update(steps);

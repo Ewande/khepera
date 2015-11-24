@@ -16,7 +16,7 @@ namespace GeneticEvolver
 
             double speedFactor = (Math.Abs(left) + Math.Abs(right)) / (2 * max);
             double movementFactor = 1 - Math.Sqrt(Math.Abs(left - right) / (2 * max));
-            double proximityFactor = 1 - simulation.SensorStates.Max();
+            double proximityFactor = 1 - Math.Sqrt(simulation.SensorStates.Max());
             return speedFactor * movementFactor * proximityFactor;
         }
 

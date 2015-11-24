@@ -44,11 +44,12 @@ namespace GeneticEvolver
                 {
                     contr.MoveRobot(_simulation);
                     /*contr.S*/_simulation.Update(stepsPerComm);
-                    contr.Fitness += evaluator(/*contr.S*/_simulation);
+                    contr.Fitness /*= Math.Min(contr.Fitness, evaluator(_simulation));*/ += evaluator(/*contr.S*/_simulation);
                 }
                 contr.Fitness /= stepsPerContr;
-                /*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
+                /*_simulation = Simulation.CloneDefault();*//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
             }//);
+            //_simulation = Simulation.CloneDefault();
 	    }
 
         public Population Select(int n)

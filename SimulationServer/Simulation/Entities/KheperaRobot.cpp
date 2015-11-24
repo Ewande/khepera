@@ -38,6 +38,7 @@ KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
         {
             case Sensor::PROXIMITY:
                 sensor = new ProximitySensor(*dynamic_cast<ProximitySensor*>(*it));
+                sensor->placeOnRobot(this);
                 break;
             default:
                 sensor = NULL;
