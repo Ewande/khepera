@@ -62,8 +62,14 @@ namespace Controller
                     _robot.LeftMotorSpeed = (speeds[0] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
                     _robot.RightMotorSpeed = (speeds[1] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
                     _robot.SpeedChanged = true;
-                    Console.WriteLine(String.Join(" ", _robot.Sensors.Select(x => String.Format("{0:0.000}", x.State))));
-                    Console.WriteLine(String.Format("{0:0.000} {1:0.000}", _robot.LeftMotorSpeed, _robot.RightMotorSpeed));
+                }
+                if(i % 7 == 0)
+                {
+                    double speedFactor = (Math.Abs(_robot.LeftMotorSpeed) + Math.Abs(_robot.RightMotorSpeed)) / (2 * Robot.DEFAULT_MAX_SPEED);
+                    double movementFactor = 1 - Math.Sqrt(Math.Abs(_robot.LeftMotorSpeed - _robot.RightMotorSpeed) / (2 * Robot.DEFAULT_MAX_SPEED));
+                    double proximityFactor = 1 - Math.Sqrt(_robot.Sensors.Select(x => x.State).Max());
+
+                    Console.WriteLine(String.Format("{0:0.000}", speedFactor * movementFactor * proximityFactor));
                 }
                 if (_robot.SpeedChanged)
                 {

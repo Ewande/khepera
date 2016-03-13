@@ -11,16 +11,21 @@ namespace GeneticEvolver
     {
         private static Random random = new Random();
         private List<Controller> _controllers;
-        private Simulation _simulation;
+        //private Simulation _simulation;
         
         public Controller Best { get { return _controllers.Max(); } }
-        public double BestFitness { get { return Best.Fitness; } }
         public double AvgFitness { get { return _controllers.Average(contr => contr.Fitness); } }
+
+        // ------ for research:
+        public double AvgSpeedFactor { get { return _controllers.Average(contr => contr.SpeedFactor); } }
+        public double AvgMovementFactor { get { return _controllers.Average(contr => contr.MovementFactor); } }
+        public double AvgProximityFactor { get { return _controllers.Average(contr => contr.ProximityFactor); } }
+        // --------------------
 
         public Population(int popSize)
         {
             _controllers = new List<Controller>(popSize);
-            _simulation = Simulation.CloneDefault();
+            //_simulation = Simulation.CloneDefault();
             int inputCount = Simulation.CloneDefault().SensorStates.Count;
             for (int i = 0; i < popSize; i++)
             {
@@ -35,21 +40,29 @@ namespace GeneticEvolver
             _controllers = controllers;
         }
 
-        public void Evaluate(Func<Simulation, double> evaluator, uint stepsPerContr, uint stepsPerComm)
+        public void Evaluate(Func<Simulation, Controller, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
-            foreach(Controller contr in _controllers) //Parallel.ForEach(_controllers, contr =>
+            /*foreach(Controller contr in _controllers) */Parallel.ForEach(_controllers, contr =>
             {
                 contr.Fitness = 0;
+                contr.SpeedFactor = 0;
+                contr.MovementFactor = 0;
+                contr.ProximityFactor = 0;
+
                 for (int i = 0; i < stepsPerContr; i++)
                 {
-                    contr.MoveRobot(_simulation);
-                    /*contr.S*/_simulation.Update(stepsPerComm);
-                    contr.Fitness /*= Math.Min(contr.Fitness, evaluator(_simulation));*/ += evaluator(/*contr.S*/_simulation);
+                    contr.MoveRobot(/*_simulation*/);
+                    contr.Simulation.Update(stepsPerComm);
+                    contr.Fitness /*= Math.Min(contr.Fitness, evaluator(_simulation));*/ 
+                        += evaluator(contr.Simulation, contr);
                 }
                 contr.Fitness /= stepsPerContr;
-                /*_simulation = Simulation.CloneDefault();*//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
-            }//);
-            //_simulation = Simulation.CloneDefault();
+                contr.SpeedFactor /= stepsPerContr;
+                contr.MovementFactor /= stepsPerContr;
+                contr.ProximityFactor /= stepsPerContr;
+
+                contr.Simulation = Simulation.CloneDefault();//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
+            });
 	    }
 
         public Population Select(int n)
@@ -62,12 +75,12 @@ namespace GeneticEvolver
                     challengeList.Add(_controllers[random.Next(_controllers.Count)]);
                 challengeList.Sort();
                 Controller best = challengeList.Last();
-                NeuralNetwork newNetwork = NNFactory.CreateElmanNN(/*best.S*/_simulation.SensorStates.Count, 2);
+                NeuralNetwork newNetwork = NNFactory.CreateElmanNN(best.Simulation.SensorStates.Count, 2);
                 newNetwork.SetAllWeights(best.NeuralNetwork.GetAllWeights());
                 newList.Add(new Controller(newNetwork));
             }
 
-            return new Population(newList) { _simulation = _simulation };
+            return new Population(newList);/*{ _simulation = _simulation };*/
         }
 
         public void RouletteWheelSelect()

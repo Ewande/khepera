@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 // SIMULATION CONSTANTS
-#define NUMBER_OF_CHECKS            10
+#define NUMBER_OF_CHECKS            3
 #define DIVIDING_LEVEL              3
 #define RESERVED_ID_LEVEL           1000
 #define NO_COLLISION	            -100

@@ -14,15 +14,21 @@ namespace GeneticEvolver
         public double Fitness { get; set; }
         public NeuralNetwork NeuralNetwork { get; set; }
 
-        //public Simulation Simulation;
+        // ------ for research:
+        public double SpeedFactor { get; set; }
+        public double MovementFactor { get; set; }
+        public double ProximityFactor { get; set; }
+        // --------------------
+
+        public Simulation Simulation;
 
         public Controller(NeuralNetwork network)
         {
             NeuralNetwork = network;
-            //Simulation = Simulation.CloneDefault();
+            Simulation = Simulation.CloneDefault();
         }
 
-        public bool MoveRobot(Simulation Simulation)
+        public bool MoveRobot(/*Simulation Simulation*/)
         {
             NeuralNetwork.InLayer.SetInputs(Simulation.SensorStates);
             NeuralNetwork.Evaluate();

@@ -23,8 +23,8 @@ namespace GeneticEvolver
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Dictionary<string, Func<Simulation, double>> _BEHAVIORS =
-            new Dictionary<string, Func<Simulation, double>>
+        private static readonly Dictionary<string, Func<Simulation, Controller, double>> _BEHAVIORS =
+            new Dictionary<string, Func<Simulation, Controller, double>>
         {
             {"collision avoidance", FitnessFuncs.AvoidCollisions}
         };
@@ -90,18 +90,21 @@ namespace GeneticEvolver
 
         private void RunGeneticAlgorithm(object sender, DoWorkEventArgs e)
         {
-            var evaluator = e.Argument as Func<Simulation, double>;
-            int generations = 30;
-            int popSize = 80;
+            var evaluator = e.Argument as Func<Simulation, Controller, double>;
+            int generations = 50;
+            int popSize = 40;
             Population pop = new Population(popSize);
             for (int i = 0; i < generations; i++)
             {
                 pop.Evaluate(evaluator, 80, 7);
-                Console.WriteLine(i + ": " + pop.BestFitness + " " + pop.AvgFitness);
+                Console.WriteLine(String.Format("{0}; {1:0.0000}; {2:0.0000}; {3:0.0000}; {4:0.0000}; " +
+                "{5:0.0000}; {6:0.0000}; {7:0.0000}; {8:0.0000}", i, 
+                pop.Best.Fitness, pop.Best.SpeedFactor, pop.Best.MovementFactor, pop.Best.ProximityFactor,
+                pop.AvgFitness, pop.AvgSpeedFactor, pop.AvgMovementFactor, pop.AvgProximityFactor));
                 _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 //pop.RouletteWheelSelect();
                 pop = pop.Select(3);
-                pop.Crossover(0.85);
+                pop.Crossover(0.75);
                 pop.Mutate(0.2);
             }
             pop.Evaluate(evaluator, 80, 7);
@@ -113,9 +116,10 @@ namespace GeneticEvolver
             Simulation sim = Simulation.CloneDefault();
             for (int i = 0; i < 80; i++)
             {
-                pop.Best.MoveRobot(sim);
+                pop.Best.MoveRobot(/*sim*/);
                 sim.Update(7);
-                Console.WriteLine(String.Format("{0}: {1:0.000} ;; L={2:0.000} R={3:0.000} ||| {4}", i, evaluator(sim),
+                Console.WriteLine(String.Format("{0}: {1:0.000} ;; L={2:0.000} R={3:0.000} ||| {4}", i, 
+                    evaluator(sim, pop.Best),
                     sim.LeftMotorSpeed, sim.RightMotorSpeed, 
                     String.Join(" ", sim.SensorStates.Select(x => String.Format("{0:0.00}", x)))));
             }
