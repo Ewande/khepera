@@ -63,7 +63,7 @@ bool KheperaRobot::getSensorState(unsigned int sensorNumber, float& state) const
     return isIndexValid;
 }
 
-void KheperaRobot::updatePosition(double deltaTime)
+double KheperaRobot::updatePosition(double deltaTime)
 {
 	// thanks to http://www.youtube.com/watch?v=aE7RQNhwnPQ 3:30
 	// here is more precise equation: http://robotics.stackexchange.com/a/1679
@@ -80,6 +80,7 @@ void KheperaRobot::updatePosition(double deltaTime)
 	double deltaY = (_wheelRadius / 2.0) * (leftWheelTurnAngle + rightWheelTurnAngle) * sin(_directionAngle);
 
     translate(deltaX, deltaY);
+    return sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
 void KheperaRobot::updateSensorsState(const SimEntMap::const_iterator& firstEntity, 

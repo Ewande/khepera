@@ -36,7 +36,7 @@ class KheperaRobot : public CircularEnt
         bool getSensorState(unsigned int sensorNumber, float& state) const;
 
 		// deltaTime in [ sec ]
-		void updatePosition(double deltaTime);
+		double updatePosition(double deltaTime);
         void updateSensorsState(const SimEntMap::const_iterator& firstEntity, 
             const SimEntMap::const_iterator& lastEntity);
         void addSensor(Sensor* sensor);

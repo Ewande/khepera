@@ -23,15 +23,15 @@ void updateSimulation(Simulation* simulation, unsigned int steps)
     simulation->update(steps);
 }
 
-int getRobotCount(Simulation* simulation)
+unsigned int getRobotCount(Simulation* simulation)
 {
     return simulation->getIdsByShape(SimEnt::KHEPERA_ROBOT).size();
 }
 
-bool fillRobotsIdArray(Simulation* simulation, int* idArray, int arrLength)
+bool fillRobotsIdArray(Simulation* simulation, int* idArray, unsigned int arrLength)
 {
     std::vector<int> robotIds = simulation->getIdsByShape(SimEnt::KHEPERA_ROBOT);
-    for (int i = 0; i < arrLength; i++)
+    for (unsigned int i = 0; i < arrLength; i++)
         idArray[i] = robotIds[i];
     return robotIds.size() <= arrLength;
 }
@@ -45,7 +45,7 @@ KheperaRobot* getRobot(Simulation* simulation, int robotId)
         return NULL;
 }
 
-int getSensorCount(KheperaRobot* robot)
+unsigned unsigned int getSensorCount(KheperaRobot* robot)
 {
     return robot->getSensorCount();
 }

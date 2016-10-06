@@ -106,7 +106,7 @@ Simulation::Simulation(const Simulation& other)
                 break;
         }
         if (entity != NULL)
-            _entities[entity->getID()] = entity;
+            addEntity(entity);
     }
 }
 
@@ -213,8 +213,20 @@ void Simulation::start()
 void Simulation::update(double deltaTime)
 {
 	_time += deltaTime;
-    for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)
-		it->second->updatePosition(deltaTime);
+    for (SimEntMap::const_iterator it1 = _entities.begin(); it1 != _entities.end(); it1++)
+    {
+        double moveDistance = it1->second->updatePosition(deltaTime);
+        if (moveDistance > 0)
+        {
+            int id1 = it1->second->getID();
+            for (SimEntMap::const_iterator it2 = _entities.begin(); it2 != _entities.end(); it2++)
+            {
+                int id2 = it2->second->getID();
+                _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] -= moveDistance;
+            }
+        }
+
+    }
 	checkCollisions();
     updateSensorsState();
 }

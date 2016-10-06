@@ -32,7 +32,7 @@ class SimEnt
 		// virtual void rotate(double angle) = 0; TODO: Later
 		virtual void translate(double x, double y) = 0;
 
-        virtual void updatePosition(double deltaTime) {}
+        virtual double updatePosition(double deltaTime) { return 0; }
 
 		// serialize for network transmission
 		virtual void serialize(Buffer& buffer) = 0;

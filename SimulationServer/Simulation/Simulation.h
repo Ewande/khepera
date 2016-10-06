@@ -35,6 +35,7 @@ class Simulation
         void removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj);
         void updateSensorsState();
 
+        DistanceMap                   _distances;
 		SimEntMap                     _entities;
 		uint32_t                      _worldWidth;
 		uint32_t                      _worldHeight;

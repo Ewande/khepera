@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,7 +42,11 @@ namespace GeneticEvolver
             Population pop = new Population(popSize, gaMode);
             for (int i = 0; i < generations; i++)
             {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
                 pop.Evaluate(evaluator, 80, 7);
+                stopwatch.Stop();
+                Console.WriteLine("Elapsed={0}", stopwatch.Elapsed);
                 using (System.IO.StreamWriter file = new System.IO.StreamWriter("log.txt", true))
                 {
                     file.WriteLine(String.Format("{0}; {1:0.0000}; {2:0.0000}; {3:0.0000}; {4:0.0000}; " +
