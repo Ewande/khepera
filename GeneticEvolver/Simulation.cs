@@ -136,5 +136,10 @@ namespace GeneticEvolver
                 for (int i = 0; i < SensorStates.Count; i++)
                     SensorStates[i] = getSensorState(_robot, i);
         }
+
+        public Simulation Clone()
+        {
+            return new Simulation(this);
+        }
     }
 }

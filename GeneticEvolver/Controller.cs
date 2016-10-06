@@ -22,10 +22,13 @@ namespace GeneticEvolver
 
         public Simulation Simulation;
 
-        public Controller(NeuralNetwork network)
+        public Controller(NeuralNetwork network, Simulation simulation = null)
         {
             NeuralNetwork = network;
-            Simulation = Simulation.CloneDefault();
+            if (simulation == null)
+                Simulation = Simulation.CloneDefault();
+            else
+                Simulation = simulation.Clone();
         }
 
         public bool MoveRobot(/*Simulation Simulation*/)

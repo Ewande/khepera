@@ -9,8 +9,13 @@ namespace GeneticEvolver
 {
     class Population
     {
+        public static int GA_CONST_START = 1;
+        public static int GA_HYBRID = 2;
+
         private static Random random = new Random();
         private List<Controller> _controllers;
+        private int gaMode;
+        private int iteration = 0;
         //private Simulation _simulation;
         
         public Controller Best { get { return _controllers.Max(); } }
@@ -22,9 +27,10 @@ namespace GeneticEvolver
         public double AvgProximityFactor { get { return _controllers.Average(contr => contr.ProximityFactor); } }
         // --------------------
 
-        public Population(int popSize)
+        public Population(int popSize, int _gaMode)
         {
             _controllers = new List<Controller>(popSize);
+            gaMode = _gaMode;
             //_simulation = Simulation.CloneDefault();
             int inputCount = Simulation.CloneDefault().SensorStates.Count;
             for (int i = 0; i < popSize; i++)
@@ -35,15 +41,20 @@ namespace GeneticEvolver
             }
         }
 
-        public Population(List<Controller> controllers)
+        public Population(List<Controller> controllers, int _iteration)
         {
             _controllers = controllers;
+            iteration = _iteration;
         }
 
         public void Evaluate(Func<Simulation, Controller, double> evaluator, uint stepsPerContr, uint stepsPerComm)
 	    {
             /*foreach(Controller contr in _controllers) */Parallel.ForEach(_controllers, contr =>
             {
+                double fitness = contr.Fitness;
+                double speedFactor = contr.SpeedFactor;
+                double movementFactor = contr.MovementFactor;
+                double proximityFactor = contr.ProximityFactor;
                 contr.Fitness = 0;
                 contr.SpeedFactor = 0;
                 contr.MovementFactor = 0;
@@ -61,12 +72,20 @@ namespace GeneticEvolver
                 contr.MovementFactor /= stepsPerContr;
                 contr.ProximityFactor /= stepsPerContr;
 
-                contr.Simulation = Simulation.CloneDefault();//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
+                contr.Fitness = (fitness * iteration + contr.Fitness) / (iteration + 1);
+                contr.SpeedFactor = (speedFactor * iteration + contr.SpeedFactor) / (iteration + 1);
+                contr.MovementFactor = (movementFactor * iteration + contr.MovementFactor) / (iteration + 1);
+                contr.ProximityFactor = (proximityFactor * iteration + contr.ProximityFactor) / (iteration + 1);
+
+                //contr.Simulation = Simulation.CloneDefault();//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
             });
 	    }
 
         public Population Select(int n)
         {
+            _controllers.Sort();
+            Controller worst = _controllers.First();
+
             List<Controller> newList = new List<Controller>(_controllers.Count);
             for (int i = 0; i < _controllers.Count; i++)
             {
@@ -77,10 +96,13 @@ namespace GeneticEvolver
                 Controller best = challengeList.Last();
                 NeuralNetwork newNetwork = NNFactory.CreateElmanNN(best.Simulation.SensorStates.Count, 2);
                 newNetwork.SetAllWeights(best.NeuralNetwork.GetAllWeights());
-                newList.Add(new Controller(newNetwork));
+                if (gaMode == GA_CONST_START)
+                    newList.Add(new Controller(newNetwork));
+                else if (gaMode == GA_HYBRID)
+                    newList.Add(new Controller(newNetwork, worst.Simulation));
             }
 
-            return new Population(newList);/*{ _simulation = _simulation };*/
+            return new Population(newList, iteration + 1){ gaMode = gaMode };
         }
 
         public void RouletteWheelSelect()
@@ -114,6 +136,14 @@ namespace GeneticEvolver
                     }
                     _controllers[2 * i].NeuralNetwork.SetAllWeights(weightsA);
                     _controllers[2 * i + 1].NeuralNetwork.SetAllWeights(weightsB);
+                    if (gaMode == GA_HYBRID)
+                    {
+                        double oldFitnessA = _controllers[2 * i].Fitness;
+                        double oldFitnessB = _controllers[2 * i + 1].Fitness;
+                        double crossCoeff = flipPoint / (double)weightsA.Count;
+                        _controllers[2 * i].Fitness = crossCoeff * oldFitnessB + (1 - crossCoeff) * oldFitnessA;
+                        _controllers[2 * i + 1].Fitness = (1 - crossCoeff) * oldFitnessB + crossCoeff * oldFitnessA;
+                    }
                 }
         }
 

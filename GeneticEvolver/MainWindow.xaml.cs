@@ -93,7 +93,7 @@ namespace GeneticEvolver
             var evaluator = e.Argument as Func<Simulation, Controller, double>;
             int generations = 50;
             int popSize = 40;
-            Population pop = new Population(popSize);
+            Population pop = new Population(popSize, Population.GA_CONST_START);
             for (int i = 0; i < generations; i++)
             {
                 pop.Evaluate(evaluator, 80, 7);
