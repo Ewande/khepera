@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActFuncs.cs" />
+    <Compile Include="IOUtils.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="MatrixRepr\Layer.cs" />
     <Compile Include="MatrixRepr\NeuralNetwork.cs" />

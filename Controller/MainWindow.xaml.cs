@@ -28,7 +28,7 @@ namespace Controller
 
         private SteeringType _steeringType;
         private KeyEventHandler _keyHandler;
-        private NeuralNetwork _neuralNetwork;
+        private Predictor _neuralNetwork;
 
         private Thread _communicationThread;
         private ConnectionManager _connMan;
@@ -56,9 +56,7 @@ namespace Controller
                 _robot.Sensors = _connMan.ReadSensorsState();
                 if (_steeringType == SteeringType.Script && i % 7 == 0)
                 {
-                    _neuralNetwork.InLayer.SetInputs(_robot.Sensors.Select(x => x.State).ToList());
-                    _neuralNetwork.Evaluate();
-                    List<double> speeds = _neuralNetwork.OutLayer.GetOutputs();
+                    List<double> speeds = _neuralNetwork.Predict(_robot.Sensors.Select(x => (double) x.State).ToList());
                     _robot.LeftMotorSpeed = (speeds[0] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
                     _robot.RightMotorSpeed = (speeds[1] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
                     _robot.SpeedChanged = true;
@@ -178,7 +176,7 @@ namespace Controller
 
                 OpenFileDialog openFileDialog = new OpenFileDialog();
 
-                openFileDialog.Filter = "Robot Controller Scripts|*.rcs";
+                openFileDialog.Filter = "Universal Controller format|*.rcs|Neural Network format|*.nn";
 
                 bool? fileChosen = openFileDialog.ShowDialog();
 
@@ -188,7 +186,12 @@ namespace Controller
 
                     using (StreamReader reader = new StreamReader(fileStream))
                     {
-                        if ((_neuralNetwork = NNManager.CreateNN(reader)) != null)
+
+                        if (openFileDialog.FileName.EndsWith(".rcs"))
+                            _neuralNetwork = NeuralNetwork.Load(reader);
+                        if (openFileDialog.FileName.EndsWith(".nn"))
+                            _neuralNetwork = NNModule.MatrixRepr.NeuralNetwork.Load(reader);
+                        if (_neuralNetwork != null)
                         {
                             ScriptButton.IsChecked = true;
                             ManualControls.Visibility = Visibility.Hidden;
@@ -196,6 +199,7 @@ namespace Controller
                             if (_connected)
                                 this.KeyDown -= _keyHandler;
                         }
+                        
                     }
                     fileStream.Close();
                 }

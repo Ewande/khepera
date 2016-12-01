@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,9 +109,30 @@ namespace NNModule
 
         public override List<double> Predict(List<double> input)
         {
-            InLayer.SetInputs(input.Select(x => (float) x).ToList());
+            InLayer.SetInputs(input.Select(x => (float)x).ToList());
             Evaluate();
-            return OutLayer.GetOutputs();   
+            return OutLayer.GetOutputs();
+        }
+
+        public static NeuralNetwork Load(StreamReader reader)
+        {
+            NeuralNetwork network = new NeuralNetwork();
+            Dictionary<int, NetworkUnit> netUnits = new Dictionary<int, NetworkUnit>();
+            int layers = int.Parse(reader.ReadLine());
+            for (int i = 0; i < layers; i++)
+                network.AddLayer(Layer.Load(reader, netUnits), false);
+            return network;
+        }
+    }
+
+    static class NNExtensions
+    {
+        public static NetworkUnit Get(this Dictionary<int, NetworkUnit> dict, int key,
+            Func<double, double> actFunc = null, NetworkUnit biasUnit = null, bool isBias = false)
+        {
+            if (!dict.ContainsKey(key))
+                dict[key] = isBias ? NetworkUnit.CreateBias(key) : new NetworkUnit(actFunc, key, biasUnit);
+            return dict[key];
         }
     }
 }

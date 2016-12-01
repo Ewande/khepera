@@ -2,6 +2,7 @@
 using MathNet.Numerics.LinearAlgebra.Double;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,15 @@ namespace NNModule.MatrixRepr
                 inputMat = inputMat.Map(layer.Activation);
             }
             return inputMat.Row(0).ToList();
+        }
+
+        public static NeuralNetwork Load(StreamReader reader)
+        {
+            NeuralNetwork network = new NeuralNetwork();
+            int numLayers = int.Parse(reader.ReadLine());
+            for (int i = 0; i < numLayers; i++)
+                network.AddLayer(Layer.Load(reader));
+            return network;
         }
     }
 }
