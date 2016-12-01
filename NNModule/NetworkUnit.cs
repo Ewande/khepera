@@ -70,7 +70,7 @@ namespace NNModule
         {
             StringBuilder result = new StringBuilder();
             result.Append(UnitId).Append(" ");
-            result.Append(ActFuncs.GetIdOfFunc(ActFunc)).AppendLine();
+            result.Append(ActFuncs.GetId(ActFunc)).AppendLine();
             result.Append(BiasUnit == null ? -1 : BiasUnit.UnitId).Append(" ");
             result.Append(MemoryUnit == null ? -1 : MemoryUnit.UnitId).AppendLine();
             result.Append(Connections.Count).AppendLine();

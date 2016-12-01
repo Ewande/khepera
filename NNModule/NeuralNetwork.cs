@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NNModule
 {
-    public class NeuralNetwork
+    public class NeuralNetwork : Predictor
     {
         private static Random random = new Random();
 
@@ -104,6 +104,13 @@ namespace NNModule
             foreach (Layer layer in _layers)
                 result.Append(layer);
             return result.ToString();
+        }
+
+        public override List<double> Predict(List<double> input)
+        {
+            InLayer.SetInputs(input.Select(x => (float) x).ToList());
+            Evaluate();
+            return OutLayer.GetOutputs();   
         }
     }
 }
