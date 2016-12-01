@@ -14,12 +14,6 @@ namespace GeneticEvolver
         public double Fitness { get; set; }
         public NeuralNetwork NeuralNetwork { get; set; }
 
-        // ------ for research:
-        public double SpeedFactor { get; set; }
-        public double MovementFactor { get; set; }
-        public double ProximityFactor { get; set; }
-        // --------------------
-
         public Simulation Simulation;
 
         public Controller(NeuralNetwork network, Simulation simulation = null)

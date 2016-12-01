@@ -97,10 +97,6 @@ namespace GeneticEvolver
             for (int i = 0; i < generations; i++)
             {
                 pop.Evaluate(evaluator, 80, 7);
-                Console.WriteLine(String.Format("{0}; {1:0.0000}; {2:0.0000}; {3:0.0000}; {4:0.0000}; " +
-                "{5:0.0000}; {6:0.0000}; {7:0.0000}; {8:0.0000}", i, 
-                pop.Best.Fitness, pop.Best.SpeedFactor, pop.Best.MovementFactor, pop.Best.ProximityFactor,
-                pop.AvgFitness, pop.AvgSpeedFactor, pop.AvgMovementFactor, pop.AvgProximityFactor));
                 _bWorker.ReportProgress((i + 1) * 100 / (generations + 1));
                 //pop.RouletteWheelSelect();
                 pop = pop.Select(3);

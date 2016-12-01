@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NNModule;
+using System.Diagnostics;
 
 namespace GeneticEvolver
 {
@@ -20,12 +21,6 @@ namespace GeneticEvolver
         
         public Controller Best { get { return _controllers.Max(); } }
         public double AvgFitness { get { return _controllers.Average(contr => contr.Fitness); } }
-
-        // ------ for research:
-        public double AvgSpeedFactor { get { return _controllers.Average(contr => contr.SpeedFactor); } }
-        public double AvgMovementFactor { get { return _controllers.Average(contr => contr.MovementFactor); } }
-        public double AvgProximityFactor { get { return _controllers.Average(contr => contr.ProximityFactor); } }
-        // --------------------
 
         public Population(int popSize, int _gaMode)
         {
@@ -47,38 +42,21 @@ namespace GeneticEvolver
             iteration = _iteration;
         }
 
-        public void Evaluate(Func<Simulation, Controller, double> evaluator, uint stepsPerContr, uint stepsPerComm)
+        public void Evaluate(Func<Simulation, Controller, double> evaluator, uint stepsPerContr, int stepsPerComm)
 	    {
-            /*foreach(Controller contr in _controllers) */Parallel.ForEach(_controllers, contr =>
+            foreach(Controller contr in _controllers) /*Parallel.ForEach(_controllers, contr =>*/
             {
-                double fitness = contr.Fitness;
-                double speedFactor = contr.SpeedFactor;
-                double movementFactor = contr.MovementFactor;
-                double proximityFactor = contr.ProximityFactor;
                 contr.Fitness = 0;
-                contr.SpeedFactor = 0;
-                contr.MovementFactor = 0;
-                contr.ProximityFactor = 0;
 
                 for (int i = 0; i < stepsPerContr; i++)
                 {
                     contr.MoveRobot(/*_simulation*/);
                     contr.Simulation.Update(stepsPerComm);
-                    contr.Fitness /*= Math.Min(contr.Fitness, evaluator(_simulation));*/ 
-                        += evaluator(contr.Simulation, contr);
+                    contr.Fitness += evaluator(contr.Simulation, contr);
                 }
                 contr.Fitness /= stepsPerContr;
-                contr.SpeedFactor /= stepsPerContr;
-                contr.MovementFactor /= stepsPerContr;
-                contr.ProximityFactor /= stepsPerContr;
-
-                contr.Fitness = (fitness * iteration + contr.Fitness) / (iteration + 1);
-                contr.SpeedFactor = (speedFactor * iteration + contr.SpeedFactor) / (iteration + 1);
-                contr.MovementFactor = (movementFactor * iteration + contr.MovementFactor) / (iteration + 1);
-                contr.ProximityFactor = (proximityFactor * iteration + contr.ProximityFactor) / (iteration + 1);
-
                 //contr.Simulation = Simulation.CloneDefault();//*contr.S*/_simulation.ShuffleRobot(stepsPerComm * 10);
-            });
+            }//);
 	    }
 
         public Population Select(int n)

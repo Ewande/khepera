@@ -19,19 +19,19 @@ namespace GeneticEvolver
         private static extern IntPtr cloneSimulation(IntPtr simulation);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void updateSimulation(IntPtr simulation, uint steps);
+        private static extern void updateSimulation(IntPtr simulation, int steps);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern uint getRobotCount(IntPtr simulation);
+        private static extern int getRobotCount(IntPtr simulation);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern bool fillRobotsIdArray(IntPtr simulation, int[] idArray, uint arrLength);
+        private static extern bool fillRobotsIdArray(IntPtr simulation, int[] idArray, int arrLength);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern IntPtr getRobot(IntPtr simulation, int robotId);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern uint getSensorCount(IntPtr robot);
+        private static extern int getSensorCount(IntPtr robot);
 
         [DllImport("SimulationServer.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
         private static extern float getSensorState(IntPtr robot, int sensorNumber);
@@ -86,7 +86,7 @@ namespace GeneticEvolver
 
         public static List<int> GetRobotsIds()
         {
-            uint robotCount = getRobotCount(_defaultState._simulation);
+            int robotCount = getRobotCount(_defaultState._simulation);
             int[] ids = new int[robotCount];
             fillRobotsIdArray(_defaultState._simulation, ids, robotCount);
             return new List<int>(ids);
@@ -117,14 +117,14 @@ namespace GeneticEvolver
             return true;
         }
 
-        public void ShuffleRobot(uint steps)
+        public void ShuffleRobot(int steps)
         {
             SetRobotSpeed(-Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2,
                 -Controller.MAX_ABS_SPEED + random.NextDouble() * Controller.MAX_ABS_SPEED * 2);
             Update(steps);
         }
 
-        public void Update(uint steps = 1)
+        public void Update(int steps = 1)
         {
             updateSimulation(_simulation, steps);
             UpdateSensorList();
