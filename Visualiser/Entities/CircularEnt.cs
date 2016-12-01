@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows;
 
-namespace Visualiser
+namespace Visualiser.Entities
 {
     class CircularEnt : SimEnt
     {
@@ -14,7 +15,7 @@ namespace Visualiser
         public double Radius { get; set; }
 
         public CircularEnt(UInt16 id, UInt32 weight, bool movable, Point center, double radius) : 
-            base(id, SimEnt.CIRCLE_ID, weight, movable)
+            base(id, CIRCLE_ID, weight, movable)
         {
             Radius = radius;
             Center = center;

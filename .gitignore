@@ -5,6 +5,10 @@
 *.suo
 *.user
 *.sln.docstates
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.csproj
 
 # Build results
 

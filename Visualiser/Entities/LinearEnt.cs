@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using System.Windows;
 
-namespace Visualiser
+namespace Visualiser.Entities
 {
     class LinearEnt : SimEnt
     {
@@ -14,7 +15,7 @@ namespace Visualiser
         private Point _end;
 
         public LinearEnt(UInt16 id, Point beg, Point end) :
-            base(id, SimEnt.CIRCLE_ID, SimulationWorld.INFINITY, false)
+            base(id, CIRCLE_ID, SimulationWorld.INFINITY, false)
         {
             _beg = beg;
             _end = end;

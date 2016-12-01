@@ -6,6 +6,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Visualiser.Entities;
+using System.Windows;
+using Visualiser.Entities.Sensors;
 
 namespace Visualiser
 {

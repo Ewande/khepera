@@ -53,15 +53,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CircularEnt.cs" />
+    <Compile Include="Entities\CircularEnt.cs" />
     <Compile Include="DisplayConfig.cs" />
     <Compile Include="EntityReceiver.cs" />
-    <Compile Include="KheperaRobot.cs" />
-    <Compile Include="LinearEnt.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="RectangularEnt.cs" />
-    <Compile Include="Sensor.cs" />
-    <Compile Include="SimEnt.cs" />
+    <Compile Include="Entities\KheperaRobot.cs" />
+    <Compile Include="Entities\LinearEnt.cs" />
+    <Compile Include="Entities\RectangularEnt.cs" />
+    <Compile Include="Entities\Sensors\Sensor.cs" />
+    <Compile Include="Entities\SimEnt.cs" />
     <Compile Include="SimulationWorld.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
