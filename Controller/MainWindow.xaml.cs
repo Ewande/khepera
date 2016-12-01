@@ -40,6 +40,7 @@ namespace Controller
         public MainWindow()
         {
             InitializeComponent();
+
             _connMan = new ConnectionManager();
             _steeringType = SteeringType.Manual;
             _connected = false;
@@ -216,6 +217,22 @@ namespace Controller
                 if (_connected)
                     this.KeyDown += _keyHandler;
             }
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).CaptureMouse();
+        }
+        
+
+        private void Highlight(object sender, MouseEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
+        }
+
+        private void Highlight(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
         }
     }
 }

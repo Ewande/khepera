@@ -122,5 +122,21 @@ namespace Visualiser
             foreach (SimEnt entity in simulationWorld.Entities.Values)
                 entity.AddToCanvas(worldCanvas);
         }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).CaptureMouse();
+        }
+
+
+        private void Highlight(object sender, MouseEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
+        }
+
+        private void Highlight(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
+        }
     }
 }

@@ -78,7 +78,7 @@
                     <TextBlock  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Text="Server address: " 
                                 VerticalAlignment="Center" Margin="10"/>
                     <TextBox    Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="Host" FontSize="15"
-                                Margin="10" FontFamily="Courier New"/>
+                                Margin="10" FontFamily="Courier New" Text="localhost"  GotFocus="TextBox_GotFocus" GotMouseCapture="Highlight" IsMouseCapturedChanged="Highlight"/>
                     <Button     Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" x:Name="ConnectButton" FontSize="15"
                                 Content="CONNECT" Click="ChangeConnection" Margin="10" VerticalAlignment="Center"/>
                     <TextBlock  Grid.Row="1" Grid.Column="3" x:Name="ConnectionStatus"
