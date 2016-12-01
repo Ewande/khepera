@@ -14,8 +14,8 @@ Server can be used in two modes:
 Use with Simulation Server running in distributed mode. One can select manual or automated steering.  
 Currently \*.rcs (produced by Genetic Evolver) and \*.nn files are supported. \*.nn file format: WILL BE PROVIDED SOON 
 
-## Visualizer
+## Visualiser
 Use with Simulation Server running in distributed mode. Provides real-time visual representation of the environment.  
 
-## MapEditor
+## Map Editor
 In progress.
