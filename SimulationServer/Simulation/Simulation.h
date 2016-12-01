@@ -8,6 +8,7 @@
 #include "Sensors/Sensor.h"
 #include "Buffer.h"
 #include "Constants.h"
+#include "Math/MathLib.h"
 
 class Simulation
 {
@@ -25,6 +26,8 @@ class Simulation
         void update(unsigned int steps = 1);
 		SimEnt* getEntity(uint16_t id);
         std::vector<int> getIdsByShape(uint8_t shapeId);
+        int getWorldWidth() { return _worldWidth; }
+        int getWorldHeight() { return _worldHeight; }
 
 		void serialize(Buffer& buffer) const;
 		void serialize(std::ofstream& file) const;
@@ -48,6 +51,7 @@ class Simulation
 
     private:
         void addBounds();
+        void addEntityInternal(SimEnt* newEntity);
         SimEnt* readEntity(std::ifstream& file, bool readBinary);
         Sensor* readSensor(std::ifstream& file, bool readBinary);
 };

@@ -43,15 +43,20 @@ void RectangularEnt::initializeEntity(double bottLeftX, double bottLeftY)
 
 double RectangularEnt::collisionLength(SimEnt& other, Point& proj)
 {
-	int other_shape = other.getShapeID();
-    if (other_shape == SimEnt::CIRCLE || other_shape == SimEnt::KHEPERA_ROBOT)
-	{
-		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
-		Point clone(*_bottLeft);
-		return check_and_divide(converted, clone, _width, _height, 1);
-	}
-	else
-		return NO_COLLISION;
+    switch (other.getShapeID())
+    {
+        case SimEnt::CIRCLE:
+        case SimEnt::KHEPERA_ROBOT:
+        {
+            CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
+            Point clone(*_bottLeft);
+            return check_and_divide(converted, clone, _width, _height, 1);
+        }
+
+        case SimEnt::RECTANGLE:
+        default:
+            return NO_COLLISION;
+    }
 }
 
 void RectangularEnt::translate(double x, double y)
@@ -76,8 +81,8 @@ double RectangularEnt::check_and_divide(CircularEnt& other, Point& bottLeft, dou
 	double radiuses_sum = radius + other.getRadius();
 	double centres_diff = center.getDistance(other.getCenter());
 
-	if (centres_diff > radiuses_sum)
-		return NO_COLLISION;
+    if (centres_diff > radiuses_sum)
+        return radiuses_sum - centres_diff;
 	else
 	{
 		double max_coll = NO_COLLISION;

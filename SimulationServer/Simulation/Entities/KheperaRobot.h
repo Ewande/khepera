@@ -2,7 +2,6 @@
 #define ROBOT_H
 
 #include "CircularEnt.h"
-#include "../Sensors/Sensor.h"
 #include <vector>
 
 class Sensor;

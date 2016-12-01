@@ -7,15 +7,16 @@
 
 Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds,
 	double simulationStep , int simulationDelay) :
-	_worldWidth(worldWidth), _worldHeight(worldHeight), _isRunning(false), _simulationStep(simulationStep),
-	_simulationDelay(simulationDelay)
+	_worldWidth(worldWidth), _worldHeight(worldHeight), _simulationStep(simulationStep),
+	_simulationDelay(simulationDelay), _isRunning(false)
 {
-    if (_hasBounds = addBounds)
+    _hasBounds = addBounds;
+    if (_hasBounds)
         this->addBounds();
 }
 
 Simulation::Simulation(std::ifstream& file, bool readBinary, double simulationStep, int simulationDelay)
-    : _isRunning(false), _simulationStep(simulationStep), _simulationDelay(simulationDelay)
+    : _simulationStep(simulationStep), _simulationDelay(simulationDelay), _isRunning(false)
 {
 	uint16_t numberOfEntities;
 
@@ -68,10 +69,10 @@ void Simulation::addBounds()
     LinearEnt* top_line = new LinearEnt(RESERVED_ID_LEVEL + 2, 0, _worldHeight, _worldWidth, _worldHeight);
     LinearEnt* left_line = new LinearEnt(RESERVED_ID_LEVEL + 3, 0, 0, 0, _worldHeight);
     LinearEnt* right_line = new LinearEnt(RESERVED_ID_LEVEL + 4, _worldWidth, 0, _worldWidth, _worldHeight);
-    _entities[RESERVED_ID_LEVEL + 1] = bottom_line;
-    _entities[RESERVED_ID_LEVEL + 2] = top_line;
-    _entities[RESERVED_ID_LEVEL + 3] = left_line;
-    _entities[RESERVED_ID_LEVEL + 4] = right_line;
+    addEntityInternal(bottom_line);
+    addEntityInternal(top_line);
+    addEntityInternal(left_line);
+    addEntityInternal(right_line);
 }
 
 Simulation::Simulation(const Simulation& other)
@@ -106,7 +107,7 @@ Simulation::Simulation(const Simulation& other)
                 break;
         }
         if (entity != NULL)
-            addEntity(entity);
+            addEntityInternal(entity);
     }
 }
 
@@ -186,8 +187,16 @@ Simulation::~Simulation()
 void Simulation::addEntity(SimEnt* newEntity)
 {
 	int new_id = newEntity->getID();
-	if (new_id < RESERVED_ID_LEVEL)
-		_entities[new_id] = newEntity;
+    if (new_id < RESERVED_ID_LEVEL)
+    {
+        _entities[new_id] = newEntity;
+    }
+}
+
+void Simulation::addEntityInternal(SimEnt* newEntity)
+{
+    int new_id = newEntity->getID();
+    _entities[newEntity->getID()] = newEntity;
 }
 
 bool Simulation::addSensor(Sensor* sensor, uint16_t id)
@@ -208,6 +217,17 @@ void Simulation::start()
 	_time = 0;
 	_isRunning = true;
     updateSensorsState();
+    for (SimEntMap::const_iterator it1 = _entities.begin(); it1 != _entities.end(); it1++)
+    {
+        int id1 = it1->second->getID();
+        for (SimEntMap::const_iterator it2 = std::next(it1); it2 != _entities.end(); it2++)
+        {
+            int id2 = it2->second->getID();
+            Point proj;
+            _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] = 
+                -it1->second->collisionLength(*(it2->second), proj);
+        }
+    }
 }
 
 void Simulation::update(double deltaTime)
@@ -225,8 +245,8 @@ void Simulation::update(double deltaTime)
                 _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] -= moveDistance;
             }
         }
-
     }
+
 	checkCollisions();
     updateSensorsState();
 }
@@ -239,25 +259,32 @@ void Simulation::update(unsigned int steps)
 
 void Simulation::checkCollisions()
 {
-	SimEntMap::iterator it1, it2;
-	for (int i = 0; i < NUMBER_OF_CHECKS; i++)
-		for (it1 = _entities.begin(); it1 != _entities.end(); it1++)
-			for (it2 = it1; it2 != _entities.end(); it2++)
-			{
-				if (it1->second->getID() != it2->second->getID())
-				{
-					// orthogonal projection onto line (used only when sth is colliding with line)
-					Point proj;
+    for (int i = 0; i < NUMBER_OF_CHECKS; i++)
+    {
+        for (SimEntMap::const_iterator it1 = _entities.begin(); it1 != _entities.end(); it1++)
+        {
+            int id1 = it1->second->getID();
+            for (SimEntMap::const_iterator it2 = std::next(it1); it2 != _entities.end(); it2++)
+            {
+                int id2 = it2->second->getID();
+                if (_distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] <= 0)
+                {
+                    // orthogonal projection onto line (used only when sth is colliding with line)
+                    Point proj;
 
-					double collision_len = it1->second->collisionLength(*(it2->second), proj);
-					if (collision_len > EPS)
-					{
-						//std::cout << "kolizja " << it1->second->getID() << " i " << it2->second->getID() << "\n";
-						//std::cout << "--- dlugosc: " << collision_len << "\n\n";
-						removeCollision(*it1->second, *it2->second, collision_len, proj);
-					}
-				}
-			}
+                    double collision_len = it1->second->collisionLength(*(it2->second), proj);
+                    _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] = -collision_len;
+                    if (collision_len > EPS)
+                    {
+                        //std::cout << "kolizja " << it1->second->getID() << " i " << it2->second->getID() << "\n";
+                        //std::cout << "--- dlugosc: " << collision_len << "\n\n";
+                        removeCollision(*it1->second, *it2->second, collision_len, proj);
+                    }
+                }
+            }
+        }
+    }
+    
 }
 
 void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj)

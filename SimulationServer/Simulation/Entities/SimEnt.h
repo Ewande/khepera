@@ -3,11 +3,19 @@
 
 #include <stdint.h>
 #include <algorithm>
-#include <Ws2tcpip.h>
 #include <fstream>
+
+#ifdef _WIN32
+#include <Ws2tcpip.h>
+#endif
+
+#if defined(__unix__) || defined(__APPLE__)
+#include <netinet/in.h>
+#endif
 
 #include "../Buffer.h"
 #include "../Math/Point.h"
+#include "../Math/MathLib.h"
 
 class SimEnt
 {
@@ -41,10 +49,10 @@ class SimEnt
 	protected:
 
 		/* TODO: Maybe we should store color information, so that visualiser user will be able to distinct diffrent entities */
-		uint8_t    _shapeID;
-		uint16_t   _id;
+        uint16_t   _id;
+        uint8_t    _shapeID;
+        uint32_t   _weight;
 		uint8_t    _movable; // stored as integer, to be able to send it through socket
-		uint32_t   _weight;
 };
 
 #endif

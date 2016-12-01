@@ -32,64 +32,68 @@ CircularEnt::CircularEnt(const CircularEnt& other) : SimEnt(other)
 
 double CircularEnt::collisionLength(SimEnt& other, Point& proj)
 {
-	int other_shape = other.getShapeID();
-
-	if (other_shape == LINE)
-	{
-		/*  If the distance between circle center and orthogonal projection is shorter than the radius and if this projection belongs to
-			the line segment (0 <= u <= 1), there is a collision.
-
-			There is also a possibility that projection doesn't belong to the line segment and there is a collision.
-			To check it we just have to calculate distance between both ends of the line segment and the center of
-			CircularEnt. If any of these distances is shorter than the radius, there is a collision.
-		*/
-
-		LinearEnt &conv = *dynamic_cast<LinearEnt*>(&other);
-		bool belongs;
-		Point orth_proj = orthogonalProjection(*_center, conv.getBeg(), conv.getEnd(), &belongs);
-		double ovr_dist = orth_proj.getDistance(*_center);
-        /*if (_shapeID == SimEnt::KHEPERA_ROBOT && conv.getID() == 1004)
+    switch (other.getShapeID())
+    {
+        case SimEnt::LINE:
         {
+            /*
+            CRAD - circle radius
+            First, we calculate orthogonal projection (OPCC) of the circle center (CC) into the line segment (LS).
+            Collision occurs if:
+            - OPCC belongs to LS and distance between CC and OPCC < CRAD
+            - OPCC does not belong to LS but distance between CC and any of LS ends < CRAD
+
+            Note: OPCC belongs to LS is equal to 0 <= u <= 1.
+            */
+
+            LinearEnt &conv = *dynamic_cast<LinearEnt*>(&other);
+            bool belongs;
+            Point orth_proj = orthogonalProjection(*_center, conv.getBeg(), conv.getEnd(), &belongs);
+            double ovr_dist = orth_proj.getDistance(*_center);
+            /*if (_shapeID == SimEnt::KHEPERA_ROBOT && conv.getID() == 1004)
+            {
             std::cout << "dist to orth_proj: " << ovr_dist << std::endl;
             double A = conv.getEnd().getY() - conv.getBeg().getY(), B = conv.getBeg().getX() - conv.getEnd().getX(),
-                C = conv.getEnd().getX() * conv.getBeg().getY() - conv.getBeg().getX() * conv.getEnd().getY();
+            C = conv.getEnd().getX() * conv.getBeg().getY() - conv.getBeg().getX() * conv.getEnd().getY();
             double top = abs(A * _center->getX() + B * _center->getY() + C);
             double bott = sqrt(A * A + B * B);
             double res = top / bott;
             std::cout << "dist - 2. approach: " << res << std::endl;
-        }*/
+            }*/
 
-		if (ovr_dist <= _radius)
-		{
-			if (belongs)
-			{
-				proj.setCoords(orth_proj);
+            //std::cout << _counter++ << std::endl;
+
+            if (ovr_dist > _radius || belongs)
+            {
+                proj.setCoords(orth_proj);
                 return _radius - ovr_dist;
-			}
-
-			double dist_to_beg = conv.getBeg().getDistance(*_center), dist_to_end = conv.getEnd().getDistance(*_center);
-			double dist_to_vertex = min(dist_to_beg, dist_to_end);
-			if (dist_to_vertex <= _radius)
-			{
-				proj.setCoords(dist_to_beg == dist_to_vertex ? conv.getBeg() : conv.getEnd());
+            }
+            else
+            {
+                double dist_to_beg = conv.getBeg().getDistance(*_center),
+                    dist_to_end = conv.getEnd().getDistance(*_center);
+                double dist_to_vertex = min(dist_to_beg, dist_to_end);
+                proj.setCoords(dist_to_beg == dist_to_vertex ? conv.getBeg() : conv.getEnd());
                 return _radius - dist_to_vertex;
-			}
-		}
-	}
+            }
+        }
 
-	else if (other_shape == RECTANGLE)
-		return other.collisionLength(*this, proj);
+        case SimEnt::RECTANGLE:
+            return other.collisionLength(*this, proj);
 
-	else if (other_shape == CIRCLE || other_shape == KHEPERA_ROBOT)
-	{
-		CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
-		double radiuses_sum = _radius + converted.getRadius();
-		double centres_diff = _center->getDistance(converted.getCenter());
+        case SimEnt::CIRCLE:
+        case SimEnt::KHEPERA_ROBOT:
+        {
+            CircularEnt &converted = *dynamic_cast<CircularEnt*>(&other);
+            double radiuses_sum = _radius + converted.getRadius();
+            double centres_diff = _center->getDistance(converted.getCenter());
 
-        return radiuses_sum - centres_diff;
-	}
+            return radiuses_sum - centres_diff;
+        }
 
-	return NO_COLLISION;
+        default:
+            return NO_COLLISION;
+    }
 }
 
 void CircularEnt::translate(double x, double y)

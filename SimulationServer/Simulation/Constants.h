@@ -8,8 +8,8 @@
 #define NUMBER_OF_CHECKS            3
 #define DIVIDING_LEVEL              3
 #define RESERVED_ID_LEVEL           1000
-#define MAX_ID_LEVEL                RESERVED_ID_LEVEL + 20
-#define NO_COLLISION	            -100
+#define MAX_ID_LEVEL                1020
+#define NO_COLLISION	            -10000
 #define INF_COLLISION               1000000
 #define EPS                         0.0001
 
@@ -17,7 +17,7 @@
 #define DEFAULT_SIMULATION_DELAY    40
 
 class SimEnt;
-typedef std::map<uint16_t, int>     DistanceMap;
+typedef std::map<int, double>  DistanceMap;
 typedef std::map<uint16_t, SimEnt*> SimEntMap;
 
 #endif

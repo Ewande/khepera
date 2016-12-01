@@ -1,4 +1,5 @@
 #include "KheperaRobot.h"
+#include "../Sensors/Sensor.h"
 #include "../Sensors/ProximitySensor.h"
 
 KheperaRobot::KheperaRobot(uint16_t id, uint32_t weight, double x,
@@ -45,7 +46,7 @@ KheperaRobot::KheperaRobot(const KheperaRobot& other) : CircularEnt(other)
                 break;
         }
         if (sensor != NULL)
-            _sensors.push_back(sensor);
+            addSensor(sensor);
     }
 }
 

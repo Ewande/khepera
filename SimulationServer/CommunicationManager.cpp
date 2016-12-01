@@ -216,7 +216,7 @@ void CommunicationManager::receive_controllers_messages(fd_set* sockets)
             }
 			else
 			{
-				std::cout << "Received command id: " << commandID << std::endl;
+				std::cout << "Received command id: " << (int) commandID << std::endl;
 				if (commandID < NUMBER_OF_CONTROLLER_COMMANDS)
 					// TODO: Send back error code in case of errors
                     _validControllerCommands[commandID]->

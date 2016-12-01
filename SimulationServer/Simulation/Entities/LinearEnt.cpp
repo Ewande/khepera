@@ -42,15 +42,18 @@ LinearEnt::~LinearEnt()
 	delete _end;
 }
 
-
 double LinearEnt::collisionLength(SimEnt& other, Point& proj)
 {
-	int other_shape = other.getShapeID();
+    switch (other.getShapeID())
+    {
+        case SimEnt::RECTANGLE:
+        case SimEnt::CIRCLE:
+        case SimEnt::KHEPERA_ROBOT:
+            return other.collisionLength(*this, proj);
 
-	if (other_shape == SimEnt::CIRCLE || other_shape == SimEnt::KHEPERA_ROBOT)
-		return other.collisionLength(*this, proj);
-	else
-		return NO_COLLISION;
+        default:
+            return NO_COLLISION;
+    }
 }
 
 void LinearEnt::translate(double x, double y)

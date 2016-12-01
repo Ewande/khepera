@@ -4,7 +4,17 @@
 #include <cmath>
 #include "Point.h"
 
-#define M_PI        (float) 3.14159265358979323846
+#ifndef M_PI
+#define M_PI        3.14159265358979323846
+#endif
+
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
 
 //	computes cosinus with an argument in arc degrees
 double cosD(double arcDegrees);

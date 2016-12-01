@@ -60,13 +60,15 @@ void ProximitySensor::updateState(const SimEntMap::const_iterator& firstEntity,
                     LinearEnt* line = dynamic_cast<LinearEnt*>(it->second);
 
                     // check if ends of linear entity are between ends of current beam
-                    double beg_cross = (line->getBeg() - rangeBeg).cross(rangeEnds[i] - rangeBeg);
-                    double end_cross = (line->getEnd() - rangeBeg).cross(rangeEnds[i] - rangeBeg);
+                    Point temp = rangeEnds[i] - rangeBeg;
+                    double beg_cross = (line->getBeg() - rangeBeg).cross(temp);
+                    double end_cross = (line->getEnd() - rangeBeg).cross(temp);
                     if (beg_cross && end_cross && sign(beg_cross) != sign(end_cross))
                     {
                         // check if ends of current beam are between ends of linear ent
-                        double beg2_cross = (rangeBeg - line->getBeg()).cross(line->getEnd() - line->getBeg());
-                        double end2_cross = (rangeEnds[i] - line->getBeg()).cross(line->getEnd() - line->getBeg());
+                        Point temp2 = line->getEnd() - line->getBeg();
+                        double beg2_cross = (rangeBeg - line->getBeg()).cross(temp2);
+                        double end2_cross = (rangeEnds[i] - line->getBeg()).cross(temp2);
                         if (beg2_cross && end2_cross && sign(beg2_cross) != sign(end2_cross))
                             minDetection = min(minDetection, _range * (beg2_cross / (beg2_cross - end2_cross)));
 

@@ -1,4 +1,5 @@
 #include "DllInterface.h"
+#include <ctime>
 
 Simulation* createSimulation(char* fileName, bool readBinary)
 {
@@ -18,22 +19,22 @@ Simulation* cloneSimulation(Simulation* simulation)
     return new Simulation(*simulation);
 }
 
-void updateSimulation(Simulation* simulation, unsigned int steps)
+void updateSimulation(Simulation* simulation, int steps)
 {
-    simulation->update(steps);
+    simulation->update((unsigned int)steps);
 }
 
-unsigned int getRobotCount(Simulation* simulation)
+int getRobotCount(Simulation* simulation)
 {
     return simulation->getIdsByShape(SimEnt::KHEPERA_ROBOT).size();
 }
 
-bool fillRobotsIdArray(Simulation* simulation, int* idArray, unsigned int arrLength)
+bool fillRobotsIdArray(Simulation* simulation, int* idArray, int arrLength)
 {
     std::vector<int> robotIds = simulation->getIdsByShape(SimEnt::KHEPERA_ROBOT);
-    for (unsigned int i = 0; i < arrLength; i++)
+    for (int i = 0; i < arrLength; i++)
         idArray[i] = robotIds[i];
-    return robotIds.size() <= arrLength;
+    return robotIds.size() <= (unsigned int)arrLength;
 }
 
 KheperaRobot* getRobot(Simulation* simulation, int robotId)
@@ -45,7 +46,7 @@ KheperaRobot* getRobot(Simulation* simulation, int robotId)
         return NULL;
 }
 
-unsigned unsigned int getSensorCount(KheperaRobot* robot)
+int getSensorCount(KheperaRobot* robot)
 {
     return robot->getSensorCount();
 }
@@ -60,4 +61,23 @@ void setRobotSpeed(KheperaRobot* robot, double leftMotor, double rightMotor)
 {
     robot->setLeftMotorSpeed(leftMotor);
     robot->setRightMotorSpeed(rightMotor);
+}
+
+int getXCoord(KheperaRobot* robot)
+{
+    return robot->getCenter().getX();
+}
+
+int getYCoord(KheperaRobot* robot)
+{
+    return robot->getCenter().getY();
+}
+
+void moveRandom(Simulation* simulation, KheperaRobot* robot)
+{
+    srand(time(NULL));
+    int x = rand() % (simulation->getWorldWidth() - 1) + 1;
+    int y = rand() % (simulation->getWorldHeight() - 1) + 1;
+    robot->getCenter().setCoords(x, y);
+    simulation->update();
 }
