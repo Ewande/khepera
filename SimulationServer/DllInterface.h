@@ -7,6 +7,10 @@
 #endif
 
 #include "Simulation/Simulation.h"
+#include <random>
+#include <ctime>
+
+std::mt19937 gen((unsigned int) time(NULL));
 
 // Simulation object management
 extern "C" DLL_PUBLIC Simulation* createSimulation(char* fileName, bool readBinary);
@@ -22,7 +26,7 @@ extern "C" DLL_PUBLIC int getSensorCount(KheperaRobot* robot);
 extern "C" DLL_PUBLIC float getSensorState(KheperaRobot* robot, int sensorNumber);
 extern "C" DLL_PUBLIC void setRobotSpeed(KheperaRobot* robot, double leftMotor, double rightMotor);
 
-extern "C" DLL_PUBLIC void moveRandom(Simulation* simulation, KheperaRobot* robot);
+extern "C" DLL_PUBLIC void teleportRobotRandom(Simulation* simulation, KheperaRobot* robot);
 
-// extern "C" DLL_PUBLIC int getXCoord(KheperaRobot* robot);
-// extern "C" DLL_PUBLIC int getYCoord(KheperaRobot* robot);
+extern "C" DLL_PUBLIC float getRobotXCoord(KheperaRobot* robot);
+extern "C" DLL_PUBLIC float getRobotYCoord(KheperaRobot* robot);

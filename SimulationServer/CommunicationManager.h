@@ -31,11 +31,10 @@ class CommunicationManager
 
 		bool init();
 
-		// starts server loop, which receives and responds to clients requests
+		// starts server loop which receives and responds to clients requests
 		// WARNING: blocks current thread
 		void runServerLoop(); 
 
-		// called by Simulation every time when simulation state is updated, to inform visualisers about it
 		void sendWorldDescriptionToVisualisers();
 
         void sendRobotsStatesToControllers();

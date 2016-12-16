@@ -123,22 +123,20 @@ void CommunicationManager::sendWorldDescriptionToVisualisers()
     serializeControllersData(buffer);
 
 	EnterCriticalSection(&_clientsMutex); // if server-thread adds new client, iterator would be broken
-	for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
-        send(*it, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
+	    for (std::set<SOCKET>::iterator it = _visualisers.begin(); it != _visualisers.end(); it++)
+            send(*it, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
 	LeaveCriticalSection(&_clientsMutex);
 }
 
 void CommunicationManager::sendRobotsStatesToControllers()
 {
     EnterCriticalSection(&_clientsMutex); // if server-thread adds new client, iterator would be broken
-
-    for (std::map<uint16_t, SocketData>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
-    {
-        Buffer buffer;
-        dynamic_cast<KheperaRobot*>(_simulation->getEntity(it->first))->serializeForController(buffer);
-        send(it->second.socket, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
-    }
-
+        for (std::map<uint16_t, SocketData>::iterator it = _controllers.begin(); it != _controllers.end(); it++)
+        {
+            Buffer buffer;
+            dynamic_cast<KheperaRobot*>(_simulation->getEntity(it->first))->serializeForController(buffer);
+            send(it->second.socket, reinterpret_cast<const char*>(buffer.getBuffer()), buffer.getLength(), 0);
+        }
     LeaveCriticalSection(&_clientsMutex);
 }
 
@@ -158,12 +156,10 @@ bool CommunicationManager::accept_new_client()
 		return false;
 	}
     
-    // receive new client type information, and it to appropriate container
+    // receive new client type information and add it to appropriate container
 	uint8_t newClientType;
 	recv(clientSocket, reinterpret_cast<char*>(&newClientType), 1, 0);
 
-    unsigned long mode = 1;
-    //ioctlsocket(ClientSocket, FIONBIO, &mode);
 	if (newClientType == TYPE_ID_VISUALISER)
 	{
 		EnterCriticalSection(&_clientsMutex);
@@ -198,7 +194,7 @@ bool CommunicationManager::accept_new_client()
 
 void CommunicationManager::receive_controllers_messages(fd_set* sockets)
 {
-	// find who sent us a message
+	// find out who sent us a message
 	std::map<uint16_t, SocketData>::iterator it = _controllers.begin();
 	while (it != _controllers.end())
 	{
@@ -217,10 +213,12 @@ void CommunicationManager::receive_controllers_messages(fd_set* sockets)
 			else
 			{
 				std::cout << "Received command id: " << (int) commandID << std::endl;
-				if (commandID < NUMBER_OF_CONTROLLER_COMMANDS)
-					// TODO: Send back error code in case of errors
+                if (commandID < NUMBER_OF_CONTROLLER_COMMANDS)
+                {
+                    // TODO: Send back error code in case of errors
                     _validControllerCommands[commandID]->
                         execute(*_simulation->getEntity(it->first), *_simulation, it->second.socket);
+                }
 				it++;
 			}
 		}
@@ -231,7 +229,7 @@ void CommunicationManager::receive_controllers_messages(fd_set* sockets)
 
 void CommunicationManager::receive_visualisers_messages(fd_set* sockets)
 {
-	// find who sent us a message
+	// find out who sent us a message
 	std::set<SOCKET>::iterator it = _visualisers.begin();
 	while (it != _visualisers.end())
 	{

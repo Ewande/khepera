@@ -32,8 +32,8 @@ DistrSimulation::~DistrSimulation()
 void DistrSimulation::start()
 {
     Simulation::start();
-    _simulationThreadHandle = 
-        CreateThread(NULL, 0, SimulationThreadWrapperFunction, static_cast<LPVOID>(this), 0, NULL);
+    _simulationThreadHandle = CreateThread(NULL, 0, SimulationThreadWrapperFunction, 
+        static_cast<LPVOID>(this), 0, NULL);
 }
 
 void DistrSimulation::run()

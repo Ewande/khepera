@@ -22,14 +22,13 @@ int main(int argc, char** argv)
     if (cmdOptionExists(argv, argv + argc, "-h"))
     {
         std::cout << "This simulation server is a part of Khepera Simulation System. More information about "
-            << "the project, protocol description and usage can be found at github.com/*.\n\n";
+            << "the project, protocol description and usage can be found at github.com/Ewande/khepera.\n\n";
         std::cout << "Flags to use as command line arguments:\n";
         std::cout << "   -in FILE\tspecifies input world description file\n";
         std::cout << "   [-bin]\tindicates that input file should be read as a binary file" << std::endl;
         return 0;
     }
-    if (cmdOptionExists(argv, argv + argc, "-in") && (inputFile = getCmdOption(argv, argv + argc, "-in")));
-    else
+    if (!cmdOptionExists(argv, argv + argc, "-in") || !(inputFile = getCmdOption(argv, argv + argc, "-in")))
     {
         std::cout << "World description file not passed. Use '-in' flag to pass input file." << std::endl;
         return 1;

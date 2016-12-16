@@ -32,9 +32,10 @@ class SimEnt
 
 		virtual ~SimEnt() {}
 
-		uint16_t getID() const { return _id; }
-		uint8_t getShapeID() const { return _shapeID; }
-		uint32_t getWeight() const { return _weight; }
+		int getID() const { return _id; }
+        int getShapeID() const { return _shapeID; }
+        int getWeight() const { return _weight; }
+        bool isMovable() const { return _movable != 0; }
 
 		virtual double collisionLength(SimEnt& other, Point& proj) = 0;
 		// virtual void rotate(double angle) = 0; TODO: Later
@@ -44,7 +45,7 @@ class SimEnt
 
 		// serialize for network transmission
 		virtual void serialize(Buffer& buffer) = 0;
-		// serialize for file storage WARNING: Uses host-byte-order
+		// serialize for file storage. WARNING: Uses host-byte-order
 		virtual void serialize(std::ofstream& file) = 0;
 	protected:
 

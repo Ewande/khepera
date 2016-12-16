@@ -5,7 +5,7 @@
 #include <vector>
 #include <stdint.h>
 
-// class used for binary data packing and unpacking for network transmission
+// class used for binary data packing and unpacking in network transmission
 
 class Buffer
 {
@@ -20,7 +20,7 @@ class Buffer
 		int getLength() const { return _buffer.size(); }
 
 	private:
-		// no clonning
+		// no cloning
 		Buffer(const Buffer& other) {}
 
 		std::vector<uint8_t>   _buffer;

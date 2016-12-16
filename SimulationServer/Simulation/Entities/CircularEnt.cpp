@@ -4,10 +4,10 @@
 #include "../Math/MathLib.h"
 #include <iostream>
 
-CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y,
+CircularEnt::CircularEnt(uint16_t id, uint32_t weight, bool movable, double center_x, double center_y,
 	double radius) : SimEnt(id, SimEnt::CIRCLE, weight, movable), _radius(radius)
 {
-	_center = new Point(x, y);
+	_center = new Point(center_x, center_y);
 }
 
 CircularEnt::CircularEnt(std::ifstream& file, bool readBinary) : SimEnt(file, readBinary, SimEnt::CIRCLE)

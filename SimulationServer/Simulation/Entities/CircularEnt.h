@@ -8,11 +8,10 @@ class CircularEnt : public SimEnt
 {
 	public:
 		// x, y -> center coords
-		CircularEnt(uint16_t id, uint32_t weight, bool movable, double x, double y, double radius);
+		CircularEnt(uint16_t id, uint32_t weight, bool movable, double center_x, double center_y, double radius);
 		CircularEnt(std::ifstream& file, bool readBinary);
         CircularEnt(const CircularEnt& other);
 		virtual ~CircularEnt() { delete _center; }
-
 
 		double collisionLength(SimEnt& other, Point& proj);
 		double getX() { return _center->getX(); }

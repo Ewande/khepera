@@ -24,6 +24,7 @@ class Simulation
         bool addSensor(Sensor* sensor, uint16_t id);
 		void start();
         void update(unsigned int steps = 1);
+        void fillDistanceMap();
 		SimEnt* getEntity(uint16_t id);
         std::vector<int> getIdsByShape(uint8_t shapeId);
         int getWorldWidth() { return _worldWidth; }
@@ -51,7 +52,7 @@ class Simulation
 
     private:
         void addBounds();
-        void addEntityInternal(SimEnt* newEntity);
+        void addEntityInternal(SimEnt* newEntity, int idLimit = MAX_ID_LEVEL);
         SimEnt* readEntity(std::ifstream& file, bool readBinary);
         Sensor* readSensor(std::ifstream& file, bool readBinary);
 };

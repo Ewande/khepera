@@ -161,7 +161,7 @@ void KheperaRobot::serialize(std::ofstream& file)
 	file.write(reinterpret_cast<const char*>(&_wheelRadius), sizeof(_wheelRadius));
 	file.write(reinterpret_cast<const char*>(&_wheelDistance), sizeof(_wheelDistance));
 	file.write(reinterpret_cast<const char*>(&_directionAngle), sizeof(_directionAngle));
-    uint16_t numberOfSensors = _sensors.size();
+    uint16_t numberOfSensors = (uint16_t) _sensors.size();
     file.write(reinterpret_cast<const char*>(&numberOfSensors), sizeof(numberOfSensors));
     for (std::vector<Sensor*>::const_iterator it = _sensors.begin(); it != _sensors.end(); it++)
         (*it)->serialize(file);

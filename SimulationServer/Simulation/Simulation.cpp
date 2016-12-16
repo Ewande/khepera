@@ -34,7 +34,7 @@ Simulation::Simulation(std::ifstream& file, bool readBinary, double simulationSt
     if (_hasBounds)
         this->addBounds();
 
-	for (uint16_t i = 0; i < numberOfEntities; i++)
+	for (int i = 0; i < numberOfEntities; i++)
 	{
         SimEnt* newEntity = readEntity(file, readBinary);
         if (newEntity != NULL)
@@ -175,28 +175,20 @@ Simulation::~Simulation()
 {
 	_isRunning = false; // to stop _simulationThreadHandle
 
-	SimEntMap::iterator it = _entities.begin();
-
-	while (it != _entities.end())
-	{
-		delete it->second;
-		it++;
-	}
+    for (SimEntMap::iterator it = _entities.begin(); it != _entities.end(); it++)
+        delete it->second;
 }
 
 void Simulation::addEntity(SimEnt* newEntity)
 {
-	int new_id = newEntity->getID();
-    if (new_id < RESERVED_ID_LEVEL)
-    {
-        _entities[new_id] = newEntity;
-    }
+    addEntityInternal(newEntity, RESERVED_ID_LEVEL);
 }
 
-void Simulation::addEntityInternal(SimEnt* newEntity)
+void Simulation::addEntityInternal(SimEnt* newEntity, int idLimit)
 {
     int new_id = newEntity->getID();
-    _entities[newEntity->getID()] = newEntity;
+    if (new_id < RESERVED_ID_LEVEL)
+        _entities[newEntity->getID()] = newEntity;
 }
 
 bool Simulation::addSensor(Sensor* sensor, uint16_t id)
@@ -212,11 +204,8 @@ bool Simulation::addSensor(Sensor* sensor, uint16_t id)
     return false;
 }
 
-void Simulation::start()
+void Simulation::fillDistanceMap()
 {
-	_time = 0;
-	_isRunning = true;
-    updateSensorsState();
     for (SimEntMap::const_iterator it1 = _entities.begin(); it1 != _entities.end(); it1++)
     {
         int id1 = it1->second->getID();
@@ -224,10 +213,18 @@ void Simulation::start()
         {
             int id2 = it2->second->getID();
             Point proj;
-            _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] = 
+            _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] =
                 -it1->second->collisionLength(*(it2->second), proj);
         }
     }
+}
+
+void Simulation::start()
+{
+	_time = 0;
+	_isRunning = true;
+    fillDistanceMap();
+    updateSensorsState();
 }
 
 void Simulation::update(double deltaTime)
@@ -276,8 +273,6 @@ void Simulation::checkCollisions()
                     _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] = -collision_len;
                     if (collision_len > EPS)
                     {
-                        //std::cout << "kolizja " << it1->second->getID() << " i " << it2->second->getID() << "\n";
-                        //std::cout << "--- dlugosc: " << collision_len << "\n\n";
                         removeCollision(*it1->second, *it2->second, collision_len, proj);
                     }
                 }
@@ -307,21 +302,26 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
             center_snd = &dynamic_cast<CircularEnt*>(&snd)->getCenter();
 
 		double weights_sum = fst.getWeight() + snd.getWeight();
-		double fst_coeff = snd.getWeight() / weights_sum;
-		double snd_coeff = fst.getWeight() / weights_sum;
+		double fst_coeff = snd.getWeight() / weights_sum * (int) fst.isMovable();
+		double snd_coeff = fst.getWeight() / weights_sum * (int) snd.isMovable();
 
 		double centers_diff = center_fst->getDistance(*center_snd);
-		double x_diff = center_fst->getXDiff(*center_snd);
-		double y_diff = center_fst->getYDiff(*center_snd);
+        if (centers_diff == 0)
+            snd.translate(0.1, 0.1);
+        else
+        {
+		    double x_diff = center_fst->getXDiff(*center_snd);
+		    double y_diff = center_fst->getYDiff(*center_snd);
 
-		double fst_x_trans = x_diff / centers_diff * collisionLen * fst_coeff;
-		double fst_y_trans = y_diff / centers_diff * collisionLen * fst_coeff;
+		    double fst_x_trans = x_diff / centers_diff * collisionLen * fst_coeff;
+		    double fst_y_trans = y_diff / centers_diff * collisionLen * fst_coeff;
 
-		double snd_x_trans = (-1) * x_diff / centers_diff * collisionLen * snd_coeff;
-		double snd_y_trans = (-1) * y_diff / centers_diff * collisionLen * snd_coeff;
+		    double snd_x_trans = (-1) * x_diff / centers_diff * collisionLen * snd_coeff;
+		    double snd_y_trans = (-1) * y_diff / centers_diff * collisionLen * snd_coeff;
 
-		fst.translate(fst_x_trans, fst_y_trans);
-		snd.translate(snd_x_trans, snd_y_trans);
+		    fst.translate(fst_x_trans, fst_y_trans);
+		    snd.translate(snd_x_trans, snd_y_trans);
+        }
 	}
 
 	else if ((snd_shape == SimEnt::CIRCLE || snd_shape == SimEnt::KHEPERA_ROBOT) && fst_shape == SimEnt::LINE)
@@ -332,14 +332,14 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
         double x_diff = center.getXDiff(proj);
         double y_diff = center.getYDiff(proj);
 
-
-		double x_trans = x_diff / proj_diff * collisionLen;
-		double y_trans = y_diff / proj_diff * collisionLen;
-
-		//std::cout << collisionLen << "| " << proj_diff << "| " << x_diff << " " << y_diff << "| " << x_trans << " " << y_trans << "\n";
-
-		snd.translate(x_trans, y_trans);
-
+		if (proj_diff == 0)
+			snd.translate(0.1, 0.1);
+		else
+		{
+			double x_trans = x_diff / proj_diff * collisionLen;
+			double y_trans = y_diff / proj_diff * collisionLen;
+			snd.translate(x_trans, y_trans);
+		}
 	}
 	else if ((fst_shape == SimEnt::CIRCLE || fst_shape == SimEnt::KHEPERA_ROBOT) && snd_shape == SimEnt::LINE)
 		removeCollision(snd, fst, collisionLen, proj);
@@ -415,7 +415,7 @@ void Simulation::serialize(std::ofstream& file) const
 	file.write(reinterpret_cast<const char*>(&_worldHeight), sizeof(_worldHeight));
 	file.write(reinterpret_cast<const char*>(&_time), sizeof(_time)); // do we have to save time to file?
     file.write(reinterpret_cast<const char*>(&_hasBounds), sizeof(_hasBounds));
-	uint16_t size = _entities.size();
+	uint16_t size = (uint16_t) _entities.size();
 	file.write(reinterpret_cast<const char*>(&size), sizeof(size));
 
     for (SimEntMap::const_iterator it = _entities.begin(); it != _entities.end(); it++)

@@ -1,5 +1,4 @@
 #include "DllInterface.h"
-#include <ctime>
 
 Simulation* createSimulation(char* fileName, bool readBinary)
 {
@@ -63,21 +62,26 @@ void setRobotSpeed(KheperaRobot* robot, double leftMotor, double rightMotor)
     robot->setRightMotorSpeed(rightMotor);
 }
 
-int getXCoord(KheperaRobot* robot)
+float getRobotXCoord(KheperaRobot* robot)
 {
-    return robot->getCenter().getX();
+    return (float) robot->getCenter().getX();
 }
 
-int getYCoord(KheperaRobot* robot)
+float getRobotYCoord(KheperaRobot* robot)
 {
-    return robot->getCenter().getY();
+    return (float) robot->getCenter().getY();
 }
 
-void moveRandom(Simulation* simulation, KheperaRobot* robot)
+void teleportRobotRandom(Simulation* simulation, KheperaRobot* robot)
 {
-    srand(time(NULL));
-    int x = rand() % (simulation->getWorldWidth() - 1) + 1;
-    int y = rand() % (simulation->getWorldHeight() - 1) + 1;
+    std::uniform_int_distribution<> rand_w(1, simulation->getWorldWidth() - 1);
+    std::uniform_int_distribution<> rand_h(1, simulation->getWorldHeight() - 1);
+
+    int x = rand_w(gen);
+    int y = rand_h(gen);
     robot->getCenter().setCoords(x, y);
+    robot->setLeftMotorSpeed(0);
+    robot->setRightMotorSpeed(0);
+    simulation->fillDistanceMap();
     simulation->update();
 }
