@@ -187,7 +187,7 @@ void Simulation::addEntity(SimEnt* newEntity)
 void Simulation::addEntityInternal(SimEnt* newEntity, int idLimit)
 {
     int new_id = newEntity->getID();
-    if (new_id < RESERVED_ID_LEVEL)
+    if (new_id < idLimit)
         _entities[newEntity->getID()] = newEntity;
 }
 
@@ -302,9 +302,8 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
             center_snd = &dynamic_cast<CircularEnt*>(&snd)->getCenter();
 
 		double weights_sum = fst.getWeight() + snd.getWeight();
-		double fst_coeff = snd.getWeight() / weights_sum * (int) fst.isMovable();
-		double snd_coeff = fst.getWeight() / weights_sum * (int) snd.isMovable();
-
+		double fst_coeff = snd.getWeight() / weights_sum * fst.isMovable() + fst.getWeight() / weights_sum * (1 - snd.isMovable());
+		double snd_coeff = fst.getWeight() / weights_sum * snd.isMovable() + snd.getWeight() / weights_sum * (1 - fst.isMovable());
 		double centers_diff = center_fst->getDistance(*center_snd);
         if (centers_diff == 0)
             snd.translate(0.1, 0.1);

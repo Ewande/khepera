@@ -29,7 +29,11 @@ SimEnt::SimEnt(std::ifstream& file, bool readBinary, uint8_t shapeID)
         file.read(reinterpret_cast<char*>(&_weight), sizeof(_weight));
     }
     else
-        file >> _id >> _movable >> _weight;
+    {
+        uint16_t movable16;
+        file >> _id >> movable16 >> _weight;
+        _movable = (uint8_t) movable16;
+    }
 }
 
 void SimEnt::serialize(Buffer& buffer)
