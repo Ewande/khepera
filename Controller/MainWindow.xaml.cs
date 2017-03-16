@@ -58,8 +58,8 @@ namespace Controller
                 if (_steeringType == SteeringType.Script && i % 7 == 0)
                 {
                     List<double> speeds = _neuralNetwork.Predict(_robot.Sensors.Select(x => (double) x.State).ToList());
-                    _robot.LeftMotorSpeed = (speeds[0] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
-                    _robot.RightMotorSpeed = (speeds[1] - 0.5) * 2 * Robot.DEFAULT_MAX_SPEED;
+                    _robot.LeftMotorSpeed = (speeds[0]) * Robot.DEFAULT_MAX_SPEED;
+                    _robot.RightMotorSpeed = (speeds[1]) * Robot.DEFAULT_MAX_SPEED;
                     _robot.SpeedChanged = true;
                 }
                 if(i % 7 == 0)
@@ -67,7 +67,7 @@ namespace Controller
                     double speedFactor = (Math.Abs(_robot.LeftMotorSpeed) + Math.Abs(_robot.RightMotorSpeed)) / (2 * Robot.DEFAULT_MAX_SPEED);
                     double movementFactor = 1 - Math.Sqrt(Math.Abs(_robot.LeftMotorSpeed - _robot.RightMotorSpeed) / (2 * Robot.DEFAULT_MAX_SPEED));
                     double proximityFactor = 1 - Math.Sqrt(_robot.Sensors.Select(x => x.State).Max());
-
+                    //Console.WriteLine(String.Format("{0:0.000} {1:0.000} {2:0.000} {3:0.000}", speedFactor * movementFactor * proximityFactor, speedFactor, movementFactor, proximityFactor));
                     Console.WriteLine(String.Format("{0:0.000}", speedFactor * movementFactor * proximityFactor));
                 }
                 if (_robot.SpeedChanged)
