@@ -85,3 +85,8 @@ void teleportRobotRandom(Simulation* simulation, KheperaRobot* robot)
     simulation->fillDistanceMap();
     simulation->update();
 }
+
+float setSeed(int seed)
+{
+    gen.seed(seed);
+}
