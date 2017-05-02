@@ -29,13 +29,14 @@ class Simulation
         std::vector<int> getIdsByShape(uint8_t shapeId);
         int getWorldWidth() { return _worldWidth; }
         int getWorldHeight() { return _worldHeight; }
+        int getNumCollisions() { return checkCollisions(true); }
 
 		void serialize(Buffer& buffer) const;
 		void serialize(std::ofstream& file) const;
 
 	protected:
         void update(double deltaTime); // deltaTime in [ s ]
-        void checkCollisions();
+        int checkCollisions(bool dryRun=false);
         void removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj);
         void updateSensorsState();
 
@@ -51,6 +52,7 @@ class Simulation
 		bool                          _isRunning;
 
     private:
+        void updateDistanceMap(SimEnt* movingEntity, double distance);
         void addBounds();
         void addEntityInternal(SimEnt* newEntity, int idLimit = MAX_ID_LEVEL);
         SimEnt* readEntity(std::ifstream& file, bool readBinary);

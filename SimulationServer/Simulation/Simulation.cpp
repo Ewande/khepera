@@ -5,6 +5,8 @@
 #include "Entities/LinearEnt.h"
 #include "Sensors/ProximitySensor.h"
 
+#include <iterator>
+
 Simulation::Simulation(unsigned int worldWidth, unsigned int worldHeight, bool addBounds,
 	double simulationStep , int simulationDelay) :
 	_worldWidth(worldWidth), _worldHeight(worldHeight), _simulationStep(simulationStep),
@@ -227,6 +229,17 @@ void Simulation::start()
     updateSensorsState();
 }
 
+void Simulation::updateDistanceMap(SimEnt* movingEntity, double distance)
+{
+    int id1 = movingEntity->getID();
+    for (SimEntMap::const_iterator it2 = _entities.begin(); it2 != _entities.end(); it2++)
+    {
+        int id2 = it2->second->getID();
+        _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] -= distance;
+    }
+}
+
+
 void Simulation::update(double deltaTime)
 {
 	_time += deltaTime;
@@ -235,12 +248,7 @@ void Simulation::update(double deltaTime)
         double moveDistance = it1->second->updatePosition(deltaTime);
         if (moveDistance > 0)
         {
-            int id1 = it1->second->getID();
-            for (SimEntMap::const_iterator it2 = _entities.begin(); it2 != _entities.end(); it2++)
-            {
-                int id2 = it2->second->getID();
-                _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] -= moveDistance;
-            }
+            updateDistanceMap(it1->second, moveDistance);
         }
     }
 
@@ -254,9 +262,11 @@ void Simulation::update(unsigned int steps)
         update(_simulationStep);
 }
 
-void Simulation::checkCollisions()
+int Simulation::checkCollisions(bool dryRun)
 {
-    for (int i = 0; i < NUMBER_OF_CHECKS; i++)
+    int num_checks = dryRun ? 1 : NUMBER_OF_CHECKS;
+    int num_colls = 0;
+    for (int i = 0; i < num_checks; i++)
     {
         for (SimEntMap::const_iterator it1 = _entities.begin(); it1 != _entities.end(); it1++)
         {
@@ -271,15 +281,20 @@ void Simulation::checkCollisions()
 
                     double collision_len = it1->second->collisionLength(*(it2->second), proj);
                     _distances[min(id1, id2) * MAX_ID_LEVEL + max(id1, id2)] = -collision_len;
+
                     if (collision_len > EPS)
                     {
-                        removeCollision(*it1->second, *it2->second, collision_len, proj);
+                        num_colls++;
+                        if (!dryRun)
+                        {
+                            removeCollision(*it1->second, *it2->second, collision_len, proj);
+                        }
                     }
                 }
             }
         }
     }
-    
+    return num_colls;
 }
 
 void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, Point& proj)
@@ -319,7 +334,9 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 		    double snd_y_trans = (-1) * y_diff / centers_diff * collisionLen * snd_coeff;
 
 		    fst.translate(fst_x_trans, fst_y_trans);
+            updateDistanceMap(&fst, collisionLen * fst_coeff);
 		    snd.translate(snd_x_trans, snd_y_trans);
+            updateDistanceMap(&snd, collisionLen * snd_coeff);
         }
 	}
 
@@ -338,6 +355,8 @@ void Simulation::removeCollision(SimEnt& fst, SimEnt& snd, double collisionLen, 
 			double x_trans = x_diff / proj_diff * collisionLen;
 			double y_trans = y_diff / proj_diff * collisionLen;
 			snd.translate(x_trans, y_trans);
+            updateDistanceMap(&snd, collisionLen);
+
 		}
 	}
 	else if ((fst_shape == SimEnt::CIRCLE || fst_shape == SimEnt::KHEPERA_ROBOT) && snd_shape == SimEnt::LINE)

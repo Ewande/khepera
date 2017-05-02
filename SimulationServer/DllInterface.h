@@ -31,4 +31,4 @@ extern "C" DLL_PUBLIC void teleportRobotRandom(Simulation* simulation, KheperaRo
 extern "C" DLL_PUBLIC float getRobotXCoord(KheperaRobot* robot);
 extern "C" DLL_PUBLIC float getRobotYCoord(KheperaRobot* robot);
 
-extern "C" DLL_PUBLIC float setSeed(int seed);
+extern "C" DLL_PUBLIC void setSeed(int seed);

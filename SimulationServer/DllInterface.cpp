@@ -76,17 +76,28 @@ void teleportRobotRandom(Simulation* simulation, KheperaRobot* robot)
 {
     std::uniform_int_distribution<> rand_w(1, simulation->getWorldWidth() - 1);
     std::uniform_int_distribution<> rand_h(1, simulation->getWorldHeight() - 1);
+    std::uniform_real_distribution<> rand_angle(0, 6.28);
 
     int x = rand_w(gen);
     int y = rand_h(gen);
+    float angle = (float) rand_angle(gen);
+    robot->setDirectionAngle(angle);
     robot->getCenter().setCoords(x, y);
     robot->setLeftMotorSpeed(0);
     robot->setRightMotorSpeed(0);
     simulation->fillDistanceMap();
-    simulation->update();
+//     simulation->update();
+    x = (int) getRobotXCoord(robot);
+    y = (int) getRobotXCoord(robot);
+
+    if (simulation->getNumCollisions() > 0 || x < 0 || x >= simulation->getWorldWidth() 
+        || y < 0 || y >= simulation->getWorldHeight())
+    {
+        teleportRobotRandom(simulation, robot);
+    }
 }
 
-float setSeed(int seed)
+void setSeed(int seed)
 {
     gen.seed(seed);
 }

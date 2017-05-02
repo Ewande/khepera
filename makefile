@@ -1,5 +1,5 @@
 CXX = g++ # C++ compiler
-CXXFLAGS = -c # C++ flags
+CXXFLAGS = -c --std=c++11 -fPIC # C++ flags
 LDFLAGS = -shared -fPIC # linking flags
 RM = rm -f
 TARGET_LIB = SimulationServer.so

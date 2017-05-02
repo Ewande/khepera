@@ -27,6 +27,7 @@ class KheperaRobot : public CircularEnt
 
 		void setRightMotorSpeed(double speed) { _rightMotor.setSpeed(speed); }
 		void setLeftMotorSpeed(double speed) { _leftMotor.setSpeed(speed); }
+        void setDirectionAngle(float angle) { _directionAngle = angle; }
 
 		double getRightMotorSpeed() const { return _rightMotor.getSpeed(); }
 		double getLeftMotorSpeed() const { return _leftMotor.getSpeed(); }
